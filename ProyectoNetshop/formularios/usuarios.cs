@@ -35,8 +35,14 @@ namespace ProyectoNetshop.formularios
 
         private void usuarios_Load(object sender, EventArgs e)
         {
-            fechaNacimientoUsuario.Format = DateTimePickerFormat.Custom;
-            fechaNacimientoUsuario.CustomFormat = "dd/MM/yyyy";
+            // Mostrar formato corto de fecha
+            fechaNacimientoUsuario.Format = DateTimePickerFormat.Short;
+
+            // Habilitar el checkbox para activar/desactivar la fecha
+            fechaNacimientoUsuario.ShowCheckBox = true;
+
+            // Por defecto, que venga “sin fecha” (unchecked)
+            fechaNacimientoUsuario.Checked = false;
 
             // Por defecto muestro ambos
             cbActivosUsuarios.Checked = true;
@@ -54,7 +60,14 @@ namespace ProyectoNetshop.formularios
             cbPerfilUsuario.DataSource = perfiles;
             cbPerfilUsuario.DisplayMember = "descripcion";
             cbPerfilUsuario.ValueMember = "id_perfil";
-            cbPerfilUsuario.SelectedIndex = -1; // opcional
+            //cbPerfilUsuario.SelectedIndex = -1; // opcional
+
+            // 2) Selecciono “Vendedor” por defecto
+            var vendedor = perfiles
+                .FirstOrDefault(p => p.descripcion.Equals("Vendedor", StringComparison.OrdinalIgnoreCase));
+
+            if (vendedor != null)
+                cbPerfilUsuario.SelectedValue = vendedor.id_perfil;
 
             // Obtener la lista de usuarios
             var usuarios = ObtenerUsuarios();
@@ -225,8 +238,8 @@ namespace ProyectoNetshop.formularios
                 sexo = rbMasculinoUsuario.Checked ? "Masculino"
                                   : rbFemeninoUsuario.Checked ? "Femenino"
                                                                   : "Otros",
-                fecha_nacimiento = fechaNacimientoUsuario.Value.Date,
-                telefono = int.Parse(tbTelefonoUsuario.Text),
+                fecha_nacimiento = fechaNacimientoUsuario.Checked ? fechaNacimientoUsuario.Value.Date : (DateTime?)null,
+                telefono = string.IsNullOrEmpty(tbTelefonoUsuario.Text.Trim()) ? (int?)null : int.Parse(tbTelefonoUsuario.Text.Trim()),
                 dni = int.Parse(tbDniUsuario.Text),
                 id_perfil = Convert.ToInt32(cbPerfilUsuario.SelectedValue)
             };
@@ -307,20 +320,34 @@ namespace ProyectoNetshop.formularios
             using var rd = cmd.ExecuteReader();
             while (rd.Read())
             {
-                lista.Add(new Usuario_model(
-                    rd.GetInt32(0),
-                    rd.GetString(1),
-                    rd.GetString(2),
-                    rd.GetString(3),
-                    (byte[])rd["pass"],
-                    rd.GetInt32(5),
-                    rd.GetString(6),
-                    rd.GetDateTime(7),
-                    rd.GetInt32(8),
-                    rd.GetInt32(9),
-                    rd.GetInt32(10)
-                ));
+                // fecha_nacimiento ya la tienes bien:
+                DateTime? fn = rd.IsDBNull(7)
+                    ? (DateTime?)null
+                    : rd.GetDateTime(7);
+
+                // teléfono opcional:
+                int? tel = rd.IsDBNull(8)
+                    ? (int?)null
+                    : rd.GetInt32(8);
+
+                var usuario = new Usuario_model
+                {
+                    id_usuario = rd.GetInt32(0),
+                    nombre = rd.GetString(1),
+                    apellido = rd.GetString(2),
+                    email = rd.GetString(3),
+                    pass = (byte[])rd["pass"],
+                    activo = rd.GetInt32(5),
+                    sexo = rd.GetString(6),
+                    fecha_nacimiento = fn,
+                    telefono = tel,
+                    dni = rd.GetInt32(9),
+                    id_perfil = rd.GetInt32(10)
+                };
+
+                lista.Add(usuario);
             }
+
             return lista;
         }
         private void DgvUsuarios_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -345,7 +372,11 @@ namespace ProyectoNetshop.formularios
             rbFemeninoUsuario.Checked = u.sexo == "Femenino";
             rbOtrosUsuario.Checked = u.sexo == "Otros";
 
-            fechaNacimientoUsuario.Value = u.fecha_nacimiento;
+            if (!u.fecha_nacimiento.HasValue)
+                fechaNacimientoUsuario.CustomFormat = " ";  // muestra vacío
+            else
+                fechaNacimientoUsuario.CustomFormat = "dd/MM/yyyy";
+
             tbTelefonoUsuario.Text = u.telefono.ToString();
             tbDniUsuario.Text = u.dni.ToString();
 
@@ -414,16 +445,24 @@ namespace ProyectoNetshop.formularios
             tbTelefonoUsuario.Clear();
             tbDniUsuario.Clear();
 
-            rbActivoUsuarioSi.Checked = false;
-            rbActivoUsuarioNo.Checked = false;
+            rbActivoUsuarioSi.Checked = false; //FIJARSE
+            rbActivoUsuarioNo.Checked = false; //FIJARSE
             rbMasculinoUsuario.Checked = false;
             rbFemeninoUsuario.Checked = false;
 
-            cbPerfilUsuario.SelectedIndex = -1;
-            fechaNacimientoUsuario.Value = DateTime.Today;
+            // 1) Resetear fecha
+            fechaNacimientoUsuario.Checked = false;
+            // Opción: cambiar formato a “vacío” para reforzar la UX
+            fechaNacimientoUsuario.CustomFormat = " ";
+            // Mantener ShowCheckBox = true
+
+            // 2) Resetear perfil a “Vendedor”
+            // Suponiendo que “Vendedor” tiene id_perfil = 2
+            // O bien buscas dinámicamente en el DataSource
+            cbPerfilUsuario.SelectedValue = 2;
 
             // Indica que ya no hay un usuario seleccionado
-            _usuarioSeleccionadoId = -1;
+            //_usuarioSeleccionadoId = -1;
         }
         private void btnEliminar_Click(object sender, EventArgs e)
         {
@@ -539,30 +578,26 @@ namespace ProyectoNetshop.formularios
             }
 
             // Fecha de nacimiento (entre 18 y 100 años, no futura)
-            DateTime fn = fechaNacimientoUsuario.Value.Date;
-            DateTime hoy = DateTime.Today;
-
-            // 1) Diferencia básica de años
-            int edad = hoy.Year - fn.Year;
-
-            // 2) Ajuste si aún no llegó el cumpleaños este año
-            if (fn > hoy.AddYears(-edad))
+            // Solo validar fecha si el checkbox está marcado
+            if (fechaNacimientoUsuario.Checked)
             {
-                edad--;
-            }
+                DateTime fn = fechaNacimientoUsuario.Value.Date;
+                DateTime hoy = DateTime.Today;
+                int edad = hoy.Year - fn.Year;
+                if (fn > hoy.AddYears(-edad))
+                    edad--;
 
-            // 3) Validar rango de edad
-            if (edad < 18 || edad > 100)
-            {
-                MessageBox.Show(
-                    "La edad debe estar entre 18 y 100 años.",
-                    "Validación",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-                fechaNacimientoUsuario.Focus();
-                return false;
+                if (edad < 18 || edad > 100)
+                {
+                    MessageBox.Show(
+                        "La edad debe estar entre 18 y 100 años.",
+                        "Validación",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    fechaNacimientoUsuario.Focus();
+                    return false;
+                }
             }
-
 
             // DNI
             if (!int.TryParse(tbDniUsuario.Text, out int dni)
@@ -574,14 +609,21 @@ namespace ProyectoNetshop.formularios
                 return false;
             }
 
-            // Teléfono (10 dígitos)
-            if (!long.TryParse(tbTelefonoUsuario.Text, out long tel)
-             || tel < 1_000_000_000L || tel > 9_999_999_999L)
+            // Teléfono (opcional, 10 dígitos si se ingresa)
+            string txtTel = tbTelefonoUsuario.Text.Trim();
+            if (!string.IsNullOrEmpty(txtTel))
             {
-                MessageBox.Show("El teléfono debe tener 10 dígitos válidos.", "Validación",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbTelefonoUsuario.Focus();
-                return false;
+                if (!long.TryParse(txtTel, out long tel)
+                 || tel < 1_000_000_000L || tel > 9_999_999_999L)
+                {
+                    MessageBox.Show(
+                        "El teléfono debe ser un número de 10 dígitos válido.",
+                        "Validación",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    tbTelefonoUsuario.Focus();
+                    return false;
+                }
             }
 
             // Perfil

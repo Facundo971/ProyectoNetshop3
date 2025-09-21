@@ -15,8 +15,8 @@ namespace ProyectoNetshop.Cruds
         public byte[] pass { get; set; }
         public int activo { get; set; }
         public string sexo { get; set; }
-        public DateTime fecha_nacimiento { get; set; }
-        public int telefono { get; set; }
+        public DateTime? fecha_nacimiento { get; set; }
+        public int? telefono { get; set; }
         public int dni { get; set; }
         public int id_perfil { get; set; }
 

@@ -31,12 +31,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(principal));
             panelIzquierdo = new Panel();
             btnSalir = new FontAwesome.Sharp.IconButton();
-            btnReportes = new FontAwesome.Sharp.IconButton();
-            btnProductos = new FontAwesome.Sharp.IconButton();
-            btnClientes = new FontAwesome.Sharp.IconButton();
-            btnVentas = new FontAwesome.Sharp.IconButton();
-            btnBackup = new FontAwesome.Sharp.IconButton();
-            btnUsuarios = new FontAwesome.Sharp.IconButton();
+            btnIconReportes = new FontAwesome.Sharp.IconButton();
+            btnIconProductos = new FontAwesome.Sharp.IconButton();
+            btnIconClientes = new FontAwesome.Sharp.IconButton();
+            btnIconVentas = new FontAwesome.Sharp.IconButton();
+            btnIconBackup = new FontAwesome.Sharp.IconButton();
+            btnIconUsuarios = new FontAwesome.Sharp.IconButton();
             panelLogo = new Panel();
             panelContenedor = new Panel();
             panelSuperior = new Panel();
@@ -47,17 +47,18 @@
             // 
             panelIzquierdo.BackColor = Color.FromArgb(0, 0, 64);
             panelIzquierdo.Controls.Add(btnSalir);
-            panelIzquierdo.Controls.Add(btnReportes);
-            panelIzquierdo.Controls.Add(btnProductos);
-            panelIzquierdo.Controls.Add(btnClientes);
-            panelIzquierdo.Controls.Add(btnVentas);
-            panelIzquierdo.Controls.Add(btnBackup);
-            panelIzquierdo.Controls.Add(btnUsuarios);
+            panelIzquierdo.Controls.Add(btnIconReportes);
+            panelIzquierdo.Controls.Add(btnIconProductos);
+            panelIzquierdo.Controls.Add(btnIconClientes);
+            panelIzquierdo.Controls.Add(btnIconVentas);
+            panelIzquierdo.Controls.Add(btnIconBackup);
+            panelIzquierdo.Controls.Add(btnIconUsuarios);
             panelIzquierdo.Controls.Add(panelLogo);
             panelIzquierdo.Dock = DockStyle.Left;
             panelIzquierdo.Location = new Point(0, 0);
+            panelIzquierdo.Margin = new Padding(3, 4, 3, 4);
             panelIzquierdo.Name = "panelIzquierdo";
-            panelIzquierdo.Size = new Size(200, 681);
+            panelIzquierdo.Size = new Size(229, 908);
             panelIzquierdo.TabIndex = 0;
             // 
             // btnSalir
@@ -72,147 +73,154 @@
             btnSalir.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSalir.IconSize = 40;
             btnSalir.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSalir.Location = new Point(0, 621);
+            btnSalir.Location = new Point(0, 828);
+            btnSalir.Margin = new Padding(3, 4, 3, 4);
             btnSalir.Name = "btnSalir";
-            btnSalir.Padding = new Padding(10, 0, 20, 0);
-            btnSalir.Size = new Size(200, 60);
+            btnSalir.Padding = new Padding(11, 0, 23, 0);
+            btnSalir.Size = new Size(229, 80);
             btnSalir.TabIndex = 7;
             btnSalir.Text = "Salir";
             btnSalir.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSalir.UseVisualStyleBackColor = true;
             btnSalir.Click += iconButton6_Click;
             // 
-            // btnReportes
+            // btnIconReportes
             // 
-            btnReportes.Cursor = Cursors.Hand;
-            btnReportes.Dock = DockStyle.Top;
-            btnReportes.FlatStyle = FlatStyle.Flat;
-            btnReportes.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            btnReportes.ForeColor = SystemColors.ButtonFace;
-            btnReportes.IconChar = FontAwesome.Sharp.IconChar.Readme;
-            btnReportes.IconColor = Color.White;
-            btnReportes.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnReportes.IconSize = 40;
-            btnReportes.ImageAlign = ContentAlignment.MiddleLeft;
-            btnReportes.Location = new Point(0, 400);
-            btnReportes.Name = "btnReportes";
-            btnReportes.Padding = new Padding(10, 0, 20, 0);
-            btnReportes.Size = new Size(200, 60);
-            btnReportes.TabIndex = 6;
-            btnReportes.Text = "Reportes";
-            btnReportes.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnReportes.UseVisualStyleBackColor = true;
-            btnReportes.Click += btnReportes_Click;
+            btnIconReportes.Cursor = Cursors.Hand;
+            btnIconReportes.Dock = DockStyle.Top;
+            btnIconReportes.FlatStyle = FlatStyle.Flat;
+            btnIconReportes.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            btnIconReportes.ForeColor = SystemColors.ButtonFace;
+            btnIconReportes.IconChar = FontAwesome.Sharp.IconChar.Readme;
+            btnIconReportes.IconColor = Color.White;
+            btnIconReportes.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnIconReportes.IconSize = 40;
+            btnIconReportes.ImageAlign = ContentAlignment.MiddleLeft;
+            btnIconReportes.Location = new Point(0, 533);
+            btnIconReportes.Margin = new Padding(3, 4, 3, 4);
+            btnIconReportes.Name = "btnIconReportes";
+            btnIconReportes.Padding = new Padding(11, 0, 23, 0);
+            btnIconReportes.Size = new Size(229, 80);
+            btnIconReportes.TabIndex = 6;
+            btnIconReportes.Text = "Reportes";
+            btnIconReportes.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnIconReportes.UseVisualStyleBackColor = true;
+            btnIconReportes.Click += btnReportes_Click;
             // 
-            // btnProductos
+            // btnIconProductos
             // 
-            btnProductos.Cursor = Cursors.Hand;
-            btnProductos.Dock = DockStyle.Top;
-            btnProductos.FlatStyle = FlatStyle.Flat;
-            btnProductos.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            btnProductos.ForeColor = SystemColors.ButtonFace;
-            btnProductos.IconChar = FontAwesome.Sharp.IconChar.ShoppingBag;
-            btnProductos.IconColor = Color.White;
-            btnProductos.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnProductos.IconSize = 40;
-            btnProductos.ImageAlign = ContentAlignment.MiddleLeft;
-            btnProductos.Location = new Point(0, 340);
-            btnProductos.Name = "btnProductos";
-            btnProductos.Padding = new Padding(10, 0, 20, 0);
-            btnProductos.Size = new Size(200, 60);
-            btnProductos.TabIndex = 5;
-            btnProductos.Text = "Productos";
-            btnProductos.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnProductos.UseVisualStyleBackColor = true;
-            btnProductos.Click += btnProductos_Click;
+            btnIconProductos.Cursor = Cursors.Hand;
+            btnIconProductos.Dock = DockStyle.Top;
+            btnIconProductos.FlatStyle = FlatStyle.Flat;
+            btnIconProductos.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            btnIconProductos.ForeColor = SystemColors.ButtonFace;
+            btnIconProductos.IconChar = FontAwesome.Sharp.IconChar.ShoppingBag;
+            btnIconProductos.IconColor = Color.White;
+            btnIconProductos.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnIconProductos.IconSize = 40;
+            btnIconProductos.ImageAlign = ContentAlignment.MiddleLeft;
+            btnIconProductos.Location = new Point(0, 453);
+            btnIconProductos.Margin = new Padding(3, 4, 3, 4);
+            btnIconProductos.Name = "btnIconProductos";
+            btnIconProductos.Padding = new Padding(11, 0, 23, 0);
+            btnIconProductos.Size = new Size(229, 80);
+            btnIconProductos.TabIndex = 5;
+            btnIconProductos.Text = "Productos";
+            btnIconProductos.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnIconProductos.UseVisualStyleBackColor = true;
+            btnIconProductos.Click += btnProductos_Click;
             // 
-            // btnClientes
+            // btnIconClientes
             // 
-            btnClientes.Cursor = Cursors.Hand;
-            btnClientes.Dock = DockStyle.Top;
-            btnClientes.FlatStyle = FlatStyle.Flat;
-            btnClientes.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            btnClientes.ForeColor = SystemColors.ButtonFace;
-            btnClientes.IconChar = FontAwesome.Sharp.IconChar.Users;
-            btnClientes.IconColor = Color.White;
-            btnClientes.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnClientes.IconSize = 40;
-            btnClientes.ImageAlign = ContentAlignment.MiddleLeft;
-            btnClientes.Location = new Point(0, 280);
-            btnClientes.Name = "btnClientes";
-            btnClientes.Padding = new Padding(10, 0, 20, 0);
-            btnClientes.Size = new Size(200, 60);
-            btnClientes.TabIndex = 4;
-            btnClientes.Text = "Clientes";
-            btnClientes.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnClientes.UseVisualStyleBackColor = true;
-            btnClientes.Click += btnClientes_Click;
+            btnIconClientes.Cursor = Cursors.Hand;
+            btnIconClientes.Dock = DockStyle.Top;
+            btnIconClientes.FlatStyle = FlatStyle.Flat;
+            btnIconClientes.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            btnIconClientes.ForeColor = SystemColors.ButtonFace;
+            btnIconClientes.IconChar = FontAwesome.Sharp.IconChar.Users;
+            btnIconClientes.IconColor = Color.White;
+            btnIconClientes.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnIconClientes.IconSize = 40;
+            btnIconClientes.ImageAlign = ContentAlignment.MiddleLeft;
+            btnIconClientes.Location = new Point(0, 373);
+            btnIconClientes.Margin = new Padding(3, 4, 3, 4);
+            btnIconClientes.Name = "btnIconClientes";
+            btnIconClientes.Padding = new Padding(11, 0, 23, 0);
+            btnIconClientes.Size = new Size(229, 80);
+            btnIconClientes.TabIndex = 4;
+            btnIconClientes.Text = "Clientes";
+            btnIconClientes.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnIconClientes.UseVisualStyleBackColor = true;
+            btnIconClientes.Click += btnClientes_Click;
             // 
-            // btnVentas
+            // btnIconVentas
             // 
-            btnVentas.Cursor = Cursors.Hand;
-            btnVentas.Dock = DockStyle.Top;
-            btnVentas.FlatStyle = FlatStyle.Flat;
-            btnVentas.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            btnVentas.ForeColor = SystemColors.ButtonFace;
-            btnVentas.IconChar = FontAwesome.Sharp.IconChar.Receipt;
-            btnVentas.IconColor = Color.White;
-            btnVentas.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnVentas.IconSize = 40;
-            btnVentas.ImageAlign = ContentAlignment.MiddleLeft;
-            btnVentas.Location = new Point(0, 220);
-            btnVentas.Name = "btnVentas";
-            btnVentas.Padding = new Padding(10, 0, 20, 0);
-            btnVentas.Size = new Size(200, 60);
-            btnVentas.TabIndex = 3;
-            btnVentas.Text = "Ventas";
-            btnVentas.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnVentas.UseVisualStyleBackColor = true;
-            btnVentas.Click += btnVentas_Click_1;
+            btnIconVentas.Cursor = Cursors.Hand;
+            btnIconVentas.Dock = DockStyle.Top;
+            btnIconVentas.FlatStyle = FlatStyle.Flat;
+            btnIconVentas.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            btnIconVentas.ForeColor = SystemColors.ButtonFace;
+            btnIconVentas.IconChar = FontAwesome.Sharp.IconChar.Receipt;
+            btnIconVentas.IconColor = Color.White;
+            btnIconVentas.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnIconVentas.IconSize = 40;
+            btnIconVentas.ImageAlign = ContentAlignment.MiddleLeft;
+            btnIconVentas.Location = new Point(0, 293);
+            btnIconVentas.Margin = new Padding(3, 4, 3, 4);
+            btnIconVentas.Name = "btnIconVentas";
+            btnIconVentas.Padding = new Padding(11, 0, 23, 0);
+            btnIconVentas.Size = new Size(229, 80);
+            btnIconVentas.TabIndex = 3;
+            btnIconVentas.Text = "Ventas";
+            btnIconVentas.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnIconVentas.UseVisualStyleBackColor = true;
+            btnIconVentas.Click += btnVentas_Click_1;
             // 
-            // btnBackup
+            // btnIconBackup
             // 
-            btnBackup.Cursor = Cursors.Hand;
-            btnBackup.Dock = DockStyle.Top;
-            btnBackup.FlatStyle = FlatStyle.Flat;
-            btnBackup.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            btnBackup.ForeColor = SystemColors.ButtonFace;
-            btnBackup.IconChar = FontAwesome.Sharp.IconChar.Database;
-            btnBackup.IconColor = Color.White;
-            btnBackup.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnBackup.IconSize = 40;
-            btnBackup.ImageAlign = ContentAlignment.MiddleLeft;
-            btnBackup.Location = new Point(0, 160);
-            btnBackup.Name = "btnBackup";
-            btnBackup.Padding = new Padding(10, 0, 20, 0);
-            btnBackup.Size = new Size(200, 60);
-            btnBackup.TabIndex = 2;
-            btnBackup.Text = "Backup";
-            btnBackup.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnBackup.UseVisualStyleBackColor = true;
-            btnBackup.Click += btnBackup_Click;
+            btnIconBackup.Cursor = Cursors.Hand;
+            btnIconBackup.Dock = DockStyle.Top;
+            btnIconBackup.FlatStyle = FlatStyle.Flat;
+            btnIconBackup.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            btnIconBackup.ForeColor = SystemColors.ButtonFace;
+            btnIconBackup.IconChar = FontAwesome.Sharp.IconChar.Database;
+            btnIconBackup.IconColor = Color.White;
+            btnIconBackup.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnIconBackup.IconSize = 40;
+            btnIconBackup.ImageAlign = ContentAlignment.MiddleLeft;
+            btnIconBackup.Location = new Point(0, 213);
+            btnIconBackup.Margin = new Padding(3, 4, 3, 4);
+            btnIconBackup.Name = "btnIconBackup";
+            btnIconBackup.Padding = new Padding(11, 0, 23, 0);
+            btnIconBackup.Size = new Size(229, 80);
+            btnIconBackup.TabIndex = 2;
+            btnIconBackup.Text = "Backup";
+            btnIconBackup.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnIconBackup.UseVisualStyleBackColor = true;
+            btnIconBackup.Click += btnBackup_Click;
             // 
-            // btnUsuarios
+            // btnIconUsuarios
             // 
-            btnUsuarios.Cursor = Cursors.Hand;
-            btnUsuarios.Dock = DockStyle.Top;
-            btnUsuarios.FlatStyle = FlatStyle.Flat;
-            btnUsuarios.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            btnUsuarios.ForeColor = SystemColors.ButtonFace;
-            btnUsuarios.IconChar = FontAwesome.Sharp.IconChar.User;
-            btnUsuarios.IconColor = Color.White;
-            btnUsuarios.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnUsuarios.IconSize = 40;
-            btnUsuarios.ImageAlign = ContentAlignment.MiddleLeft;
-            btnUsuarios.Location = new Point(0, 100);
-            btnUsuarios.Name = "btnUsuarios";
-            btnUsuarios.Padding = new Padding(10, 0, 20, 0);
-            btnUsuarios.Size = new Size(200, 60);
-            btnUsuarios.TabIndex = 1;
-            btnUsuarios.Text = "Usuarios";
-            btnUsuarios.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnUsuarios.UseVisualStyleBackColor = true;
-            btnUsuarios.Click += btnUsuarios_Click;
+            btnIconUsuarios.Cursor = Cursors.Hand;
+            btnIconUsuarios.Dock = DockStyle.Top;
+            btnIconUsuarios.FlatStyle = FlatStyle.Flat;
+            btnIconUsuarios.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            btnIconUsuarios.ForeColor = SystemColors.ButtonFace;
+            btnIconUsuarios.IconChar = FontAwesome.Sharp.IconChar.User;
+            btnIconUsuarios.IconColor = Color.White;
+            btnIconUsuarios.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnIconUsuarios.IconSize = 40;
+            btnIconUsuarios.ImageAlign = ContentAlignment.MiddleLeft;
+            btnIconUsuarios.Location = new Point(0, 133);
+            btnIconUsuarios.Margin = new Padding(3, 4, 3, 4);
+            btnIconUsuarios.Name = "btnIconUsuarios";
+            btnIconUsuarios.Padding = new Padding(11, 0, 23, 0);
+            btnIconUsuarios.Size = new Size(229, 80);
+            btnIconUsuarios.TabIndex = 1;
+            btnIconUsuarios.Text = "Usuarios";
+            btnIconUsuarios.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnIconUsuarios.UseVisualStyleBackColor = true;
+            btnIconUsuarios.Click += btnUsuarios_Click;
             // 
             // panelLogo
             // 
@@ -221,38 +229,44 @@
             panelLogo.BackgroundImageLayout = ImageLayout.Stretch;
             panelLogo.Dock = DockStyle.Top;
             panelLogo.Location = new Point(0, 0);
+            panelLogo.Margin = new Padding(3, 4, 3, 4);
             panelLogo.Name = "panelLogo";
-            panelLogo.Size = new Size(200, 100);
+            panelLogo.Size = new Size(229, 133);
             panelLogo.TabIndex = 0;
             // 
             // panelContenedor
             // 
             panelContenedor.Dock = DockStyle.Bottom;
-            panelContenedor.Location = new Point(200, 118);
+            panelContenedor.Location = new Point(229, 157);
+            panelContenedor.Margin = new Padding(3, 4, 3, 4);
             panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(1064, 563);
+            panelContenedor.Size = new Size(1216, 751);
             panelContenedor.TabIndex = 2;
+            panelContenedor.Paint += panelContenedor_Paint;
             // 
             // panelSuperior
             // 
             panelSuperior.BackColor = Color.FromArgb(0, 0, 64);
             panelSuperior.Dock = DockStyle.Top;
-            panelSuperior.Location = new Point(200, 0);
+            panelSuperior.Location = new Point(229, 0);
+            panelSuperior.Margin = new Padding(3, 4, 3, 4);
             panelSuperior.Name = "panelSuperior";
-            panelSuperior.Size = new Size(1064, 100);
+            panelSuperior.Size = new Size(1216, 133);
             panelSuperior.TabIndex = 1;
             // 
             // principal
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SlateGray;
-            ClientSize = new Size(1264, 681);
+            ClientSize = new Size(1445, 908);
             Controls.Add(panelContenedor);
             Controls.Add(panelSuperior);
             Controls.Add(panelIzquierdo);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "principal";
             Text = "Netshop";
+            Load += principal_Load;
             panelIzquierdo.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -260,13 +274,13 @@
         #endregion
 
         private Panel panelIzquierdo;
-        private FontAwesome.Sharp.IconButton btnUsuarios;
+        private FontAwesome.Sharp.IconButton btnIconUsuarios;
         private Panel panelLogo;
-        private FontAwesome.Sharp.IconButton btnBackup;
-        private FontAwesome.Sharp.IconButton btnClientes;
-        private FontAwesome.Sharp.IconButton btnVentas;
-        private FontAwesome.Sharp.IconButton btnReportes;
-        private FontAwesome.Sharp.IconButton btnProductos;
+        private FontAwesome.Sharp.IconButton btnIconBackup;
+        private FontAwesome.Sharp.IconButton btnIconClientes;
+        private FontAwesome.Sharp.IconButton btnIconVentas;
+        private FontAwesome.Sharp.IconButton btnIconReportes;
+        private FontAwesome.Sharp.IconButton btnIconProductos;
         private FontAwesome.Sharp.IconButton btnSalir;
         private Panel panelSuperior;
         private Panel panelContenedor;
