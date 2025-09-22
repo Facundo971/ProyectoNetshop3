@@ -82,6 +82,7 @@
             TBBaseDeDatos.Name = "TBBaseDeDatos";
             TBBaseDeDatos.Size = new Size(400, 27);
             TBBaseDeDatos.TabIndex = 3;
+            TBBaseDeDatos.TextChanged += TBBaseDeDatos_TextChanged;
             // 
             // TBGuardarRuta
             // 
@@ -91,6 +92,7 @@
             TBGuardarRuta.Name = "TBGuardarRuta";
             TBGuardarRuta.Size = new Size(400, 27);
             TBGuardarRuta.TabIndex = 4;
+            TBGuardarRuta.TextChanged += TBGuardarRuta_TextChanged;
             // 
             // BConectar
             // 
@@ -104,6 +106,7 @@
             BConectar.TabIndex = 5;
             BConectar.Text = "Conectar";
             BConectar.UseVisualStyleBackColor = true;
+            BConectar.Click += BConectar_Click;
             // 
             // BGuardarRuta
             // 
@@ -117,6 +120,7 @@
             BGuardarRuta.TabIndex = 6;
             BGuardarRuta.Text = "Guardar";
             BGuardarRuta.UseVisualStyleBackColor = true;
+            BGuardarRuta.Click += BGuardarRuta_Click;
             // 
             // BBackUp
             // 
@@ -130,6 +134,7 @@
             BBackUp.TabIndex = 7;
             BBackUp.Text = "Back Up";
             BBackUp.UseVisualStyleBackColor = true;
+            BBackUp.Click += BBackUp_Click;
             // 
             // panel1
             // 

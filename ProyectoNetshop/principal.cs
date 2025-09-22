@@ -5,25 +5,37 @@ namespace ProyectoNetshop
 {
     public partial class principal : Form
     {
-        private readonly int idPerfil;
+        private int idPerfil;
+        private int vendedorDni;
+        private string vendedorNombre;
 
-        public principal(int p_idPerfil)
+        public principal(int p_idPerfil, int p_dni, string p_nombre)
         {
             InitializeComponent();
-
-            // Aquí suscribo el evento Load al método Principal_Load
             this.Load += principal_Load;
 
             idPerfil = p_idPerfil;
-
-            //MessageBox.Show($"Perfil en principal: {idPerfil}");
+            vendedorDni = p_dni;
+            vendedorNombre = p_nombre;
 
             AplicarPermisos();
         }
 
         private void iconButton6_Click(object sender, EventArgs e)
         {
-            Close();
+            // 1) Muestro confirmación
+            var respuesta = MessageBox.Show(
+                "¿Estás seguro que deseas cerrar sesión y volver al login?",
+                "Confirmar salida",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            // 2) Si el usuario dice Sí, reinicio la app
+            if (respuesta == DialogResult.Yes)
+            {
+                Application.Restart();
+            }
+            // 3) Si dice No, no hago nada y el formulario principal sigue activo
         }
 
         private void AbrirFormularioEnPanel(object formulario)
@@ -55,11 +67,12 @@ namespace ProyectoNetshop
                     break;
 
                 case 2: // Vendedor
-                    reporteARenderizar = new ReportesV();
+                    // Pasa dni y nombre al formulario de reportes de vendedor
+                    reporteARenderizar = new ReportesV(vendedorDni, vendedorNombre);
                     break;
 
                 case 3: // Gerente
-                    reporteARenderizar = new Reportes();
+                    reporteARenderizar = new Reportes(idPerfil);
                     break;
 
                 default:

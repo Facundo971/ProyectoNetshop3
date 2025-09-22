@@ -37,7 +37,10 @@
             TBContraseniaLogin = new TextBox();
             panel1 = new Panel();
             panel2 = new Panel();
+            btnOcultarContrasenia = new Button();
+            panel3 = new Panel();
             panel2.SuspendLayout();
+            panel3.SuspendLayout();
             SuspendLayout();
             // 
             // LUsuario
@@ -45,7 +48,7 @@
             LUsuario.AutoSize = true;
             LUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             LUsuario.ForeColor = SystemColors.ButtonFace;
-            LUsuario.Location = new Point(251, 152);
+            LUsuario.Location = new Point(251, 146);
             LUsuario.Name = "LUsuario";
             LUsuario.Size = new Size(69, 29);
             LUsuario.TabIndex = 0;
@@ -57,7 +60,7 @@
             LContraseña.AutoSize = true;
             LContraseña.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             LContraseña.ForeColor = SystemColors.ButtonFace;
-            LContraseña.Location = new Point(239, 231);
+            LContraseña.Location = new Point(239, 225);
             LContraseña.Name = "LContraseña";
             LContraseña.Size = new Size(94, 29);
             LContraseña.TabIndex = 1;
@@ -94,7 +97,7 @@
             // TBUsuarioLogin
             // 
             TBUsuarioLogin.Font = new Font("Segoe UI", 9F);
-            TBUsuarioLogin.Location = new Point(183, 185);
+            TBUsuarioLogin.Location = new Point(183, 179);
             TBUsuarioLogin.Margin = new Padding(3, 4, 3, 4);
             TBUsuarioLogin.Name = "TBUsuarioLogin";
             TBUsuarioLogin.PlaceholderText = "Ingrese su nombre...";
@@ -105,7 +108,7 @@
             // TBContraseniaLogin
             // 
             TBContraseniaLogin.Font = new Font("Segoe UI", 9F);
-            TBContraseniaLogin.Location = new Point(183, 264);
+            TBContraseniaLogin.Location = new Point(183, 258);
             TBContraseniaLogin.Margin = new Padding(3, 4, 3, 4);
             TBContraseniaLogin.Name = "TBContraseniaLogin";
             TBContraseniaLogin.PlaceholderText = "Ingrese su contraseña...";
@@ -114,18 +117,18 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.DarkGray;
+            panel1.BackColor = Color.Transparent;
             panel1.BackgroundImage = (Image)resources.GetObject("panel1.BackgroundImage");
             panel1.BackgroundImageLayout = ImageLayout.Stretch;
-            panel1.Location = new Point(183, 16);
+            panel1.Location = new Point(183, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(200, 117);
+            panel1.Size = new Size(201, 120);
             panel1.TabIndex = 6;
             // 
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(0, 0, 64);
-            panel2.Controls.Add(panel1);
+            panel2.Controls.Add(btnOcultarContrasenia);
             panel2.Controls.Add(TBContraseniaLogin);
             panel2.Controls.Add(TBUsuarioLogin);
             panel2.Controls.Add(LUsuario);
@@ -137,12 +140,35 @@
             panel2.Size = new Size(538, 397);
             panel2.TabIndex = 7;
             // 
+            // btnOcultarContrasenia
+            // 
+            btnOcultarContrasenia.Cursor = Cursors.Hand;
+            btnOcultarContrasenia.Font = new Font("Dubai", 8F, FontStyle.Bold | FontStyle.Italic);
+            btnOcultarContrasenia.ForeColor = SystemColors.ActiveCaptionText;
+            btnOcultarContrasenia.Location = new Point(390, 258);
+            btnOcultarContrasenia.Name = "btnOcultarContrasenia";
+            btnOcultarContrasenia.Size = new Size(69, 27);
+            btnOcultarContrasenia.TabIndex = 7;
+            btnOcultarContrasenia.Text = "Mostrar";
+            btnOcultarContrasenia.UseVisualStyleBackColor = true;
+            btnOcultarContrasenia.Click += btnOcultarContrasenia_Click;
+            // 
+            // panel3
+            // 
+            panel3.BackColor = Color.SlateGray;
+            panel3.Controls.Add(panel1);
+            panel3.Location = new Point(22, 21);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(538, 120);
+            panel3.TabIndex = 8;
+            // 
             // FInicioSesion
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 64);
             ClientSize = new Size(582, 441);
+            Controls.Add(panel3);
             Controls.Add(panel2);
             Margin = new Padding(3, 4, 3, 4);
             Name = "FInicioSesion";
@@ -151,6 +177,7 @@
             Load += FInicioSesion_Load;
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            panel3.ResumeLayout(false);
             ResumeLayout(false);
 
         }
@@ -165,6 +192,8 @@
         private System.Windows.Forms.TextBox TBContraseniaLogin;
         private Panel panel1;
         private Panel panel2;
+        private Button btnOcultarContrasenia;
+        private Panel panel3;
     }
 }
 

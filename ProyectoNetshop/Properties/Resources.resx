@@ -121,4 +121,10 @@
   <data name="Logo de la Empresa" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\Logo de la Empresa.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="MostrarPass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mostrarPass.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="OcultarPass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ocultarPass.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

@@ -31,12 +31,6 @@
             LReporteDeUsuarios = new Label();
             BGenerarReporte = new Button();
             dataGridView1 = new DataGridView();
-            IdUsuario = new DataGridViewTextBoxColumn();
-            nombreUsuario = new DataGridViewTextBoxColumn();
-            apellidoUsuario = new DataGridViewTextBoxColumn();
-            emailUsuario = new DataGridViewTextBoxColumn();
-            perfilUsuario = new DataGridViewTextBoxColumn();
-            activoUsuario = new DataGridViewTextBoxColumn();
             panel1 = new Panel();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             panel1.SuspendLayout();
@@ -71,55 +65,12 @@
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.BackgroundColor = Color.SlateGray;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { IdUsuario, nombreUsuario, apellidoUsuario, emailUsuario, perfilUsuario, activoUsuario });
             dataGridView1.Location = new Point(177, 231);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.Size = new Size(803, 402);
             dataGridView1.TabIndex = 2;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
-            // 
-            // IdUsuario
-            // 
-            IdUsuario.HeaderText = "IdUsuario";
-            IdUsuario.MinimumWidth = 6;
-            IdUsuario.Name = "IdUsuario";
-            IdUsuario.Width = 125;
-            // 
-            // nombreUsuario
-            // 
-            nombreUsuario.HeaderText = "Nombre";
-            nombreUsuario.MinimumWidth = 6;
-            nombreUsuario.Name = "nombreUsuario";
-            nombreUsuario.Width = 125;
-            // 
-            // apellidoUsuario
-            // 
-            apellidoUsuario.HeaderText = "Apellido";
-            apellidoUsuario.MinimumWidth = 6;
-            apellidoUsuario.Name = "apellidoUsuario";
-            apellidoUsuario.Width = 125;
-            // 
-            // emailUsuario
-            // 
-            emailUsuario.HeaderText = "Email";
-            emailUsuario.MinimumWidth = 6;
-            emailUsuario.Name = "emailUsuario";
-            emailUsuario.Width = 125;
-            // 
-            // perfilUsuario
-            // 
-            perfilUsuario.HeaderText = "Perfil";
-            perfilUsuario.MinimumWidth = 6;
-            perfilUsuario.Name = "perfilUsuario";
-            perfilUsuario.Width = 125;
-            // 
-            // activoUsuario
-            // 
-            activoUsuario.HeaderText = "Activo";
-            activoUsuario.MinimumWidth = 6;
-            activoUsuario.Name = "activoUsuario";
-            activoUsuario.Width = 125;
             // 
             // panel1
             // 
@@ -157,12 +108,6 @@
         private System.Windows.Forms.Label LReporteDeUsuarios;
         private System.Windows.Forms.Button BGenerarReporte;
         private DataGridView dataGridView1;
-        private DataGridViewTextBoxColumn IdUsuario;
-        private DataGridViewTextBoxColumn nombreUsuario;
-        private DataGridViewTextBoxColumn apellidoUsuario;
-        private DataGridViewTextBoxColumn emailUsuario;
-        private DataGridViewTextBoxColumn perfilUsuario;
-        private DataGridViewTextBoxColumn activoUsuario;
         private Panel panel1;
     }
 }

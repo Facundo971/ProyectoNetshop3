@@ -31,6 +31,14 @@ namespace ProyectoNetshop.formularios
             tbBusquedaNombreUsuario.TextChanged += Busqueda_TextChanged;
 
             dgvUsuarios.CellFormatting += DgvUsuarios_CellFormatting;
+
+            // Configuro largo máximo
+            tbDniUsuario.MaxLength = 8;   // sólo 8 dígitos
+            tbTelefonoUsuario.MaxLength = 10;  // sólo 10 dígitos
+
+            // Asigno el mismo manejador a ambos TextBox
+            tbDniUsuario.KeyPress += TextBox_OnlyDigits_KeyPress;
+            tbTelefonoUsuario.KeyPress += TextBox_OnlyDigits_KeyPress;
         }
 
         private void usuarios_Load(object sender, EventArgs e)
@@ -548,31 +556,57 @@ namespace ProyectoNetshop.formularios
                 return false;
             }
 
-            // Email
+            // 1. Email: obligatorio y debe terminar en .com
             string email = tbEmailUsuario.Text.Trim();
             if (string.IsNullOrWhiteSpace(email))
             {
-                MessageBox.Show("El email es obligatorio.", "Validación",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "El email es obligatorio.",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 tbEmailUsuario.Focus();
                 return false;
             }
-            // Regex simple de email
-            var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            // Regex: cualquier texto sin espacios ni @, luego @, luego texto, y final .com
+            var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.com$", RegexOptions.IgnoreCase);
             if (!emailRegex.IsMatch(email))
             {
-                MessageBox.Show("El email no tiene un formato válido.", "Validación",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "El email debe tener formato válido y terminar en .com.",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 tbEmailUsuario.Focus();
                 return false;
             }
 
-            // Contraseña
-            if (string.IsNullOrEmpty(tbContraseniaUsuario.Text)
-             || tbContraseniaUsuario.Text.Length < 6)
+            // 2. Contraseña: 8–20 caracteres, al menos una mayúscula, un número y solo letras/dígitos
+            string password = tbContraseniaUsuario.Text;
+            if (string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("La contraseña debe tener al menos 6 caracteres.", "Validación",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "La contraseña es obligatoria.",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                tbContraseniaUsuario.Focus();
+                return false;
+            }
+            // Regex con positive lookahead:
+            // (?=.{8,20}$) → longitud entre 8 y 20
+            // (?=.*[A-Z]) → al menos una mayúscula
+            // (?=.*\d)    → al menos un dígito
+            // [A-Za-z\d]+ → sólo letras y dígitos
+            var passRegex = new Regex(@"^(?=.{8,20}$)(?=.*[A-Z])(?=.*\d)[A-Za-z\d]+$");
+            if (!passRegex.IsMatch(password))
+            {
+                MessageBox.Show(
+                    "La contraseña debe tener entre 8 y 20 caracteres, " +
+                    "al menos una letra mayúscula, un numero y ningún símbolo.",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 tbContraseniaUsuario.Focus();
                 return false;
             }
@@ -636,7 +670,34 @@ namespace ProyectoNetshop.formularios
             }
 
             // Todos los checks pasaron
+
+            // Extraer valores para la comprobación
+            int dniR = int.Parse(tbDniUsuario.Text);
+            string emailR = tbEmailUsuario.Text.Trim();
+            int idActR = _usuarioSeleccionadoId < 0 ? 0 : _usuarioSeleccionadoId;
+
+            //  Última validación: DNI o email duplicados
+            if (Usuario_controller.ExisteEmailODni(dniR, emailR, idActR))
+            {
+                MessageBox.Show("El DNI o el email ya están registrados en otro usuario.", "Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // Focalizar según prefieras
+                tbDniUsuario.Focus();
+                return false;
+            }
+
             return true;
+        }
+
+        // Este método bloquea todo lo que no sea dígito o tecla de control
+        private void TextBox_OnlyDigits_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            bool esControl = char.IsControl(e.KeyChar);
+            bool esDigito = char.IsDigit(e.KeyChar);
+
+            if (!esControl && !esDigito)
+            {
+                e.Handled = true;  // cancela la tecla
+            }
         }
     }
 }

@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             panel2 = new Panel();
-            textBox2 = new TextBox();
+            tbNombreVendedorReporte = new TextBox();
             label2 = new Label();
-            textBox1 = new TextBox();
+            tbDniVendedorReporte = new TextBox();
             panel1 = new Panel();
+            BGenerarReporteVendedor = new Button();
             label1 = new Label();
             label7 = new Label();
             fechaHasta = new DateTimePicker();
             fechaDesde = new DateTimePicker();
-            BGenerarReporteVendedor = new Button();
             panel2.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -45,9 +45,9 @@
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(0, 0, 64);
-            panel2.Controls.Add(textBox2);
+            panel2.Controls.Add(tbNombreVendedorReporte);
             panel2.Controls.Add(label2);
-            panel2.Controls.Add(textBox1);
+            panel2.Controls.Add(tbDniVendedorReporte);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(288, 0);
             panel2.Margin = new Padding(3, 4, 3, 4);
@@ -55,15 +55,15 @@
             panel2.Size = new Size(889, 133);
             panel2.TabIndex = 4;
             // 
-            // textBox2
+            // tbNombreVendedorReporte
             // 
-            textBox2.Location = new Point(304, 51);
-            textBox2.Margin = new Padding(3, 4, 3, 4);
-            textBox2.Name = "textBox2";
-            textBox2.ReadOnly = true;
-            textBox2.Size = new Size(252, 27);
-            textBox2.TabIndex = 22;
-            textBox2.Text = "Nombre completo del vendedor";
+            tbNombreVendedorReporte.Location = new Point(304, 51);
+            tbNombreVendedorReporte.Margin = new Padding(3, 4, 3, 4);
+            tbNombreVendedorReporte.Name = "tbNombreVendedorReporte";
+            tbNombreVendedorReporte.ReadOnly = true;
+            tbNombreVendedorReporte.Size = new Size(252, 27);
+            tbNombreVendedorReporte.TabIndex = 22;
+            tbNombreVendedorReporte.Text = "Nombre completo del vendedor";
             // 
             // label2
             // 
@@ -77,15 +77,15 @@
             label2.TabIndex = 21;
             label2.Text = "Vendedor";
             // 
-            // textBox1
+            // tbDniVendedorReporte
             // 
-            textBox1.Location = new Point(146, 51);
-            textBox1.Margin = new Padding(3, 4, 3, 4);
-            textBox1.Name = "textBox1";
-            textBox1.ReadOnly = true;
-            textBox1.Size = new Size(126, 27);
-            textBox1.TabIndex = 2;
-            textBox1.Text = "DNI del Vendodor";
+            tbDniVendedorReporte.Location = new Point(146, 51);
+            tbDniVendedorReporte.Margin = new Padding(3, 4, 3, 4);
+            tbDniVendedorReporte.Name = "tbDniVendedorReporte";
+            tbDniVendedorReporte.ReadOnly = true;
+            tbDniVendedorReporte.Size = new Size(126, 27);
+            tbDniVendedorReporte.TabIndex = 2;
+            tbDniVendedorReporte.Text = "DNI del Vendodor";
             // 
             // panel1
             // 
@@ -101,6 +101,18 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(288, 699);
             panel1.TabIndex = 3;
+            // 
+            // BGenerarReporteVendedor
+            // 
+            BGenerarReporteVendedor.Cursor = Cursors.Hand;
+            BGenerarReporteVendedor.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            BGenerarReporteVendedor.Location = new Point(3, 541);
+            BGenerarReporteVendedor.Margin = new Padding(3, 4, 3, 4);
+            BGenerarReporteVendedor.Name = "BGenerarReporteVendedor";
+            BGenerarReporteVendedor.Size = new Size(285, 50);
+            BGenerarReporteVendedor.TabIndex = 21;
+            BGenerarReporteVendedor.Text = "Generar Reporte";
+            BGenerarReporteVendedor.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -142,18 +154,6 @@
             fechaDesde.Size = new Size(209, 27);
             fechaDesde.TabIndex = 17;
             // 
-            // BGenerarReporteVendedor
-            // 
-            BGenerarReporteVendedor.Cursor = Cursors.Hand;
-            BGenerarReporteVendedor.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
-            BGenerarReporteVendedor.Location = new Point(3, 541);
-            BGenerarReporteVendedor.Margin = new Padding(3, 4, 3, 4);
-            BGenerarReporteVendedor.Name = "BGenerarReporteVendedor";
-            BGenerarReporteVendedor.Size = new Size(285, 50);
-            BGenerarReporteVendedor.TabIndex = 21;
-            BGenerarReporteVendedor.Text = "Generar Reporte";
-            BGenerarReporteVendedor.UseVisualStyleBackColor = true;
-            // 
             // ReportesV
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -165,6 +165,7 @@
             FormBorderStyle = FormBorderStyle.None;
             Name = "ReportesV";
             Text = "Reporte del Vendedor";
+            Load += ReportesV_Load;
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             panel1.ResumeLayout(false);
@@ -175,9 +176,9 @@
         #endregion
 
         private Panel panel2;
-        private TextBox textBox2;
+        private TextBox tbNombreVendedorReporte;
         private Label label2;
-        private TextBox textBox1;
+        private TextBox tbDniVendedorReporte;
         private Panel panel1;
         private Label label1;
         private Label label7;

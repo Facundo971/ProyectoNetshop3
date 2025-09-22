@@ -1,4 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using FontAwesome.Sharp;
+using Microsoft.Data.SqlClient;
+using ProyectoNetshop.BD;
+using ProyectoNetshop.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ProyectoNetshop.BD;
 
 
 namespace vistaDeProyectoC
@@ -16,6 +18,9 @@ namespace vistaDeProyectoC
     public partial class FInicioSesion : Form
     {
         public int IdPerfil { get; private set; }
+        public int VendedorDni { get; private set; }
+        public string VendedorNombre { get; private set; }
+
 
         public FInicioSesion()
         {
@@ -24,7 +29,8 @@ namespace vistaDeProyectoC
 
         private void FInicioSesion_Load(object sender, EventArgs e)
         {
-
+            // En el Load del formulario
+            TBContraseniaLogin.UseSystemPasswordChar = true;
         }
 
         private void LUsuario_Click(object sender, EventArgs e)
@@ -58,7 +64,7 @@ namespace vistaDeProyectoC
                     conexion.Open();
 
                 // 2) Preparar comando: filtramos por 'nombre'
-                using var cmd = new SqlCommand(@"SELECT pass, activo, id_perfil FROM usuario WHERE nombre = @usuario", conexion);
+                using var cmd = new SqlCommand(@"SELECT pass, activo, id_perfil, dni, nombre, apellido FROM usuario WHERE nombre = @usuario", conexion);
 
                 // VARCHAR(100) coincide con tu definición de columna nombre
                 cmd.Parameters.Add("@usuario", SqlDbType.VarChar, 100).Value = TBUsuarioLogin.Text.Trim();
@@ -86,13 +92,20 @@ namespace vistaDeProyectoC
                 byte[] hashIngresado = Encoding.UTF8.GetBytes(TBContraseniaLogin.Text);
                 if (!hashBD.SequenceEqual(hashIngresado))
                 {
-                    MessageBox.Show("Contraseña incorrecta.","Login fallido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Contraseña incorrecta.", "Login fallido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     TBContraseniaLogin.Clear();
                     TBContraseniaLogin.Focus();
                     return;
                 }
                 // Ejemplo: tras reader.Read()
                 // reader ya apuntó al registro del usuario
+                // lee también estos campos del reader:
+                int dni = reader.GetInt32(reader.GetOrdinal("dni"));
+                string nombre = reader.GetString(reader.GetOrdinal("nombre"));
+                string apellido = reader.GetString(reader.GetOrdinal("apellido"));
+
+                this.VendedorDni = dni;
+                this.VendedorNombre = $"{nombre} {apellido}";
 
                 // 6) Login exitoso: guardamos el idPerfil y cerramos
                 this.IdPerfil = idPerfil;
@@ -116,6 +129,15 @@ namespace vistaDeProyectoC
             var resp = MessageBox.Show("¿Seguro que deseas salir?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (resp == DialogResult.Yes) this.DialogResult = DialogResult.Cancel;
+        }
+
+        private void btnOcultarContrasenia_Click(object sender, EventArgs e)
+        {
+            // Alterna entre oculto y visible
+            TBContraseniaLogin.UseSystemPasswordChar = !TBContraseniaLogin.UseSystemPasswordChar;
+
+            // Actualiza el texto del botón
+            btnOcultarContrasenia.Text = TBContraseniaLogin.UseSystemPasswordChar ? "Mostrar" : "Ocultar";
         }
     }
 }

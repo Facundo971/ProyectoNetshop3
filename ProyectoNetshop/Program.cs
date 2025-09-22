@@ -46,10 +46,18 @@ internal static class Program
         ApplicationConfiguration.Initialize();
 
         using var login = new FInicioSesion();
-        if (login.ShowDialog() != DialogResult.OK)
-            return;
+        //if (login.ShowDialog() != DialogResult.OK)
+        //    return;
 
-        Application.Run(new principal(login.IdPerfil));
+        //Application.Run(new principal(login.IdPerfil));
+
+        if (login.ShowDialog() == DialogResult.OK)
+        {
+            Application.Run(new principal(
+                login.IdPerfil,
+                login.VendedorDni,
+                login.VendedorNombre));
+        }
 
         //Application.Run(new principal());
     }

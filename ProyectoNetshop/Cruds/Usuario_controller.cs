@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using ProyectoNetshop.BD;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -71,6 +72,45 @@ namespace ProyectoNetshop.Cruds
             cmd.CommandText = @"UPDATE usuario SET activo = 0 WHERE id_usuario = @idUsuario;";
             cmd.Parameters.Add("@idUsuario", SqlDbType.Int).Value = idUsuario;
             return cmd.ExecuteNonQuery();
+        }
+
+        public static List<Usuario_model> ObtenerVendedores()
+        {
+            var lista = new List<Usuario_model>();
+
+            using var conexion = BaseDeDatos.obtenerConexion();
+            using var cmd = new SqlCommand(
+                @"SELECT dni, nombre, apellido 
+                FROM usuario 
+               WHERE id_perfil = 2 
+                 AND activo    = 1;",
+                conexion);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                lista.Add(new Usuario_model
+                {
+                    dni = reader.GetInt32(reader.GetOrdinal("dni")),
+                    nombre = reader.GetString(reader.GetOrdinal("nombre")),
+                    apellido = reader.GetString(reader.GetOrdinal("apellido"))
+                });
+            }
+
+            return lista;
+        }
+
+        public static bool ExisteEmailODni(int dni, string email, int idUsuario = 0)
+        {
+            using var conexion = BD.BaseDeDatos.obtenerConexion();
+            using var cmd = conexion.CreateCommand();
+            cmd.CommandText = @"SELECT COUNT(*) FROM usuario WHERE (dni = @dni OR email = @email) AND (@idUsuario = 0 OR id_usuario <> @idUsuario);";
+            cmd.Parameters.Add("@dni", SqlDbType.Int).Value = dni;
+            cmd.Parameters.Add("@email", SqlDbType.VarChar, 200).Value = email;
+            cmd.Parameters.Add("@idUsuario", SqlDbType.Int).Value = idUsuario;
+
+            int count = Convert.ToInt32(cmd.ExecuteScalar());
+            return count > 0;
         }
     }
 }
