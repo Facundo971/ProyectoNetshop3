@@ -37,7 +37,7 @@
             TBContraseniaLogin = new TextBox();
             panel1 = new Panel();
             panel2 = new Panel();
-            btnOcultarContrasenia = new Button();
+            cbOcultarContraseniaLoginUser = new CheckBox();
             panel3 = new Panel();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -128,7 +128,7 @@
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(0, 0, 64);
-            panel2.Controls.Add(btnOcultarContrasenia);
+            panel2.Controls.Add(cbOcultarContraseniaLoginUser);
             panel2.Controls.Add(TBContraseniaLogin);
             panel2.Controls.Add(TBUsuarioLogin);
             panel2.Controls.Add(LUsuario);
@@ -140,18 +140,15 @@
             panel2.Size = new Size(538, 397);
             panel2.TabIndex = 7;
             // 
-            // btnOcultarContrasenia
+            // cbOcultarContraseniaLoginUser
             // 
-            btnOcultarContrasenia.Cursor = Cursors.Hand;
-            btnOcultarContrasenia.Font = new Font("Dubai", 8F, FontStyle.Bold | FontStyle.Italic);
-            btnOcultarContrasenia.ForeColor = SystemColors.ActiveCaptionText;
-            btnOcultarContrasenia.Location = new Point(390, 258);
-            btnOcultarContrasenia.Name = "btnOcultarContrasenia";
-            btnOcultarContrasenia.Size = new Size(69, 27);
-            btnOcultarContrasenia.TabIndex = 7;
-            btnOcultarContrasenia.Text = "Mostrar";
-            btnOcultarContrasenia.UseVisualStyleBackColor = true;
-            btnOcultarContrasenia.Click += btnOcultarContrasenia_Click;
+            cbOcultarContraseniaLoginUser.AutoSize = true;
+            cbOcultarContraseniaLoginUser.Location = new Point(390, 264);
+            cbOcultarContraseniaLoginUser.Name = "cbOcultarContraseniaLoginUser";
+            cbOcultarContraseniaLoginUser.Size = new Size(18, 17);
+            cbOcultarContraseniaLoginUser.TabIndex = 8;
+            cbOcultarContraseniaLoginUser.UseVisualStyleBackColor = true;
+            cbOcultarContraseniaLoginUser.CheckedChanged += cbOcultarContraseniaLoginUser_CheckedChanged;
             // 
             // panel3
             // 
@@ -192,8 +189,8 @@
         private System.Windows.Forms.TextBox TBContraseniaLogin;
         private Panel panel1;
         private Panel panel2;
-        private Button btnOcultarContrasenia;
         private Panel panel3;
+        private CheckBox cbOcultarContraseniaLoginUser;
     }
 }
 

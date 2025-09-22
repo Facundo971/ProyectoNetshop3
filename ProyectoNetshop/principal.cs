@@ -89,7 +89,8 @@ namespace ProyectoNetshop
 
         private void btnVentas_Click_1(object sender, EventArgs e)
         {
-            AbrirFormularioEnPanel(new formularios.ventas());
+            // Pasamos los datos del vendedor logueado
+            AbrirFormularioEnPanel(new formularios.ventas(vendedorDni, vendedorNombre));
         }
 
         private void btnBackup_Click(object sender, EventArgs e)

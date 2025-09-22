@@ -19,21 +19,31 @@ namespace ProyectoNetshop.formularios
             InitializeComponent();
             idPerfil = p_idPerfil;
             this.Load += Reportes_Load;
+
+            // Desuscribimos por si hubiera duplicados en el Designer
+            BGenerarRecaudacionGerente.Click -= OnGenerarGerente_Click;
+            BGenerarReporteGerente.Click -= OnGenerarGerente_Click;
+            BGenerarTotalVentasGerente.Click -= OnGenerarGerente_Click;
+
+            // Suscribimos los tres botones al mismo handler
+            BGenerarRecaudacionGerente.Click += OnGenerarGerente_Click;
+            BGenerarReporteGerente.Click += OnGenerarGerente_Click;
+            BGenerarTotalVentasGerente.Click += OnGenerarGerente_Click;
         }
 
         private void Reportes_Load(object sender, EventArgs e)
         {
-            fechaDesde.Format = DateTimePickerFormat.Custom;
-            fechaDesde.CustomFormat = "dd/MM/yyyy";
+            fechaDesdeGerente.Format = DateTimePickerFormat.Custom;
+            fechaDesdeGerente.CustomFormat = "dd/MM/yyyy";
 
-            fechaHasta.Format = DateTimePickerFormat.Custom;
-            fechaHasta.CustomFormat = "dd/MM/yyyy";
+            fechaHastaGerente.Format = DateTimePickerFormat.Custom;
+            fechaHastaGerente.CustomFormat = "dd/MM/yyyy";
 
             if (idPerfil == 3)
                 CargarComboVendedores();
             //else
-                // ocultas o deshabilitas los combos si no es gerente
-                //panelVendedores.Visible = false;
+            // ocultas o deshabilitas los combos si no es gerente
+            //panelVendedores.Visible = false;
         }
 
         private void CargarComboVendedores()
@@ -69,5 +79,56 @@ namespace ProyectoNetshop.formularios
             cbVendedoresNombreReporte.Text = "Selecciona nombre completo...";
         }
 
+        private void BGenerarReporteGerente_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void OnGenerarGerente_Click(object sender, EventArgs e)
+        {
+            // 1) Validar rango de fechas
+            if (!ValidarRangoFechas())
+                return;
+
+            // 2) Saber qué botón disparó el evento
+            var boton = sender as Button;
+            string accion = boton == BGenerarRecaudacionGerente
+                ? "recaudación"
+                : boton == BGenerarReporteGerente
+                    ? "reporte"
+                    : "total de ventas";
+
+            // 3) Mostrar mensaje de éxito
+            MessageBox.Show(
+                $"Rango de fechas válido. Generando {accion} para Gerente…",
+                "Éxito",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+
+            // Aquí iría la lógica real de generación según el botón
+        }
+
+        private bool ValidarRangoFechas()
+        {
+            DateTime desde = fechaDesdeGerente.Value.Date;
+            DateTime hasta = fechaHastaGerente.Value.Date;
+
+            if (hasta < desde)
+            {
+                MessageBox.Show(
+                    "La fecha “Hasta” debe ser igual o posterior a la fecha “Desde”.",
+                    "Validación de fechas",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                fechaDesdeGerente.Focus();
+                return false;
+            }
+
+            // Opcional: prohibir rangos demasiado largos, fechas futuras, etc.
+            // if ((hasta - desde).TotalDays > 365) { … }
+
+            return true;
+        }
     }
 }

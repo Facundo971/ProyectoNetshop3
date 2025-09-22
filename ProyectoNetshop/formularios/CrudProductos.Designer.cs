@@ -28,21 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CrudProductos));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             panel1 = new Panel();
+            lbPrecioVenta = new Label();
+            tbPrecioVenta = new TextBox();
+            cbMarca = new ComboBox();
             lbMarca = new Label();
-            tbMarca = new TextBox();
-            lbIDProducto = new Label();
-            tbiDProducto = new TextBox();
             lbCategoria = new Label();
             cbCategoria = new ComboBox();
             btnCargarImg = new FontAwesome.Sharp.IconButton();
             pbProducto = new PictureBox();
             lbEliminar = new Label();
             lbGuardar = new Label();
-            btnEliminar = new FontAwesome.Sharp.IconButton();
+            btnBorrar = new FontAwesome.Sharp.IconButton();
             lbStock = new Label();
             tbStock = new TextBox();
             lbDescripcion = new Label();
@@ -57,12 +58,13 @@
             cbActivos = new CheckBox();
             dgvProductos = new DataGridView();
             colIdProducto = new DataGridViewTextBoxColumn();
-            colMarca = new DataGridViewTextBoxColumn();
             colNombre = new DataGridViewTextBoxColumn();
             colDescripcion = new DataGridViewTextBoxColumn();
             colPrecio = new DataGridViewTextBoxColumn();
             colStock = new DataGridViewTextBoxColumn();
+            colPrecioVenta = new DataGridViewTextBoxColumn();
             colCategoria = new DataGridViewTextBoxColumn();
+            colMarca = new DataGridViewTextBoxColumn();
             colImagen = new DataGridViewImageColumn();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbProducto).BeginInit();
@@ -73,17 +75,17 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(0, 0, 64);
+            panel1.Controls.Add(lbPrecioVenta);
+            panel1.Controls.Add(tbPrecioVenta);
+            panel1.Controls.Add(cbMarca);
             panel1.Controls.Add(lbMarca);
-            panel1.Controls.Add(tbMarca);
-            panel1.Controls.Add(lbIDProducto);
-            panel1.Controls.Add(tbiDProducto);
             panel1.Controls.Add(lbCategoria);
             panel1.Controls.Add(cbCategoria);
             panel1.Controls.Add(btnCargarImg);
             panel1.Controls.Add(pbProducto);
             panel1.Controls.Add(lbEliminar);
             panel1.Controls.Add(lbGuardar);
-            panel1.Controls.Add(btnEliminar);
+            panel1.Controls.Add(btnBorrar);
             panel1.Controls.Add(lbStock);
             panel1.Controls.Add(tbStock);
             panel1.Controls.Add(lbDescripcion);
@@ -95,10 +97,45 @@
             panel1.Controls.Add(tbNombre);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
             panel1.RightToLeft = RightToLeft.No;
-            panel1.Size = new Size(1014, 219);
+            panel1.Size = new Size(1159, 292);
             panel1.TabIndex = 20;
+            // 
+            // lbPrecioVenta
+            // 
+            lbPrecioVenta.AutoSize = true;
+            lbPrecioVenta.BackColor = Color.Transparent;
+            lbPrecioVenta.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            lbPrecioVenta.ForeColor = SystemColors.ButtonFace;
+            lbPrecioVenta.Location = new Point(66, 140);
+            lbPrecioVenta.Name = "lbPrecioVenta";
+            lbPrecioVenta.Size = new Size(147, 29);
+            lbPrecioVenta.TabIndex = 35;
+            lbPrecioVenta.Text = "Precio de venta (*)";
+            // 
+            // tbPrecioVenta
+            // 
+            tbPrecioVenta.Location = new Point(24, 173);
+            tbPrecioVenta.Margin = new Padding(3, 4, 3, 4);
+            tbPrecioVenta.Name = "tbPrecioVenta";
+            tbPrecioVenta.Size = new Size(209, 27);
+            tbPrecioVenta.TabIndex = 34;
+            tbPrecioVenta.TextChanged += tbPrecioVenta_TextChanged;
+            tbPrecioVenta.KeyPress += tbPrecioVenta_KeyPress;
+            // 
+            // cbMarca
+            // 
+            cbMarca.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbMarca.FormattingEnabled = true;
+            cbMarca.Items.AddRange(new object[] { "HP", "Apple", "Lenovo", "Asus", "Acer", "MSI", "Huawei" });
+            cbMarca.Location = new Point(24, 242);
+            cbMarca.Margin = new Padding(3, 4, 3, 4);
+            cbMarca.Name = "cbMarca";
+            cbMarca.Size = new Size(209, 28);
+            cbMarca.TabIndex = 33;
+            cbMarca.SelectedIndexChanged += cbMarca_SelectedIndexChanged;
             // 
             // lbMarca
             // 
@@ -106,41 +143,11 @@
             lbMarca.BackColor = Color.Transparent;
             lbMarca.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbMarca.ForeColor = SystemColors.ButtonFace;
-            lbMarca.Location = new Point(92, 157);
+            lbMarca.Location = new Point(86, 209);
             lbMarca.Name = "lbMarca";
-            lbMarca.Size = new Size(44, 22);
+            lbMarca.Size = new Size(82, 29);
             lbMarca.TabIndex = 32;
-            lbMarca.Text = "Marca";
-            // 
-            // tbMarca
-            // 
-            tbMarca.Location = new Point(23, 182);
-            tbMarca.Name = "tbMarca";
-            tbMarca.Size = new Size(183, 23);
-            tbMarca.TabIndex = 31;
-            tbMarca.TextChanged += tbMarca_TextChanged;
-            tbMarca.KeyPress += tbMarca_KeyPress;
-            // 
-            // lbIDProducto
-            // 
-            lbIDProducto.AutoSize = true;
-            lbIDProducto.BackColor = Color.Transparent;
-            lbIDProducto.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            lbIDProducto.ForeColor = SystemColors.ButtonFace;
-            lbIDProducto.Location = new Point(388, 5);
-            lbIDProducto.Name = "lbIDProducto";
-            lbIDProducto.Size = new Size(77, 22);
-            lbIDProducto.TabIndex = 30;
-            lbIDProducto.Text = "ID Producto";
-            // 
-            // tbiDProducto
-            // 
-            tbiDProducto.Location = new Point(340, 30);
-            tbiDProducto.Name = "tbiDProducto";
-            tbiDProducto.Size = new Size(183, 23);
-            tbiDProducto.TabIndex = 29;
-            tbiDProducto.TextChanged += tbiDProducto_TextChanged;
-            tbiDProducto.KeyPress += tbiDProducto_KeyPress;
+            lbMarca.Text = "Marca (*)";
             // 
             // lbCategoria
             // 
@@ -148,20 +155,21 @@
             lbCategoria.BackColor = Color.Transparent;
             lbCategoria.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbCategoria.ForeColor = SystemColors.ButtonFace;
-            lbCategoria.Location = new Point(402, 105);
+            lbCategoria.Location = new Point(442, 140);
             lbCategoria.Name = "lbCategoria";
-            lbCategoria.Size = new Size(63, 22);
+            lbCategoria.Size = new Size(106, 29);
             lbCategoria.TabIndex = 26;
-            lbCategoria.Text = "Categoria";
+            lbCategoria.Text = "Categoria (*)";
             // 
             // cbCategoria
             // 
             cbCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
             cbCategoria.FormattingEnabled = true;
             cbCategoria.Items.AddRange(new object[] { "Hogar", "Trabajo", "Educación", "Gaming", "Diseño y edición multimedia" });
-            cbCategoria.Location = new Point(340, 130);
+            cbCategoria.Location = new Point(389, 173);
+            cbCategoria.Margin = new Padding(3, 4, 3, 4);
             cbCategoria.Name = "cbCategoria";
-            cbCategoria.Size = new Size(180, 23);
+            cbCategoria.Size = new Size(205, 28);
             cbCategoria.TabIndex = 25;
             cbCategoria.SelectedIndexChanged += cbCategoria_SelectedIndexChanged;
             // 
@@ -173,9 +181,10 @@
             btnCargarImg.IconColor = Color.Black;
             btnCargarImg.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnCargarImg.IconSize = 40;
-            btnCargarImg.Location = new Point(650, 159);
+            btnCargarImg.Location = new Point(743, 212);
+            btnCargarImg.Margin = new Padding(3, 4, 3, 4);
             btnCargarImg.Name = "btnCargarImg";
-            btnCargarImg.Size = new Size(137, 46);
+            btnCargarImg.Size = new Size(157, 61);
             btnCargarImg.TabIndex = 28;
             btnCargarImg.Text = "Cargar imagen";
             btnCargarImg.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -185,9 +194,13 @@
             // pbProducto
             // 
             pbProducto.BackColor = Color.SlateGray;
-            pbProducto.Location = new Point(605, 12);
+            pbProducto.ErrorImage = null;
+            pbProducto.Image = (Image)resources.GetObject("pbProducto.Image");
+            pbProducto.InitialImage = null;
+            pbProducto.Location = new Point(691, 16);
+            pbProducto.Margin = new Padding(3, 4, 3, 4);
             pbProducto.Name = "pbProducto";
-            pbProducto.Size = new Size(224, 141);
+            pbProducto.Size = new Size(256, 188);
             pbProducto.SizeMode = PictureBoxSizeMode.StretchImage;
             pbProducto.TabIndex = 27;
             pbProducto.TabStop = false;
@@ -198,11 +211,11 @@
             lbEliminar.BackColor = Color.Transparent;
             lbEliminar.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbEliminar.ForeColor = SystemColors.ButtonFace;
-            lbEliminar.Location = new Point(909, 117);
+            lbEliminar.Location = new Point(1050, 156);
             lbEliminar.Name = "lbEliminar";
-            lbEliminar.Size = new Size(54, 22);
+            lbEliminar.Size = new Size(61, 29);
             lbEliminar.TabIndex = 26;
-            lbEliminar.Text = "Eliminar";
+            lbEliminar.Text = "Borrar";
             // 
             // lbGuardar
             // 
@@ -210,25 +223,26 @@
             lbGuardar.BackColor = Color.Transparent;
             lbGuardar.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbGuardar.ForeColor = SystemColors.ButtonFace;
-            lbGuardar.Location = new Point(911, 17);
+            lbGuardar.Location = new Point(1045, 23);
             lbGuardar.Name = "lbGuardar";
-            lbGuardar.Size = new Size(54, 22);
+            lbGuardar.Size = new Size(72, 29);
             lbGuardar.TabIndex = 25;
             lbGuardar.Text = "Guardar";
             // 
-            // btnEliminar
+            // btnBorrar
             // 
-            btnEliminar.Cursor = Cursors.Hand;
-            btnEliminar.IconChar = FontAwesome.Sharp.IconChar.Trash;
-            btnEliminar.IconColor = Color.Black;
-            btnEliminar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnEliminar.IconSize = 40;
-            btnEliminar.Location = new Point(904, 142);
-            btnEliminar.Name = "btnEliminar";
-            btnEliminar.Size = new Size(75, 60);
-            btnEliminar.TabIndex = 18;
-            btnEliminar.UseVisualStyleBackColor = true;
-            btnEliminar.Click += btnEliminar_Click;
+            btnBorrar.Cursor = Cursors.Hand;
+            btnBorrar.IconChar = FontAwesome.Sharp.IconChar.Trash;
+            btnBorrar.IconColor = Color.Black;
+            btnBorrar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnBorrar.IconSize = 40;
+            btnBorrar.Location = new Point(1033, 189);
+            btnBorrar.Margin = new Padding(3, 4, 3, 4);
+            btnBorrar.Name = "btnBorrar";
+            btnBorrar.Size = new Size(86, 80);
+            btnBorrar.TabIndex = 18;
+            btnBorrar.UseVisualStyleBackColor = true;
+            btnBorrar.Click += btnEliminar_Click;
             // 
             // lbStock
             // 
@@ -236,17 +250,18 @@
             lbStock.BackColor = Color.Transparent;
             lbStock.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbStock.ForeColor = SystemColors.ButtonFace;
-            lbStock.Location = new Point(92, 105);
+            lbStock.Location = new Point(458, 7);
             lbStock.Name = "lbStock";
-            lbStock.Size = new Size(42, 22);
+            lbStock.Size = new Size(79, 29);
             lbStock.TabIndex = 13;
-            lbStock.Text = "Stock";
+            lbStock.Text = "Stock (*)";
             // 
             // tbStock
             // 
-            tbStock.Location = new Point(23, 130);
+            tbStock.Location = new Point(389, 40);
+            tbStock.Margin = new Padding(3, 4, 3, 4);
             tbStock.Name = "tbStock";
-            tbStock.Size = new Size(183, 23);
+            tbStock.Size = new Size(209, 27);
             tbStock.TabIndex = 12;
             tbStock.TextChanged += tbStock_TextChanged;
             tbStock.KeyPress += tbStock_KeyPress;
@@ -257,17 +272,18 @@
             lbDescripcion.BackColor = Color.Transparent;
             lbDescripcion.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbDescripcion.ForeColor = SystemColors.ButtonFace;
-            lbDescripcion.Location = new Point(75, 54);
+            lbDescripcion.Location = new Point(86, 72);
             lbDescripcion.Name = "lbDescripcion";
-            lbDescripcion.Size = new Size(75, 22);
+            lbDescripcion.Size = new Size(98, 29);
             lbDescripcion.TabIndex = 11;
             lbDescripcion.Text = "Descripcion";
             // 
             // tbDescripcion
             // 
-            tbDescripcion.Location = new Point(23, 79);
+            tbDescripcion.Location = new Point(26, 105);
+            tbDescripcion.Margin = new Padding(3, 4, 3, 4);
             tbDescripcion.Name = "tbDescripcion";
-            tbDescripcion.Size = new Size(183, 23);
+            tbDescripcion.Size = new Size(209, 27);
             tbDescripcion.TabIndex = 10;
             tbDescripcion.TextChanged += tbDescripcion_TextChanged;
             // 
@@ -277,17 +293,18 @@
             lbPrecio.BackColor = Color.Transparent;
             lbPrecio.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbPrecio.ForeColor = SystemColors.ButtonFace;
-            lbPrecio.Location = new Point(402, 56);
+            lbPrecio.Location = new Point(458, 72);
             lbPrecio.Name = "lbPrecio";
-            lbPrecio.Size = new Size(44, 22);
+            lbPrecio.Size = new Size(83, 29);
             lbPrecio.TabIndex = 5;
-            lbPrecio.Text = "Precio";
+            lbPrecio.Text = "Precio (*)";
             // 
             // tbPrecio
             // 
-            tbPrecio.Location = new Point(340, 79);
+            tbPrecio.Location = new Point(389, 105);
+            tbPrecio.Margin = new Padding(3, 4, 3, 4);
             tbPrecio.Name = "tbPrecio";
-            tbPrecio.Size = new Size(183, 23);
+            tbPrecio.Size = new Size(209, 27);
             tbPrecio.TabIndex = 4;
             tbPrecio.TextChanged += tbPrecio_TextChanged;
             tbPrecio.KeyPress += tbPrecio_KeyPress;
@@ -298,11 +315,11 @@
             lbNombre.BackColor = Color.Transparent;
             lbNombre.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbNombre.ForeColor = SystemColors.ButtonFace;
-            lbNombre.Location = new Point(82, 5);
+            lbNombre.Location = new Point(86, 7);
             lbNombre.Name = "lbNombre";
-            lbNombre.Size = new Size(54, 22);
+            lbNombre.Size = new Size(96, 29);
             lbNombre.TabIndex = 3;
-            lbNombre.Text = "Nombre";
+            lbNombre.Text = "Nombre (*)";
             // 
             // btnGuardar
             // 
@@ -311,19 +328,22 @@
             btnGuardar.IconColor = Color.Black;
             btnGuardar.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnGuardar.IconSize = 40;
-            btnGuardar.Location = new Point(904, 42);
+            btnGuardar.Location = new Point(1033, 56);
+            btnGuardar.Margin = new Padding(3, 4, 3, 4);
             btnGuardar.Name = "btnGuardar";
-            btnGuardar.Size = new Size(75, 60);
+            btnGuardar.Size = new Size(86, 80);
             btnGuardar.TabIndex = 2;
             btnGuardar.UseVisualStyleBackColor = true;
             btnGuardar.Click += btnGuardar_Click;
             // 
             // tbNombre
             // 
-            tbNombre.Location = new Point(21, 30);
+            tbNombre.Location = new Point(24, 40);
+            tbNombre.Margin = new Padding(3, 4, 3, 4);
             tbNombre.Name = "tbNombre";
-            tbNombre.Size = new Size(183, 23);
+            tbNombre.Size = new Size(209, 27);
             tbNombre.TabIndex = 1;
+            tbNombre.TextChanged += tbNombre_TextChanged;
             tbNombre.KeyPress += tbNombre_KeyPress;
             // 
             // panel2
@@ -333,9 +353,10 @@
             panel2.Controls.Add(cbActivos);
             panel2.Controls.Add(dgvProductos);
             panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 258);
+            panel2.Location = new Point(0, 344);
+            panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1014, 231);
+            panel2.Size = new Size(1159, 308);
             panel2.TabIndex = 21;
             // 
             // cbInactivos
@@ -343,9 +364,10 @@
             cbInactivos.AutoSize = true;
             cbInactivos.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             cbInactivos.ForeColor = SystemColors.ButtonFace;
-            cbInactivos.Location = new Point(232, 16);
+            cbInactivos.Location = new Point(134, 56);
+            cbInactivos.Margin = new Padding(3, 4, 3, 4);
             cbInactivos.Name = "cbInactivos";
-            cbInactivos.Size = new Size(79, 26);
+            cbInactivos.Size = new Size(99, 33);
             cbInactivos.TabIndex = 30;
             cbInactivos.Text = "Inactivos";
             cbInactivos.UseVisualStyleBackColor = true;
@@ -355,12 +377,14 @@
             cbActivos.AutoSize = true;
             cbActivos.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             cbActivos.ForeColor = SystemColors.ButtonFace;
-            cbActivos.Location = new Point(75, 16);
+            cbActivos.Location = new Point(24, 56);
+            cbActivos.Margin = new Padding(3, 4, 3, 4);
             cbActivos.Name = "cbActivos";
-            cbActivos.Size = new Size(71, 26);
+            cbActivos.Size = new Size(88, 33);
             cbActivos.TabIndex = 29;
             cbActivos.Text = "Activos";
             cbActivos.UseVisualStyleBackColor = true;
+            cbActivos.CheckedChanged += cbActivos_CheckedChanged;
             // 
             // dgvProductos
             // 
@@ -375,7 +399,7 @@
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dgvProductos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvProductos.Columns.AddRange(new DataGridViewColumn[] { colIdProducto, colMarca, colNombre, colDescripcion, colPrecio, colStock, colCategoria, colImagen });
+            dgvProductos.Columns.AddRange(new DataGridViewColumn[] { colIdProducto, colNombre, colDescripcion, colPrecio, colStock, colPrecioVenta, colCategoria, colMarca, colImagen });
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = SystemColors.Window;
             dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
@@ -384,7 +408,8 @@
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dgvProductos.DefaultCellStyle = dataGridViewCellStyle2;
-            dgvProductos.Location = new Point(21, 47);
+            dgvProductos.Location = new Point(24, 87);
+            dgvProductos.Margin = new Padding(3, 4, 3, 4);
             dgvProductos.Name = "dgvProductos";
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = SystemColors.Control;
@@ -395,21 +420,15 @@
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
             dgvProductos.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvProductos.RowHeadersWidth = 51;
-            dgvProductos.Size = new Size(971, 170);
+            dgvProductos.Size = new Size(1110, 203);
             dgvProductos.TabIndex = 0;
             // 
             // colIdProducto
             // 
-            colIdProducto.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colIdProducto.FillWeight = 50F;
-            colIdProducto.HeaderText = "idProducto";
+            colIdProducto.HeaderText = "ID Producto";
             colIdProducto.MinimumWidth = 6;
             colIdProducto.Name = "colIdProducto";
-            // 
-            // colMarca
-            // 
-            colMarca.HeaderText = "Marca";
-            colMarca.Name = "colMarca";
+            colIdProducto.Width = 140;
             // 
             // colNombre
             // 
@@ -439,6 +458,13 @@
             colStock.Name = "colStock";
             colStock.Width = 125;
             // 
+            // colPrecioVenta
+            // 
+            colPrecioVenta.HeaderText = "Precio de venta";
+            colPrecioVenta.MinimumWidth = 6;
+            colPrecioVenta.Name = "colPrecioVenta";
+            colPrecioVenta.Width = 125;
+            // 
             // colCategoria
             // 
             colCategoria.HeaderText = "Categoría";
@@ -446,21 +472,31 @@
             colCategoria.Name = "colCategoria";
             colCategoria.Width = 125;
             // 
+            // colMarca
+            // 
+            colMarca.HeaderText = "Marca";
+            colMarca.MinimumWidth = 6;
+            colMarca.Name = "colMarca";
+            colMarca.Width = 125;
+            // 
             // colImagen
             // 
             colImagen.HeaderText = "Imagen";
             colImagen.ImageLayout = DataGridViewImageCellLayout.Stretch;
+            colImagen.MinimumWidth = 6;
             colImagen.Name = "colImagen";
+            colImagen.Width = 125;
             // 
             // CrudProductos
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SlateGray;
-            ClientSize = new Size(1014, 489);
+            ClientSize = new Size(1159, 652);
             Controls.Add(panel2);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 4, 3, 4);
             Name = "CrudProductos";
             Text = "CrudProductos";
             Load += CrudProductos_Load;
@@ -478,7 +514,7 @@
         private Panel panel1;
         private Label lbEliminar;
         private Label lbGuardar;
-        private FontAwesome.Sharp.IconButton btnEliminar;
+        private FontAwesome.Sharp.IconButton btnBorrar;
         private Label lbStock;
         private TextBox tbStock;
         private Label lbDescripcion;
@@ -496,17 +532,18 @@
         private DataGridView dgvProductos;
         private Label lbCategoria;
         private ComboBox cbCategoria;
-        private Label lbIDProducto;
-        private TextBox tbiDProducto;
         private Label lbMarca;
-        private TextBox tbMarca;
+        private ComboBox cbMarca;
+        private Label lbPrecioVenta;
+        private TextBox tbPrecioVenta;
         private DataGridViewTextBoxColumn colIdProducto;
-        private DataGridViewTextBoxColumn colMarca;
         private DataGridViewTextBoxColumn colNombre;
         private DataGridViewTextBoxColumn colDescripcion;
         private DataGridViewTextBoxColumn colPrecio;
         private DataGridViewTextBoxColumn colStock;
+        private DataGridViewTextBoxColumn colPrecioVenta;
         private DataGridViewTextBoxColumn colCategoria;
+        private DataGridViewTextBoxColumn colMarca;
         private DataGridViewImageColumn colImagen;
     }
 }

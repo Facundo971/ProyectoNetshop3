@@ -30,6 +30,18 @@ namespace ProyectoNetshop.formularios
             tbBusquedaDniUsuario.TextChanged += Busqueda_TextChanged;
             tbBusquedaNombreUsuario.TextChanged += Busqueda_TextChanged;
 
+            //// Ocultar el checkbox hasta que selecciones un usuario
+            //cbOcultalContraseniaUser.Visible = false;
+            //cbOcultalContraseniaUser.CheckedChanged += cbOcultalContraseniaUser_CheckedChanged;
+
+            // 1) Siempre enmascarar por defecto
+            tbContraseniaUsuario.UseSystemPasswordChar = true;
+
+            // 2) Mostrar el CheckBox todo el tiempo
+            cbOcultalContraseniaUser.Visible = true;
+            cbOcultalContraseniaUser.Checked = false;
+            cbOcultalContraseniaUser.CheckedChanged += cbOcultalContraseniaUser_CheckedChanged;
+
             dgvUsuarios.CellFormatting += DgvUsuarios_CellFormatting;
 
             // Configuro largo máximo
@@ -39,6 +51,17 @@ namespace ProyectoNetshop.formularios
             // Asigno el mismo manejador a ambos TextBox
             tbDniUsuario.KeyPress += TextBox_OnlyDigits_KeyPress;
             tbTelefonoUsuario.KeyPress += TextBox_OnlyDigits_KeyPress;
+
+            // Solo letras (y espacios) para el nombre
+            tbBusquedaNombreUsuario.KeyPress += TextBox_OnlyLetters_KeyPress;
+            // Solo dígitos para el DNI
+            tbBusquedaDniUsuario.KeyPress += TextBox_OnlyDigits_KeyPress;
+
+            //// Enmascarar con el carácter del sistema (●) o usa PasswordChar = '*'
+            //tbContraseniaUsuario.UseSystemPasswordChar = true;
+
+            //// Solo lectura para evitar cambios
+            //tbContraseniaUsuario.ReadOnly = true;
         }
 
         private void usuarios_Load(object sender, EventArgs e)
@@ -59,6 +82,14 @@ namespace ProyectoNetshop.formularios
             // Suscribir al mismo handler
             cbActivosUsuarios.CheckedChanged += Filtro_CheckedChanged;
             cbInactivosUsuarios.CheckedChanged += Filtro_CheckedChanged;
+
+            // Por defecto, activo = 1
+            rbActivoUsuarioSi.Checked = true;
+
+            // Por defecto, sexo = “Masculino”
+            rbMasculinoUsuario.Checked = false;
+            rbFemeninoUsuario.Checked = false;
+            rbOtrosUsuario.Checked = true;
 
             FiltrarYRefrescar();
 
@@ -159,9 +190,9 @@ namespace ProyectoNetshop.formularios
             });
             dgvUsuarios.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = "activo",
-                DataPropertyName = "activo",
-                HeaderText = "Activo"
+                Name = "colActivo",
+                HeaderText = "Activo",
+                DataPropertyName = "ActivoTexto"
             });
             // Asigno la lista ya procesada
             dgvUsuarios.DataSource = usuarios;
@@ -281,7 +312,7 @@ namespace ProyectoNetshop.formularios
             FiltrarYRefrescar();
             LimpiarControles();
         }
-        
+
         private void cbPerfilUsuario_SelectedIndexChanged(object sender, EventArgs e)
         {
             Usuario_model usuario = new Usuario_model();
@@ -372,6 +403,11 @@ namespace ProyectoNetshop.formularios
             tbContraseniaUsuario.Text = u.pass != null
                 ? Encoding.UTF8.GetString(u.pass)
                 : string.Empty;
+            // 2) Aseguro que el TextBox empiece enmascarado
+            tbContraseniaUsuario.UseSystemPasswordChar = true;
+
+            // 3) Reinicio el CheckBox para que false→true funcione siempre
+            cbOcultalContraseniaUser.Checked = false;
 
             rbActivoUsuarioSi.Checked = u.activo == 1;
             rbActivoUsuarioNo.Checked = u.activo == 0;
@@ -390,6 +426,9 @@ namespace ProyectoNetshop.formularios
 
             cbPerfilUsuario.SelectedValue = u.id_perfil;
             gbActivoUsuario.Visible = (u.activo == 0);
+
+            // Habilita “Eliminar” solo si activa == 1
+            btnBorrar.Enabled = u.activo == 1;
         }
         private void Busqueda_TextChanged(object sender, EventArgs e)
         {
@@ -449,14 +488,26 @@ namespace ProyectoNetshop.formularios
             tbNombreUsuario.Clear();
             tbApellidoUsuario.Clear();
             tbEmailUsuario.Clear();
+
+            //tbContraseniaUsuario.Clear();
+            //cbOcultalContraseniaUser.Visible = false;
+            //cbOcultalContraseniaUser.Checked = false;
+
             tbContraseniaUsuario.Clear();
+            tbContraseniaUsuario.UseSystemPasswordChar = true;
+
+            // El CheckBox sigue visible para poder alternar si quiere ver lo que escribe
+            cbOcultalContraseniaUser.Checked = false;
+
             tbTelefonoUsuario.Clear();
             tbDniUsuario.Clear();
 
-            rbActivoUsuarioSi.Checked = false; //FIJARSE
-            rbActivoUsuarioNo.Checked = false; //FIJARSE
+            // Defaults de RadioButtons
+            rbActivoUsuarioSi.Checked = true;
+            rbActivoUsuarioNo.Checked = false;
             rbMasculinoUsuario.Checked = false;
             rbFemeninoUsuario.Checked = false;
+            rbOtrosUsuario.Checked = true;
 
             // 1) Resetear fecha
             fechaNacimientoUsuario.Checked = false;
@@ -470,7 +521,7 @@ namespace ProyectoNetshop.formularios
             cbPerfilUsuario.SelectedValue = 2;
 
             // Indica que ya no hay un usuario seleccionado
-            //_usuarioSeleccionadoId = -1;
+            _usuarioSeleccionadoId = -1;
         }
         private void btnEliminar_Click(object sender, EventArgs e)
         {
@@ -481,22 +532,42 @@ namespace ProyectoNetshop.formularios
                 return;
             }
 
-            // 2) Si hay un usuario: confirmo y desactivo
-            var dr = MessageBox.Show("¿Seguro que deseas desactivar este usuario?", "Confirmar eliminación",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            // 2) Confirmación
+            var dr = MessageBox.Show(
+                "¿Seguro que deseas desactivar este usuario?",
+                "Confirmar baja",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
 
             if (dr != DialogResult.Yes)
                 return;
 
+            // 3) Intentar “baja”
             int filas = Usuario_controller.eliminarUsuario(_usuarioSeleccionadoId);
-            if (filas == 1)
-                MessageBox.Show("Usuario desactivado con éxito.");
-            else
-                MessageBox.Show("Error al desactivar el usuario.");
 
+            if (filas == 1)
+            {
+                MessageBox.Show(
+                    "Usuario desactivado con éxito.",
+                    "Éxito",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else
+            {
+                // 0 filas → ya estaba inactivo
+                MessageBox.Show(
+                    "El usuario ya estaba desactivado.",
+                    "Información",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+
+            // 4) Refrescar listado y limpiar
             FiltrarYRefrescar();
             LimpiarControles();
         }
+
 
         private void lbEmail_Click(object sender, EventArgs e)
         {
@@ -698,6 +769,37 @@ namespace ProyectoNetshop.formularios
             {
                 e.Handled = true;  // cancela la tecla
             }
+        }
+
+        // Permite solo letras (incluye tildes), control (Backspace, flechas) y espacios
+        private void TextBox_OnlyLetters_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            bool esControl = char.IsControl(e.KeyChar); // Backspace, Supr, flechas…
+            bool esLetra = char.IsLetter(e.KeyChar);  // A–Z, a–z, acentuadas…
+            bool esEspacio = e.KeyChar == ' ';          // espacio en blanco
+
+            // Si NO es control, letra ni espacio, cancelar la tecla
+            if (!esControl && !esLetra && !esEspacio)
+                e.Handled = true;
+        }
+
+        private void tbBusquedaNombreUsuario_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbOcultalContraseniaUser_CheckedChanged(object sender, EventArgs e)
+        {
+            // Si está chequeado, quita la máscara para ver el texto;
+            // si no, vuelve a enmascarar.
+            //tbContraseniaUsuario.UseSystemPasswordChar = !cbOcultalContraseniaUser.Checked;
+
+            tbContraseniaUsuario.UseSystemPasswordChar = !cbOcultalContraseniaUser.Checked;
+        }
+
+        private void dgvUsuarios_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

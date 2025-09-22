@@ -69,10 +69,12 @@ namespace ProyectoNetshop.Cruds
         {
             using var con = BD.BaseDeDatos.obtenerConexion();
             using var cmd = con.CreateCommand();
-            cmd.CommandText = @"UPDATE usuario SET activo = 0 WHERE id_usuario = @idUsuario;";
+            cmd.CommandText = @"UPDATE usuario SET activo = 0 WHERE id_usuario = @idUsuario AND activo = 1;";
             cmd.Parameters.Add("@idUsuario", SqlDbType.Int).Value = idUsuario;
-            return cmd.ExecuteNonQuery();
+
+            return cmd.ExecuteNonQuery();          // 1 = cambio exitoso; 0 = ya estaba inactivo
         }
+
 
         public static List<Usuario_model> ObtenerVendedores()
         {

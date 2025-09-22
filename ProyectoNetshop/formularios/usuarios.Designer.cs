@@ -30,6 +30,7 @@
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             panel1 = new Panel();
+            cbOcultalContraseniaUser = new CheckBox();
             lbDniUsuario = new Label();
             tbDniUsuario = new TextBox();
             gbActivoUsuario = new GroupBox();
@@ -75,6 +76,7 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(0, 0, 64);
+            panel1.Controls.Add(cbOcultalContraseniaUser);
             panel1.Controls.Add(lbDniUsuario);
             panel1.Controls.Add(tbDniUsuario);
             panel1.Controls.Add(gbActivoUsuario);
@@ -104,6 +106,16 @@
             panel1.RightToLeft = RightToLeft.No;
             panel1.Size = new Size(1159, 292);
             panel1.TabIndex = 0;
+            // 
+            // cbOcultalContraseniaUser
+            // 
+            cbOcultalContraseniaUser.AutoSize = true;
+            cbOcultalContraseniaUser.Location = new Point(604, 111);
+            cbOcultalContraseniaUser.Name = "cbOcultalContraseniaUser";
+            cbOcultalContraseniaUser.Size = new Size(18, 17);
+            cbOcultalContraseniaUser.TabIndex = 29;
+            cbOcultalContraseniaUser.UseVisualStyleBackColor = true;
+            cbOcultalContraseniaUser.CheckedChanged += cbOcultalContraseniaUser_CheckedChanged;
             // 
             // lbDniUsuario
             // 
@@ -462,6 +474,7 @@
             tbBusquedaNombreUsuario.PlaceholderText = "Busqueda por Nombre";
             tbBusquedaNombreUsuario.Size = new Size(209, 27);
             tbBusquedaNombreUsuario.TabIndex = 32;
+            tbBusquedaNombreUsuario.TextChanged += tbBusquedaNombreUsuario_TextChanged;
             // 
             // tbBusquedaDniUsuario
             // 
@@ -525,6 +538,7 @@
             dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvUsuarios.Size = new Size(1112, 213);
             dgvUsuarios.TabIndex = 0;
+            dgvUsuarios.CellContentClick += dgvUsuarios_CellContentClick;
             // 
             // sqlCommand1
             // 
@@ -594,5 +608,6 @@
         private TextBox tbBusquedaNombreUsuario;
         private TextBox tbBusquedaDniUsuario;
         private Microsoft.Data.SqlClient.SqlCommand sqlCommand1;
+        private CheckBox cbOcultalContraseniaUser;
     }
 }

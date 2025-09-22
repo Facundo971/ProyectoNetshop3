@@ -25,6 +25,15 @@ namespace vistaDeProyectoC
         public FInicioSesion()
         {
             InitializeComponent();
+
+            // 1) Por defecto enmascarar la contraseña
+            TBContraseniaLogin.UseSystemPasswordChar = true;
+
+            // 2) Suscribir el evento CheckedChanged
+            cbOcultarContraseniaLoginUser.CheckedChanged += cbOcultarContraseniaLoginUser_CheckedChanged;
+
+            // Solo letras (y espacios) para el nombre
+            TBUsuarioLogin.KeyPress += TextBox_OnlyLetters_KeyPress;
         }
 
         private void FInicioSesion_Load(object sender, EventArgs e)
@@ -133,11 +142,26 @@ namespace vistaDeProyectoC
 
         private void btnOcultarContrasenia_Click(object sender, EventArgs e)
         {
-            // Alterna entre oculto y visible
-            TBContraseniaLogin.UseSystemPasswordChar = !TBContraseniaLogin.UseSystemPasswordChar;
 
-            // Actualiza el texto del botón
-            btnOcultarContrasenia.Text = TBContraseniaLogin.UseSystemPasswordChar ? "Mostrar" : "Ocultar";
+        }
+
+        // Permite solo letras (incluye tildes), control (Backspace, flechas) y espacios
+        private void TextBox_OnlyLetters_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            bool esControl = char.IsControl(e.KeyChar); // Backspace, Supr, flechas…
+            bool esLetra = char.IsLetter(e.KeyChar);  // A–Z, a–z, acentuadas…
+            bool esEspacio = e.KeyChar == ' ';          // espacio en blanco
+
+            // Si NO es control, letra ni espacio, cancelar la tecla
+            if (!esControl && !esLetra && !esEspacio)
+                e.Handled = true;
+        }
+
+        private void cbOcultarContraseniaLoginUser_CheckedChanged(object sender, EventArgs e)
+        {
+            // Si está marcado, quita la máscara y muestra el texto; 
+            // si no, vuelve a ocultar
+            TBContraseniaLogin.UseSystemPasswordChar = !cbOcultarContraseniaLoginUser.Checked;
         }
     }
 }

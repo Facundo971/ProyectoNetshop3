@@ -23,6 +23,8 @@ namespace ProyectoNetshop.Cruds
         // Esta es la propiedad donde volcarás el texto del perfil
         public string descripcion { get; set; }
 
+        public string ActivoTexto => activo == 1 ? "SI" : "NO";
+
         public Usuario_model() { }
 
         public Usuario_model(int p_id_usuario, string p_nombre, string p_apellido, string p_email, byte[] p_pass, int p_activo, string p_sexo, DateTime p_fecha_nacimiento,

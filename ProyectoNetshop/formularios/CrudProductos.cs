@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,9 @@ namespace ProyectoNetshop.formularios
         public CrudProductos()
         {
             InitializeComponent();
+
+            tbDescripcion.KeyPress -= TbDescripcion_KeyPress;
+            tbDescripcion.KeyPress += TbDescripcion_KeyPress;
         }
 
         private void btnCargarImg_Click(object sender, EventArgs e)
@@ -36,15 +40,23 @@ namespace ProyectoNetshop.formularios
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             // Crea una fila con los datos
-            int rowIndex = dgvProductos.Rows.Add();
-            dgvProductos.Rows[rowIndex].Cells["colIdProducto"].Value = tbiDProducto.Text;
-            dgvProductos.Rows[rowIndex].Cells["colNombre"].Value = tbNombre.Text;
-            dgvProductos.Rows[rowIndex].Cells["colPrecio"].Value = tbPrecio.Text;
-            dgvProductos.Rows[rowIndex].Cells["colDescripcion"].Value = tbDescripcion.Text;
-            dgvProductos.Rows[rowIndex].Cells["colStock"].Value = tbStock.Text;
-            dgvProductos.Rows[rowIndex].Cells["colCategoria"].Value = cbCategoria.SelectedItem?.ToString();
-            dgvProductos.Rows[rowIndex].Cells["colImagen"].Value = pbProducto.Image;
-            dgvProductos.Rows[rowIndex].Cells["colMarca"].Value = tbMarca.Text;
+            //int rowIndex = dgvProductos.Rows.Add();
+            //dgvProductos.Rows[rowIndex].Cells["colIdProducto"].Value = tbiDProducto.Text;
+            //dgvProductos.Rows[rowIndex].Cells["colNombre"].Value = tbNombre.Text;
+            //dgvProductos.Rows[rowIndex].Cells["colPrecio"].Value = tbPrecio.Text;
+            //dgvProductos.Rows[rowIndex].Cells["colPrecioVenta"].Value = tbPrecioVenta.Text;
+            //dgvProductos.Rows[rowIndex].Cells["colDescripcion"].Value = tbDescripcion.Text;
+            //dgvProductos.Rows[rowIndex].Cells["colStock"].Value = tbStock.Text;
+            //dgvProductos.Rows[rowIndex].Cells["colCategoria"].Value = cbCategoria.SelectedItem?.ToString();
+            //dgvProductos.Rows[rowIndex].Cells["colImagen"].Value = pbProducto.Image;
+            //dgvProductos.Rows[rowIndex].Cells["colMarca"].Value = cbMarca.SelectedItem?.ToString();
+
+            // 4) Mostrar mensaje de éxito
+            MessageBox.Show(
+                "Producto agregado con éxito.",
+                "Éxito",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 
         // Validaciones de entrada
@@ -55,15 +67,22 @@ namespace ProyectoNetshop.formularios
             if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && e.KeyChar != ' ')
             {
                 e.Handled = true;
+                MessageBox.Show("Solo se permiten letras.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
-        private void tbMarca_KeyPress(object sender, KeyPressEventArgs e)
+        private void TbDescripcion_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Permite solo letras y teclas de control
-            if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && e.KeyChar != ' ')
+            if (!char.IsControl(e.KeyChar)
+                && !char.IsLetter(e.KeyChar)
+                && e.KeyChar != ' ')
             {
                 e.Handled = true;
+                MessageBox.Show(
+                    "Solo se permiten letras en la descripción.",
+                    "Carácter no permitido",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
             }
         }
 
@@ -73,11 +92,28 @@ namespace ProyectoNetshop.formularios
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
             {
                 e.Handled = true;
+                MessageBox.Show("Solo se permiten números y un punto.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             // Permite solo un punto decimal
             if (e.KeyChar == '.' && (sender as TextBox).Text.Contains("."))
             {
                 e.Handled = true;
+                MessageBox.Show("Solo se permiten números y un punto.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+        private void tbPrecioVenta_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Permite solo dígitos, el punto decimal y teclas de control
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true;
+                MessageBox.Show("Solo se permiten números y un punto.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            // Permite solo un punto decimal
+            if (e.KeyChar == '.' && (sender as TextBox).Text.Contains("."))
+            {
+                e.Handled = true;
+                MessageBox.Show("Solo se permiten números y un punto.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -87,6 +123,7 @@ namespace ProyectoNetshop.formularios
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
+                MessageBox.Show("Solo se permiten números.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -96,6 +133,7 @@ namespace ProyectoNetshop.formularios
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
+                MessageBox.Show("Solo se permiten números.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -106,15 +144,44 @@ namespace ProyectoNetshop.formularios
 
         private void validarCampos()
         {
-            // Habilita el botón Guardar solo si todos los campos obligatorios están llenos
-            btnGuardar.Enabled = !string.IsNullOrWhiteSpace(tbiDProducto.Text) &&
-                               !string.IsNullOrWhiteSpace(tbNombre.Text) &&
-                               !string.IsNullOrWhiteSpace(tbPrecio.Text) &&
-                               !string.IsNullOrWhiteSpace(tbDescripcion.Text) &&
-                               !string.IsNullOrWhiteSpace(tbStock.Text) &&
-                               !string.IsNullOrWhiteSpace(tbMarca.Text) &&
-                               cbCategoria.SelectedItem != null &&
-                               pbProducto.Image != null;
+            // 1) Validación de campos obligatorios “base”
+            bool baseValida =
+                   !string.IsNullOrWhiteSpace(tbNombre.Text)
+                && !string.IsNullOrWhiteSpace(tbPrecio.Text)
+                && !string.IsNullOrWhiteSpace(tbPrecioVenta.Text)
+                && !string.IsNullOrWhiteSpace(tbStock.Text)
+                && cbMarca.SelectedItem != null
+                && cbCategoria.SelectedItem != null
+                && pbProducto.Image != null;
+
+            if (!baseValida)
+            {
+                btnGuardar.Enabled = false;
+                return;
+            }
+
+            // 2) Intentar parsear a decimal usando InvariantCulture (punto decimal)
+            bool precioOk = decimal.TryParse(
+                               tbPrecio.Text,
+                               NumberStyles.Number,
+                               CultureInfo.InvariantCulture,
+                               out decimal precioOriginal);
+
+            bool ventaOk = decimal.TryParse(
+                               tbPrecioVenta.Text,
+                               NumberStyles.Number,
+                               CultureInfo.InvariantCulture,
+                               out decimal precioVenta);
+
+            // 3) Comparar precios sólo si ambos parsearon correctamente
+            if (precioOk && ventaOk && precioVenta < precioOriginal)
+            {
+                btnGuardar.Enabled = true;
+            }
+            else
+            {
+                btnGuardar.Enabled = false;
+            }
         }
 
         private void tbNombre_TextChanged(object sender, EventArgs e)
@@ -137,12 +204,23 @@ namespace ProyectoNetshop.formularios
             validarCampos();
         }
 
+        private void tbPrecioVenta_TextChanged(object sender, EventArgs e)
+        {
+            validarCampos();
+        }
+
+
         private void tbStock_TextChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
 
         private void cbCategoria_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            validarCampos();
+        }
+
+        private void cbMarca_SelectedIndexChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
@@ -155,17 +233,37 @@ namespace ProyectoNetshop.formularios
         private void btnEliminar_Click(object sender, EventArgs e)
         {
             // Vacia los campos de entrada
-            tbiDProducto.Text = "";
             tbNombre.Text = "";
             tbPrecio.Text = "";
+            tbPrecioVenta.Text = "";
             tbDescripcion.Text = "";
             tbStock.Text = "";
-            tbMarca.Text = "";
+            cbMarca.SelectedIndex = -1;
             cbCategoria.SelectedIndex = -1;
-            pbProducto.Image = null;
-
+            //pbProducto.Image = null;
             btnGuardar.Enabled = false;
         }
+
+        private void cbActivos_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        //private void tbBusquedaDniUsuario_TextChanged(object sender, EventArgs e)
+        //{
+        //    // Permite solo dígitos, el punto decimal y teclas de control
+        //    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+        //    {
+        //        e.Handled = true;
+        //        MessageBox.Show("Solo se permiten números y un punto.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //    }
+        //    // Permite solo un punto decimal
+        //    if (e.KeyChar == '.' && (sender as TextBox).Text.Contains("."))
+        //    {
+        //        e.Handled = true;
+        //        MessageBox.Show("Solo se permiten números y un punto.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //    }
+        //}
     }
 }
 

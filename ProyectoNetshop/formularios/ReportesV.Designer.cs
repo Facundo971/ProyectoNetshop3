@@ -36,8 +36,8 @@
             BGenerarReporteVendedor = new Button();
             label1 = new Label();
             label7 = new Label();
-            fechaHasta = new DateTimePicker();
-            fechaDesde = new DateTimePicker();
+            fechaHastaVendedor = new DateTimePicker();
+            fechaDesdeVendedor = new DateTimePicker();
             panel2.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -86,6 +86,7 @@
             tbDniVendedorReporte.Size = new Size(126, 27);
             tbDniVendedorReporte.TabIndex = 2;
             tbDniVendedorReporte.Text = "DNI del Vendodor";
+            tbDniVendedorReporte.TextChanged += tbDniVendedorReporte_TextChanged;
             // 
             // panel1
             // 
@@ -93,8 +94,8 @@
             panel1.Controls.Add(BGenerarReporteVendedor);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(label7);
-            panel1.Controls.Add(fechaHasta);
-            panel1.Controls.Add(fechaDesde);
+            panel1.Controls.Add(fechaHastaVendedor);
+            panel1.Controls.Add(fechaDesdeVendedor);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(3, 4, 3, 4);
@@ -138,21 +139,21 @@
             label7.TabIndex = 19;
             label7.Text = "Hasta";
             // 
-            // fechaHasta
+            // fechaHastaVendedor
             // 
-            fechaHasta.Location = new Point(40, 335);
-            fechaHasta.Margin = new Padding(3, 4, 3, 4);
-            fechaHasta.Name = "fechaHasta";
-            fechaHasta.Size = new Size(209, 27);
-            fechaHasta.TabIndex = 18;
+            fechaHastaVendedor.Location = new Point(40, 335);
+            fechaHastaVendedor.Margin = new Padding(3, 4, 3, 4);
+            fechaHastaVendedor.Name = "fechaHastaVendedor";
+            fechaHastaVendedor.Size = new Size(209, 27);
+            fechaHastaVendedor.TabIndex = 18;
             // 
-            // fechaDesde
+            // fechaDesdeVendedor
             // 
-            fechaDesde.Location = new Point(40, 217);
-            fechaDesde.Margin = new Padding(3, 4, 3, 4);
-            fechaDesde.Name = "fechaDesde";
-            fechaDesde.Size = new Size(209, 27);
-            fechaDesde.TabIndex = 17;
+            fechaDesdeVendedor.Location = new Point(40, 217);
+            fechaDesdeVendedor.Margin = new Padding(3, 4, 3, 4);
+            fechaDesdeVendedor.Name = "fechaDesdeVendedor";
+            fechaDesdeVendedor.Size = new Size(209, 27);
+            fechaDesdeVendedor.TabIndex = 17;
             // 
             // ReportesV
             // 
@@ -182,8 +183,8 @@
         private Panel panel1;
         private Label label1;
         private Label label7;
-        private DateTimePicker fechaHasta;
-        private DateTimePicker fechaDesde;
+        private DateTimePicker fechaHastaVendedor;
+        private DateTimePicker fechaDesdeVendedor;
         private Button BGenerarReporteVendedor;
     }
 }

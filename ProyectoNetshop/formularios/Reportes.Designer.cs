@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
+            BGenerarTotalVentasGerente = new Button();
             panel1 = new Panel();
             label1 = new Label();
             label7 = new Label();
-            fechaHasta = new DateTimePicker();
-            fechaDesde = new DateTimePicker();
-            button3 = new Button();
-            button2 = new Button();
+            fechaHastaGerente = new DateTimePicker();
+            fechaDesdeGerente = new DateTimePicker();
+            BGenerarRecaudacionGerente = new Button();
+            BGenerarReporteGerente = new Button();
             panel2 = new Panel();
             cbVendedoresNombreReporte = new ComboBox();
             cbVendedoresDniReporte = new ComboBox();
@@ -44,29 +44,29 @@
             panel2.SuspendLayout();
             SuspendLayout();
             // 
-            // button1
+            // BGenerarTotalVentasGerente
             // 
-            button1.Cursor = Cursors.Hand;
-            button1.Dock = DockStyle.Bottom;
-            button1.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            button1.Location = new Point(0, 646);
-            button1.Margin = new Padding(3, 4, 3, 4);
-            button1.Name = "button1";
-            button1.Size = new Size(288, 53);
-            button1.TabIndex = 0;
-            button1.Text = "Total de ventas";
-            button1.UseVisualStyleBackColor = true;
+            BGenerarTotalVentasGerente.Cursor = Cursors.Hand;
+            BGenerarTotalVentasGerente.Dock = DockStyle.Bottom;
+            BGenerarTotalVentasGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            BGenerarTotalVentasGerente.Location = new Point(0, 646);
+            BGenerarTotalVentasGerente.Margin = new Padding(3, 4, 3, 4);
+            BGenerarTotalVentasGerente.Name = "BGenerarTotalVentasGerente";
+            BGenerarTotalVentasGerente.Size = new Size(288, 53);
+            BGenerarTotalVentasGerente.TabIndex = 0;
+            BGenerarTotalVentasGerente.Text = "Total de ventas";
+            BGenerarTotalVentasGerente.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(0, 0, 64);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(label7);
-            panel1.Controls.Add(fechaHasta);
-            panel1.Controls.Add(fechaDesde);
-            panel1.Controls.Add(button3);
-            panel1.Controls.Add(button2);
-            panel1.Controls.Add(button1);
+            panel1.Controls.Add(fechaHastaGerente);
+            panel1.Controls.Add(fechaDesdeGerente);
+            panel1.Controls.Add(BGenerarRecaudacionGerente);
+            panel1.Controls.Add(BGenerarReporteGerente);
+            panel1.Controls.Add(BGenerarTotalVentasGerente);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(3, 4, 3, 4);
@@ -98,47 +98,48 @@
             label7.TabIndex = 19;
             label7.Text = "Hasta";
             // 
-            // fechaHasta
+            // fechaHastaGerente
             // 
-            fechaHasta.Location = new Point(40, 335);
-            fechaHasta.Margin = new Padding(3, 4, 3, 4);
-            fechaHasta.Name = "fechaHasta";
-            fechaHasta.Size = new Size(209, 27);
-            fechaHasta.TabIndex = 18;
+            fechaHastaGerente.Location = new Point(40, 335);
+            fechaHastaGerente.Margin = new Padding(3, 4, 3, 4);
+            fechaHastaGerente.Name = "fechaHastaGerente";
+            fechaHastaGerente.Size = new Size(209, 27);
+            fechaHastaGerente.TabIndex = 18;
             // 
-            // fechaDesde
+            // fechaDesdeGerente
             // 
-            fechaDesde.Location = new Point(40, 217);
-            fechaDesde.Margin = new Padding(3, 4, 3, 4);
-            fechaDesde.Name = "fechaDesde";
-            fechaDesde.Size = new Size(209, 27);
-            fechaDesde.TabIndex = 17;
+            fechaDesdeGerente.Location = new Point(40, 217);
+            fechaDesdeGerente.Margin = new Padding(3, 4, 3, 4);
+            fechaDesdeGerente.Name = "fechaDesdeGerente";
+            fechaDesdeGerente.Size = new Size(209, 27);
+            fechaDesdeGerente.TabIndex = 17;
             // 
-            // button3
+            // BGenerarRecaudacionGerente
             // 
-            button3.Cursor = Cursors.Hand;
-            button3.Dock = DockStyle.Bottom;
-            button3.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            button3.Location = new Point(0, 540);
-            button3.Margin = new Padding(3, 4, 3, 4);
-            button3.Name = "button3";
-            button3.Size = new Size(288, 53);
-            button3.TabIndex = 2;
-            button3.Text = "Recaudación";
-            button3.UseVisualStyleBackColor = true;
+            BGenerarRecaudacionGerente.Cursor = Cursors.Hand;
+            BGenerarRecaudacionGerente.Dock = DockStyle.Bottom;
+            BGenerarRecaudacionGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            BGenerarRecaudacionGerente.Location = new Point(0, 540);
+            BGenerarRecaudacionGerente.Margin = new Padding(3, 4, 3, 4);
+            BGenerarRecaudacionGerente.Name = "BGenerarRecaudacionGerente";
+            BGenerarRecaudacionGerente.Size = new Size(288, 53);
+            BGenerarRecaudacionGerente.TabIndex = 2;
+            BGenerarRecaudacionGerente.Text = "Recaudación";
+            BGenerarRecaudacionGerente.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // BGenerarReporteGerente
             // 
-            button2.Cursor = Cursors.Hand;
-            button2.Dock = DockStyle.Bottom;
-            button2.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            button2.Location = new Point(0, 593);
-            button2.Margin = new Padding(3, 4, 3, 4);
-            button2.Name = "button2";
-            button2.Size = new Size(288, 53);
-            button2.TabIndex = 1;
-            button2.Text = "Prductos mas vendidos";
-            button2.UseVisualStyleBackColor = true;
+            BGenerarReporteGerente.Cursor = Cursors.Hand;
+            BGenerarReporteGerente.Dock = DockStyle.Bottom;
+            BGenerarReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            BGenerarReporteGerente.Location = new Point(0, 593);
+            BGenerarReporteGerente.Margin = new Padding(3, 4, 3, 4);
+            BGenerarReporteGerente.Name = "BGenerarReporteGerente";
+            BGenerarReporteGerente.Size = new Size(288, 53);
+            BGenerarReporteGerente.TabIndex = 1;
+            BGenerarReporteGerente.Text = "Prductos mas vendidos";
+            BGenerarReporteGerente.UseVisualStyleBackColor = true;
+            BGenerarReporteGerente.Click += BGenerarReporteGerente_Click;
             // 
             // panel2
             // 
@@ -203,12 +204,12 @@
 
         #endregion
 
-        private Button button1;
+        private Button BGenerarTotalVentasGerente;
         private Panel panel1;
-        private Button button3;
-        private Button button2;
-        private DateTimePicker fechaDesde;
-        private DateTimePicker fechaHasta;
+        private Button BGenerarRecaudacionGerente;
+        private Button BGenerarReporteGerente;
+        private DateTimePicker fechaDesdeGerente;
+        private DateTimePicker fechaHastaGerente;
         private Label label1;
         private Label label7;
         private Panel panel2;
