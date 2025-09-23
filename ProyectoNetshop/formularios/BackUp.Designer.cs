@@ -151,12 +151,13 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1130, 655);
             panel1.TabIndex = 8;
+            panel1.Paint += panel1_Paint;
             // 
             // FBackUp
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.SlateGray;
+            BackColor = Color.FromArgb(0, 0, 64);
             ClientSize = new Size(1177, 699);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;

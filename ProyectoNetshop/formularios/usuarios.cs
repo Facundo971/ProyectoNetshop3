@@ -15,29 +15,28 @@ namespace ProyectoNetshop.formularios
 {
     public partial class usuarios : Form
     {
+        // Campo que guarda el ID del usuario seleccionado en la grilla
+        // Inicializado en -1 para indicar que ningun usuario se eligio
         private int _usuarioSeleccionadoId = -1;
 
         public usuarios()
         {
             InitializeComponent();
 
+            //Al cargar la vista, ejecuta usuarios_Load
             Load += usuarios_Load;
 
+            // Al hacer clic en cualquier celda de la grilla llamamos al método que carga los datos de esa fila
             dgvUsuarios.CellClick += DgvUsuarios_CellClick;
-            //btnGuardar.Click += btnGuardar_Click;
 
-            // Suscribir búsqueda “al vuelo”
+            // Cada vez que se cambie el texto de búsqueda por DNI se aplica el filtro a la grilla
             tbBusquedaDniUsuario.TextChanged += Busqueda_TextChanged;
             tbBusquedaNombreUsuario.TextChanged += Busqueda_TextChanged;
 
-            //// Ocultar el checkbox hasta que selecciones un usuario
-            //cbOcultalContraseniaUser.Visible = false;
-            //cbOcultalContraseniaUser.CheckedChanged += cbOcultalContraseniaUser_CheckedChanged;
-
-            // 1) Siempre enmascarar por defecto
+            // Enmascarar por defecto
             tbContraseniaUsuario.UseSystemPasswordChar = true;
 
-            // 2) Mostrar el CheckBox todo el tiempo
+            // Mostrar el CheckBox todo el tiempo
             cbOcultalContraseniaUser.Visible = true;
             cbOcultalContraseniaUser.Checked = false;
             cbOcultalContraseniaUser.CheckedChanged += cbOcultalContraseniaUser_CheckedChanged;
@@ -45,8 +44,8 @@ namespace ProyectoNetshop.formularios
             dgvUsuarios.CellFormatting += DgvUsuarios_CellFormatting;
 
             // Configuro largo máximo
-            tbDniUsuario.MaxLength = 8;   // sólo 8 dígitos
-            tbTelefonoUsuario.MaxLength = 10;  // sólo 10 dígitos
+            tbDniUsuario.MaxLength = 8;
+            tbTelefonoUsuario.MaxLength = 10;
 
             // Asigno el mismo manejador a ambos TextBox
             tbDniUsuario.KeyPress += TextBox_OnlyDigits_KeyPress;
@@ -56,20 +55,14 @@ namespace ProyectoNetshop.formularios
             tbBusquedaNombreUsuario.KeyPress += TextBox_OnlyLetters_KeyPress;
             // Solo dígitos para el DNI
             tbBusquedaDniUsuario.KeyPress += TextBox_OnlyDigits_KeyPress;
-
-            //// Enmascarar con el carácter del sistema (●) o usa PasswordChar = '*'
-            //tbContraseniaUsuario.UseSystemPasswordChar = true;
-
-            //// Solo lectura para evitar cambios
-            //tbContraseniaUsuario.ReadOnly = true;
         }
 
         private void usuarios_Load(object sender, EventArgs e)
         {
-            // Mostrar formato corto de fecha
+            // Mostramos el formato corto de fecha
             fechaNacimientoUsuario.Format = DateTimePickerFormat.Short;
 
-            // Habilitar el checkbox para activar/desactivar la fecha
+            // Habilitamos el checkbox para activar/desactivar la fecha
             fechaNacimientoUsuario.ShowCheckBox = true;
 
             // Por defecto, que venga “sin fecha” (unchecked)
@@ -79,14 +72,12 @@ namespace ProyectoNetshop.formularios
             cbActivosUsuarios.Checked = true;
             cbInactivosUsuarios.Checked = true;
 
-            // Suscribir al mismo handler
             cbActivosUsuarios.CheckedChanged += Filtro_CheckedChanged;
             cbInactivosUsuarios.CheckedChanged += Filtro_CheckedChanged;
 
             // Por defecto, activo = 1
             rbActivoUsuarioSi.Checked = true;
 
-            // Por defecto, sexo = “Masculino”
             rbMasculinoUsuario.Checked = false;
             rbFemeninoUsuario.Checked = false;
             rbOtrosUsuario.Checked = true;
@@ -99,19 +90,18 @@ namespace ProyectoNetshop.formularios
             cbPerfilUsuario.DataSource = perfiles;
             cbPerfilUsuario.DisplayMember = "descripcion";
             cbPerfilUsuario.ValueMember = "id_perfil";
-            //cbPerfilUsuario.SelectedIndex = -1; // opcional
 
-            // 2) Selecciono “Vendedor” por defecto
+            // Selecciono “Vendedor” por defecto
             var vendedor = perfiles
                 .FirstOrDefault(p => p.descripcion.Equals("Vendedor", StringComparison.OrdinalIgnoreCase));
 
             if (vendedor != null)
                 cbPerfilUsuario.SelectedValue = vendedor.id_perfil;
 
-            // Obtener la lista de usuarios
+            // Obtengo la lista de usuarios
             var usuarios = ObtenerUsuarios();
 
-            // Llenas la propiedad descripcion de cada usuario
+            // Obtener la descripcion de perfiles de cada usuario
             for (int i = 0; i < usuarios.Count; i++)
             {
                 for (int j = 0; j < perfiles.Count; j++)
@@ -124,7 +114,7 @@ namespace ProyectoNetshop.formularios
                 }
             }
 
-            // Configurar DataGridView manualmente
+            // Configuramos el DataGridView manualmente
             dgvUsuarios.AutoGenerateColumns = false;
             dgvUsuarios.Columns.Clear();
 
@@ -194,6 +184,7 @@ namespace ProyectoNetshop.formularios
                 HeaderText = "Activo",
                 DataPropertyName = "ActivoTexto"
             });
+
             // Asigno la lista ya procesada
             dgvUsuarios.DataSource = usuarios;
         }
@@ -203,7 +194,7 @@ namespace ProyectoNetshop.formularios
             // Si es la columna “pass”
             if (dgvUsuarios.Columns[e.ColumnIndex].Name == "pass")
             {
-                // Asigna siempre cinco asteriscos (o la longitud que quieras)
+                // Asigna siempre 10 asteriscos
                 e.Value = "***************";
                 e.FormattingApplied = true;
             }
@@ -227,46 +218,19 @@ namespace ProyectoNetshop.formularios
             }
         }
 
-        //private void btnGuardar_Click(object sender, EventArgs e)
-        //{
-        //    Usuario_model usuario = new Usuario_model();
-        //    usuario.nombre = tbNombreUsuario.Text;
-        //    usuario.apellido = tbApellidoUsuario.Text;
-        //    usuario.email = tbEmailUsuario.Text;
-        //    usuario.pass = tbContraseniaUsuario.Text;
-        //    if (rbActivoUsuarioSi.Checked)
-        //        usuario.activo = rbActivoUsuarioSi.Text;
-        //    else if (rbActivoUsuarioNo.Checked)
-        //        usuario.activo = rbActivoUsuarioNo.Text;
-        //    else
-        //        usuario.activo = "Otros";  // opcional, para manejar ningún marcado
-        //    usuario.id_perfil = Convert.ToInt32(cbPerfilUsuario.SelectedValue);
-
-        //    int result = Usuario_controller.agregarUsuario(usuario);
-
-        //    if (result > 0)
-        //        MessageBox.Show("Se guardo con exito");
-        //    else
-        //        MessageBox.Show("Error al guardar");
-        //}
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            // 1) Validar campos; si falla, termina aquí
             if (!ValidarCampos())
                 return;
 
-            // 2) Confirmar acción de crear vs. actualizar
+            // Se confirmar cual acción de se va a ejecutar (crear o actualizar)
             string accion = _usuarioSeleccionadoId < 0 ? "crear" : "actualizar";
-            var dr = MessageBox.Show(
-                $"¿Seguro que deseas {accion} este usuario?",
-                "Confirmar",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            var dr = MessageBox.Show($"¿Seguro que deseas {accion} este usuario?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (dr != DialogResult.Yes)
                 return;
 
-            // 3) Armar el objeto Usuario_model
+            // Se armar el objeto Usuario_model
             var usuario = new Usuario_model
             {
                 nombre = tbNombreUsuario.Text.Trim(),
@@ -278,12 +242,12 @@ namespace ProyectoNetshop.formularios
                                   : rbFemeninoUsuario.Checked ? "Femenino"
                                                                   : "Otros",
                 fecha_nacimiento = fechaNacimientoUsuario.Checked ? fechaNacimientoUsuario.Value.Date : (DateTime?)null,
-                telefono = string.IsNullOrEmpty(tbTelefonoUsuario.Text.Trim()) ? (int?)null : int.Parse(tbTelefonoUsuario.Text.Trim()),
+                telefono = long.TryParse(tbTelefonoUsuario.Text.Trim(), out long tel) ? (long?)tel : (long?)null,
                 dni = int.Parse(tbDniUsuario.Text),
                 id_perfil = Convert.ToInt32(cbPerfilUsuario.SelectedValue)
             };
 
-            // 4) Ejecutar INSERT o UPDATE
+            // Se ejecuta el INSERT o UPDATE
             int filas;
             if (_usuarioSeleccionadoId < 0)
                 filas = Usuario_controller.agregarUsuario(usuario);
@@ -293,21 +257,10 @@ namespace ProyectoNetshop.formularios
                 filas = Usuario_controller.actualizarUsuario(usuario);
             }
 
-            // 5) Mensaje post-operación
             if (filas == 1)
-                MessageBox.Show(
-                    _usuarioSeleccionadoId < 0
-                      ? "Usuario creado con éxito."
-                      : "Usuario actualizado con éxito.",
-                    "Éxito",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                MessageBox.Show(_usuarioSeleccionadoId < 0 ? "Usuario creado con éxito." : "Usuario actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else
-                MessageBox.Show(
-                    "Ocurrió un error durante la operación.",
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MessageBox.Show("Ocurrió un error durante la operación.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             FiltrarYRefrescar();
             LimpiarControles();
@@ -329,17 +282,16 @@ namespace ProyectoNetshop.formularios
             var lista = new List<Perfil_model>();
 
             using (SqlConnection conexion = BD.BaseDeDatos.obtenerConexion())
-            using (SqlCommand comando = new SqlCommand(
-                "SELECT id_perfil, descripcion, activo FROM perfil", conexion))
+            using (SqlCommand comando = new SqlCommand("SELECT id_perfil, descripcion, activo FROM perfil", conexion))
             {
                 using (SqlDataReader reader = comando.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         var perfil = new Perfil_model(
-                            reader.GetInt32(0),     // id_perfil
-                            reader.GetString(1),    // descripcion
-                            reader.GetInt32(2)     // activo
+                            reader.GetInt32(0), // id_perfil
+                            reader.GetString(1), // descripcion
+                            reader.GetInt32(2) // activo
                         );
                         lista.Add(perfil);
                     }
@@ -354,8 +306,7 @@ namespace ProyectoNetshop.formularios
             var lista = new List<Usuario_model>();
             using var con = BD.BaseDeDatos.obtenerConexion();
             using var cmd = con.CreateCommand();
-            cmd.CommandText = @"SELECT id_usuario, nombre, apellido, email, pass, activo, 
-                                       sexo, fecha_nacimiento, telefono, dni, id_perfil FROM usuario";
+            cmd.CommandText = @"SELECT id_usuario, nombre, apellido, email, pass, activo, sexo, fecha_nacimiento, telefono, dni, id_perfil FROM usuario";
             using var rd = cmd.ExecuteReader();
             while (rd.Read())
             {
@@ -363,11 +314,7 @@ namespace ProyectoNetshop.formularios
                 DateTime? fn = rd.IsDBNull(7)
                     ? (DateTime?)null
                     : rd.GetDateTime(7);
-
-                // teléfono opcional:
-                int? tel = rd.IsDBNull(8)
-                    ? (int?)null
-                    : rd.GetInt32(8);
+                long? tel = rd.IsDBNull(8) ? (long?)null : rd.GetInt64(8);
 
                 var usuario = new Usuario_model
                 {
@@ -399,29 +346,22 @@ namespace ProyectoNetshop.formularios
             tbNombreUsuario.Text = u.nombre;
             tbApellidoUsuario.Text = u.apellido;
             tbEmailUsuario.Text = u.email;
-            // Convertir binario a texto (solo para mostrar)
-            tbContraseniaUsuario.Text = u.pass != null
-                ? Encoding.UTF8.GetString(u.pass)
-                : string.Empty;
-            // 2) Aseguro que el TextBox empiece enmascarado
+            tbContraseniaUsuario.Text = u.pass != null ? Encoding.UTF8.GetString(u.pass) : string.Empty;
             tbContraseniaUsuario.UseSystemPasswordChar = true;
-
-            // 3) Reinicio el CheckBox para que false→true funcione siempre
             cbOcultalContraseniaUser.Checked = false;
 
             rbActivoUsuarioSi.Checked = u.activo == 1;
             rbActivoUsuarioNo.Checked = u.activo == 0;
-            // sexo
             rbMasculinoUsuario.Checked = u.sexo == "Masculino";
             rbFemeninoUsuario.Checked = u.sexo == "Femenino";
             rbOtrosUsuario.Checked = u.sexo == "Otros";
 
             if (!u.fecha_nacimiento.HasValue)
-                fechaNacimientoUsuario.CustomFormat = " ";  // muestra vacío
+                fechaNacimientoUsuario.CustomFormat = " ";
             else
                 fechaNacimientoUsuario.CustomFormat = "dd/MM/yyyy";
 
-            tbTelefonoUsuario.Text = u.telefono.ToString();
+            tbTelefonoUsuario.Text = u.telefono?.ToString() ?? string.Empty;
             tbDniUsuario.Text = u.dni.ToString();
 
             cbPerfilUsuario.SelectedValue = u.id_perfil;
@@ -440,45 +380,30 @@ namespace ProyectoNetshop.formularios
             var perfiles = ObtenerPerfiles();
             var usuarios = ObtenerUsuarios();
 
-            // 1) Filtrar por activo/inactivo
-            var filtrados = usuarios
-              .Where(u =>
-                  (cbActivosUsuarios.Checked && u.activo == 1) ||
-                  (cbInactivosUsuarios.Checked && u.activo == 0)
-              )
-              .ToList();
+            // Se aplica un filtro por activo/inactivo
+            var filtrados = usuarios.Where(u => (cbActivosUsuarios.Checked && u.activo == 1) || (cbInactivosUsuarios.Checked && u.activo == 0)).ToList();
 
-            // 2) Si hay texto en el DNI, filtrar por prefijo
+            // Si hay texto en el DNI, filtrar por prefijo
             var textoDni = tbBusquedaDniUsuario.Text.Trim();
             if (textoDni.Length > 0 && textoDni.All(char.IsDigit))
             {
-                filtrados = filtrados
-                  .Where(u => u.dni.ToString().StartsWith(textoDni))
-                  .ToList();
+                filtrados = filtrados.Where(u => u.dni.ToString().StartsWith(textoDni)).ToList();
             }
 
-            // 3) Si hay texto en el Nombre, filtrar por contenido (case-insensitive)
+            // Si hay texto en el Nombre, filtrar por contenido
             var textoNom = tbBusquedaNombreUsuario.Text.Trim();
             if (textoNom.Length > 0)
             {
-                filtrados = filtrados
-                  .Where(u =>
-                      u.nombre
-                       .IndexOf(textoNom, StringComparison.OrdinalIgnoreCase) >= 0
-                  )
-                  .ToList();
+                filtrados = filtrados.Where(u => u.nombre.IndexOf(textoNom, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
             }
 
-            // 4) Asignar descripción de perfil a los resultantes
+            // Asignar la descripción de perfil
             foreach (var u in filtrados)
             {
-                u.descripcion = perfiles
-                  .FirstOrDefault(p => p.id_perfil == u.id_perfil)?
-                  .descripcion
-                  ?? "Desconocido";
+                u.descripcion = perfiles.FirstOrDefault(p => p.id_perfil == u.id_perfil)?.descripcion ?? "Desconocido";
             }
 
-            // 5) Refrescar el DataGridView con la lista filtrada
+            // Se refresca el DataGridView con la lista filtrada
             dgvUsuarios.DataSource = null;
             dgvUsuarios.DataSource = filtrados;
         }
@@ -488,36 +413,18 @@ namespace ProyectoNetshop.formularios
             tbNombreUsuario.Clear();
             tbApellidoUsuario.Clear();
             tbEmailUsuario.Clear();
-
-            //tbContraseniaUsuario.Clear();
-            //cbOcultalContraseniaUser.Visible = false;
-            //cbOcultalContraseniaUser.Checked = false;
-
             tbContraseniaUsuario.Clear();
             tbContraseniaUsuario.UseSystemPasswordChar = true;
-
-            // El CheckBox sigue visible para poder alternar si quiere ver lo que escribe
             cbOcultalContraseniaUser.Checked = false;
-
             tbTelefonoUsuario.Clear();
             tbDniUsuario.Clear();
-
-            // Defaults de RadioButtons
             rbActivoUsuarioSi.Checked = true;
             rbActivoUsuarioNo.Checked = false;
             rbMasculinoUsuario.Checked = false;
             rbFemeninoUsuario.Checked = false;
             rbOtrosUsuario.Checked = true;
-
-            // 1) Resetear fecha
             fechaNacimientoUsuario.Checked = false;
-            // Opción: cambiar formato a “vacío” para reforzar la UX
             fechaNacimientoUsuario.CustomFormat = " ";
-            // Mantener ShowCheckBox = true
-
-            // 2) Resetear perfil a “Vendedor”
-            // Suponiendo que “Vendedor” tiene id_perfil = 2
-            // O bien buscas dinámicamente en el DataSource
             cbPerfilUsuario.SelectedValue = 2;
 
             // Indica que ya no hay un usuario seleccionado
@@ -525,45 +432,30 @@ namespace ProyectoNetshop.formularios
         }
         private void btnEliminar_Click(object sender, EventArgs e)
         {
-            // 1) Si no hay selección: limpio los campos
+            // Si no hay selección: limpio los campos
             if (_usuarioSeleccionadoId < 0)
             {
                 LimpiarControles();
                 return;
             }
 
-            // 2) Confirmación
-            var dr = MessageBox.Show(
-                "¿Seguro que deseas desactivar este usuario?",
-                "Confirmar baja",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            var dr = MessageBox.Show("¿Seguro que deseas desactivar este usuario?", "Confirmar baja", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (dr != DialogResult.Yes)
                 return;
 
-            // 3) Intentar “baja”
             int filas = Usuario_controller.eliminarUsuario(_usuarioSeleccionadoId);
 
             if (filas == 1)
             {
-                MessageBox.Show(
-                    "Usuario desactivado con éxito.",
-                    "Éxito",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                MessageBox.Show("Usuario desactivado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                // 0 filas → ya estaba inactivo
-                MessageBox.Show(
-                    "El usuario ya estaba desactivado.",
-                    "Información",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MessageBox.Show("El usuario ya estaba desactivado.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            // 4) Refrescar listado y limpiar
+            // Se refresca el listado y se limpia
             FiltrarYRefrescar();
             LimpiarControles();
         }
@@ -586,7 +478,6 @@ namespace ProyectoNetshop.formularios
 
         private void Filtro_CheckedChanged(object sender, EventArgs e)
         {
-            // Si ninguno está marcado, vuelvo a marcar el que disparó el evento
             if (!cbActivosUsuarios.Checked && !cbInactivosUsuarios.Checked)
             {
                 var cb = (CheckBox)sender;
@@ -627,7 +518,7 @@ namespace ProyectoNetshop.formularios
                 return false;
             }
 
-            // 1. Email: obligatorio y debe terminar en .com
+            // Email
             string email = tbEmailUsuario.Text.Trim();
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -639,7 +530,7 @@ namespace ProyectoNetshop.formularios
                 tbEmailUsuario.Focus();
                 return false;
             }
-            // Regex: cualquier texto sin espacios ni @, luego @, luego texto, y final .com
+            // Email Regex
             var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.com$", RegexOptions.IgnoreCase);
             if (!emailRegex.IsMatch(email))
             {
@@ -652,7 +543,7 @@ namespace ProyectoNetshop.formularios
                 return false;
             }
 
-            // 2. Contraseña: 8–20 caracteres, al menos una mayúscula, un número y solo letras/dígitos
+            // Contraseña
             string password = tbContraseniaUsuario.Text;
             if (string.IsNullOrEmpty(password))
             {
@@ -664,11 +555,7 @@ namespace ProyectoNetshop.formularios
                 tbContraseniaUsuario.Focus();
                 return false;
             }
-            // Regex con positive lookahead:
-            // (?=.{8,20}$) → longitud entre 8 y 20
-            // (?=.*[A-Z]) → al menos una mayúscula
-            // (?=.*\d)    → al menos un dígito
-            // [A-Za-z\d]+ → sólo letras y dígitos
+            // Contraseña Regex
             var passRegex = new Regex(@"^(?=.{8,20}$)(?=.*[A-Z])(?=.*\d)[A-Za-z\d]+$");
             if (!passRegex.IsMatch(password))
             {
@@ -682,8 +569,7 @@ namespace ProyectoNetshop.formularios
                 return false;
             }
 
-            // Fecha de nacimiento (entre 18 y 100 años, no futura)
-            // Solo validar fecha si el checkbox está marcado
+            // Fecha de nacimiento
             if (fechaNacimientoUsuario.Checked)
             {
                 DateTime fn = fechaNacimientoUsuario.Value.Date;
@@ -714,12 +600,13 @@ namespace ProyectoNetshop.formularios
                 return false;
             }
 
-            // Teléfono (opcional, 10 dígitos si se ingresa)
+            // Teléfono
             string txtTel = tbTelefonoUsuario.Text.Trim();
             if (!string.IsNullOrEmpty(txtTel))
             {
                 if (!long.TryParse(txtTel, out long tel)
-                 || tel < 1_000_000_000L || tel > 9_999_999_999L)
+                 || tel < 1_000_000_000L
+                 || tel > 9_999_999_999L)
                 {
                     MessageBox.Show(
                         "El teléfono debe ser un número de 10 dígitos válido.",
@@ -740,8 +627,6 @@ namespace ProyectoNetshop.formularios
                 return false;
             }
 
-            // Todos los checks pasaron
-
             // Extraer valores para la comprobación
             int dniR = int.Parse(tbDniUsuario.Text);
             string emailR = tbEmailUsuario.Text.Trim();
@@ -751,7 +636,6 @@ namespace ProyectoNetshop.formularios
             if (Usuario_controller.ExisteEmailODni(dniR, emailR, idActR))
             {
                 MessageBox.Show("El DNI o el email ya están registrados en otro usuario.", "Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                // Focalizar según prefieras
                 tbDniUsuario.Focus();
                 return false;
             }
@@ -767,18 +651,18 @@ namespace ProyectoNetshop.formularios
 
             if (!esControl && !esDigito)
             {
-                e.Handled = true;  // cancela la tecla
+                e.Handled = true;
             }
         }
 
-        // Permite solo letras (incluye tildes), control (Backspace, flechas) y espacios
+        // Permite solo letras y espacios
         private void TextBox_OnlyLetters_KeyPress(object sender, KeyPressEventArgs e)
         {
-            bool esControl = char.IsControl(e.KeyChar); // Backspace, Supr, flechas…
-            bool esLetra = char.IsLetter(e.KeyChar);  // A–Z, a–z, acentuadas…
-            bool esEspacio = e.KeyChar == ' ';          // espacio en blanco
+            bool esControl = char.IsControl(e.KeyChar);
+            bool esLetra = char.IsLetter(e.KeyChar);
+            bool esEspacio = e.KeyChar == ' ';
 
-            // Si NO es control, letra ni espacio, cancelar la tecla
+            // Si NO es letra ni espacio se cancela la tecla
             if (!esControl && !esLetra && !esEspacio)
                 e.Handled = true;
         }
@@ -790,14 +674,20 @@ namespace ProyectoNetshop.formularios
 
         private void cbOcultalContraseniaUser_CheckedChanged(object sender, EventArgs e)
         {
-            // Si está chequeado, quita la máscara para ver el texto;
-            // si no, vuelve a enmascarar.
-            //tbContraseniaUsuario.UseSystemPasswordChar = !cbOcultalContraseniaUser.Checked;
-
             tbContraseniaUsuario.UseSystemPasswordChar = !cbOcultalContraseniaUser.Checked;
         }
 
         private void dgvUsuarios_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void tbTelefonoUsuario_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
         }

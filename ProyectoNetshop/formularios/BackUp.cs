@@ -17,7 +17,6 @@ namespace vistaDeProyectoC
         {
             InitializeComponent();
 
-            // Estado inicial
             TBBaseDeDatos.Clear();
             TBGuardarRuta.Clear();
             TBGuardarRuta.Enabled = false;
@@ -25,14 +24,8 @@ namespace vistaDeProyectoC
             BGuardarRuta.Enabled = false;
             BBackUp.Enabled = false;
 
-            // Un único manejador para ambos TextChanged
             TBBaseDeDatos.TextChanged += Campos_TextChanged;
             TBGuardarRuta.TextChanged += Campos_TextChanged;
-
-            // Clicks
-            //BConectar.Click += BConectar_Click;
-            //BGuardarRuta.Click += BGuardarRuta_Click;
-            //BBackUp.Click += BBackUp_Click;
         }
 
         private void FBackUp_Load(object sender, EventArgs e)
@@ -45,7 +38,6 @@ namespace vistaDeProyectoC
 
         }
 
-        // Mismo método para actualizar estado de botones
         private void Campos_TextChanged(object sender, EventArgs e)
         {
             BConectar.Enabled = !string.IsNullOrWhiteSpace(TBBaseDeDatos.Text);
@@ -83,8 +75,12 @@ namespace vistaDeProyectoC
                 return;
             }
 
-            MessageBox.Show(
-                "¡Todos los campos están completos! Listo para el BackUp.", "Preparado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("¡Todos los campos están completos! Listo para el BackUp.", "Preparado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

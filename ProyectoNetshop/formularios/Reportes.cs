@@ -20,12 +20,10 @@ namespace ProyectoNetshop.formularios
             idPerfil = p_idPerfil;
             this.Load += Reportes_Load;
 
-            // Desuscribimos por si hubiera duplicados en el Designer
             BGenerarRecaudacionGerente.Click -= OnGenerarGerente_Click;
             BGenerarReporteGerente.Click -= OnGenerarGerente_Click;
             BGenerarTotalVentasGerente.Click -= OnGenerarGerente_Click;
 
-            // Suscribimos los tres botones al mismo handler
             BGenerarRecaudacionGerente.Click += OnGenerarGerente_Click;
             BGenerarReporteGerente.Click += OnGenerarGerente_Click;
             BGenerarTotalVentasGerente.Click += OnGenerarGerente_Click;
@@ -41,29 +39,21 @@ namespace ProyectoNetshop.formularios
 
             if (idPerfil == 3)
                 CargarComboVendedores();
-            //else
-            // ocultas o deshabilitas los combos si no es gerente
-            //panelVendedores.Visible = false;
         }
 
         private void CargarComboVendedores()
         {
-            // 1) Traer lista de vendedores
             var vendedores = Usuario_controller.ObtenerVendedores();
 
-            // 2) Proyectar a objeto anónimo que tenga dni y nombre completo
             var data = vendedores
                 .Select(v => new
                 {
                     v.dni,
                     NombreCompleto = $"{v.nombre} {v.apellido}"
-                })
-                .ToList();
+                }).ToList();
 
-            // 3) Crear un BindingSource compartido
             var bs = new BindingSource { DataSource = data };
 
-            // 4) Asignar a los ComboBox con distintos DisplayMember
             cbVendedoresDniReporte.DataSource = bs;
             cbVendedoresDniReporte.DisplayMember = "dni";
             cbVendedoresDniReporte.ValueMember = "dni";
@@ -72,7 +62,6 @@ namespace ProyectoNetshop.formularios
             cbVendedoresNombreReporte.DisplayMember = "NombreCompleto";
             cbVendedoresNombreReporte.ValueMember = "dni";
 
-            // 5) (Opcional) estilo y texto de ayuda
             cbVendedoresDniReporte.SelectedIndex = -1;
             cbVendedoresNombreReporte.SelectedIndex = -1;
             cbVendedoresDniReporte.Text = "Selecciona DNI...";
@@ -87,26 +76,13 @@ namespace ProyectoNetshop.formularios
 
         private void OnGenerarGerente_Click(object sender, EventArgs e)
         {
-            // 1) Validar rango de fechas
             if (!ValidarRangoFechas())
                 return;
 
-            // 2) Saber qué botón disparó el evento
             var boton = sender as Button;
-            string accion = boton == BGenerarRecaudacionGerente
-                ? "recaudación"
-                : boton == BGenerarReporteGerente
-                    ? "reporte"
-                    : "total de ventas";
+            string accion = boton == BGenerarRecaudacionGerente ? "recaudación" : boton == BGenerarReporteGerente ? "reporte" : "total de ventas";
 
-            // 3) Mostrar mensaje de éxito
-            MessageBox.Show(
-                $"Rango de fechas válido. Generando {accion} para Gerente…",
-                "Éxito",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-
-            // Aquí iría la lógica real de generación según el botón
+            MessageBox.Show($"Rango de fechas válido. Generando {accion} para Gerente…", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private bool ValidarRangoFechas()
@@ -124,10 +100,6 @@ namespace ProyectoNetshop.formularios
                 fechaDesdeGerente.Focus();
                 return false;
             }
-
-            // Opcional: prohibir rangos demasiado largos, fechas futuras, etc.
-            // if ((hasta - desde).TotalDays > 365) { … }
-
             return true;
         }
     }

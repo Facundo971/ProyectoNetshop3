@@ -16,19 +16,20 @@ namespace ProyectoNetshop.Cruds
         public int activo { get; set; }
         public string sexo { get; set; }
         public DateTime? fecha_nacimiento { get; set; }
-        public int? telefono { get; set; }
+        public long? telefono { get; set; }
         public int dni { get; set; }
         public int id_perfil { get; set; }
 
-        // Esta es la propiedad donde volcarás el texto del perfil
+        // Obtenemos la descripcion del perfil
         public string descripcion { get; set; }
 
+        // Obtenemos la descripcion del ususairo que esta activo
         public string ActivoTexto => activo == 1 ? "SI" : "NO";
 
         public Usuario_model() { }
 
         public Usuario_model(int p_id_usuario, string p_nombre, string p_apellido, string p_email, byte[] p_pass, int p_activo, string p_sexo, DateTime p_fecha_nacimiento,
-                             int p_telefono, int p_dni, int p_id_perfil)
+                             long p_telefono, int p_dni, int p_id_perfil)
         {
             this.id_usuario = p_id_usuario;
             this.nombre = p_nombre;

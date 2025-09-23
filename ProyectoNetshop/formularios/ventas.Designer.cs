@@ -62,21 +62,20 @@
             groupBox5 = new GroupBox();
             cbTipoFacturaVenta = new ComboBox();
             groupBox6 = new GroupBox();
-            dataGridView1 = new DataGridView();
+            dgvVentas = new DataGridView();
             codIdProducto = new DataGridViewTextBoxColumn();
             colDescripcion = new DataGridViewTextBoxColumn();
             colCantidad = new DataGridViewTextBoxColumn();
             colSubtotal = new DataGridViewTextBoxColumn();
             totalVenta = new DataGridViewTextBoxColumn();
             fechaVenta = new DataGridViewTextBoxColumn();
-            colEliminar = new DataGridViewTextBoxColumn();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox4.SuspendLayout();
             groupBox5.SuspendLayout();
             groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvVentas).BeginInit();
             SuspendLayout();
             // 
             // groupBox1
@@ -511,9 +510,9 @@
             groupBox6.TabIndex = 31;
             groupBox6.TabStop = false;
             // 
-            // dataGridView1
+            // dgvVentas
             // 
-            dataGridView1.BackgroundColor = Color.FromArgb(0, 0, 64);
+            dgvVentas.BackgroundColor = Color.SlateGray;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = SystemColors.Control;
             dataGridViewCellStyle1.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
@@ -521,17 +520,16 @@
             dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { codIdProducto, colDescripcion, colCantidad, colSubtotal, totalVenta, fechaVenta, colEliminar });
-            dataGridView1.Dock = DockStyle.Bottom;
-            dataGridView1.Location = new Point(0, 428);
-            dataGridView1.Margin = new Padding(3, 4, 3, 4);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 51;
-            dataGridView1.Size = new Size(1177, 271);
-            dataGridView1.TabIndex = 32;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            dgvVentas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dgvVentas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvVentas.Columns.AddRange(new DataGridViewColumn[] { codIdProducto, colDescripcion, colCantidad, colSubtotal, totalVenta, fechaVenta });
+            dgvVentas.Location = new Point(14, 477);
+            dgvVentas.Margin = new Padding(3, 4, 3, 4);
+            dgvVentas.Name = "dgvVentas";
+            dgvVentas.RowHeadersWidth = 51;
+            dgvVentas.Size = new Size(1149, 127);
+            dgvVentas.TabIndex = 32;
+            dgvVentas.CellContentClick += dataGridView1_CellContentClick;
             // 
             // codIdProducto
             // 
@@ -545,7 +543,7 @@
             colDescripcion.HeaderText = "Descripcion";
             colDescripcion.MinimumWidth = 320;
             colDescripcion.Name = "colDescripcion";
-            colDescripcion.Width = 350;
+            colDescripcion.Width = 470;
             // 
             // colCantidad
             // 
@@ -575,20 +573,13 @@
             fechaVenta.Name = "fechaVenta";
             fechaVenta.Width = 125;
             // 
-            // colEliminar
-            // 
-            colEliminar.HeaderText = "Eliminar";
-            colEliminar.MinimumWidth = 6;
-            colEliminar.Name = "colEliminar";
-            colEliminar.Width = 125;
-            // 
             // ventas
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.SlateGray;
+            BackColor = Color.FromArgb(0, 0, 64);
             ClientSize = new Size(1177, 699);
-            Controls.Add(dataGridView1);
+            Controls.Add(dgvVentas);
             Controls.Add(groupBox6);
             Controls.Add(groupBox5);
             Controls.Add(groupBox4);
@@ -610,7 +601,7 @@
             groupBox5.ResumeLayout(false);
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvVentas).EndInit();
             ResumeLayout(false);
         }
 
@@ -649,13 +640,12 @@
         private GroupBox groupBox5;
         private GroupBox groupBox6;
         private ComboBox cbTipoFacturaVenta;
-        private DataGridView dataGridView1;
+        private DataGridView dgvVentas;
         private DataGridViewTextBoxColumn codIdProducto;
         private DataGridViewTextBoxColumn colDescripcion;
         private DataGridViewTextBoxColumn colCantidad;
         private DataGridViewTextBoxColumn colSubtotal;
         private DataGridViewTextBoxColumn totalVenta;
         private DataGridViewTextBoxColumn fechaVenta;
-        private DataGridViewTextBoxColumn colEliminar;
     }
 }

@@ -38,9 +38,11 @@
             btnIconBackup = new FontAwesome.Sharp.IconButton();
             btnIconUsuarios = new FontAwesome.Sharp.IconButton();
             panelLogo = new Panel();
-            panelContenedor = new Panel();
             panelSuperior = new Panel();
+            panel1 = new Panel();
+            panelContenedor = new Panel();
             panelIzquierdo.SuspendLayout();
+            panelSuperior.SuspendLayout();
             SuspendLayout();
             // 
             // panelIzquierdo
@@ -58,7 +60,7 @@
             panelIzquierdo.Location = new Point(0, 0);
             panelIzquierdo.Margin = new Padding(3, 4, 3, 4);
             panelIzquierdo.Name = "panelIzquierdo";
-            panelIzquierdo.Size = new Size(229, 908);
+            panelIzquierdo.Size = new Size(229, 753);
             panelIzquierdo.TabIndex = 0;
             // 
             // btnSalir
@@ -73,7 +75,7 @@
             btnSalir.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSalir.IconSize = 40;
             btnSalir.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSalir.Location = new Point(0, 828);
+            btnSalir.Location = new Point(0, 673);
             btnSalir.Margin = new Padding(3, 4, 3, 4);
             btnSalir.Name = "btnSalir";
             btnSalir.Padding = new Padding(11, 0, 23, 0);
@@ -234,19 +236,10 @@
             panelLogo.Size = new Size(229, 133);
             panelLogo.TabIndex = 0;
             // 
-            // panelContenedor
-            // 
-            panelContenedor.Dock = DockStyle.Bottom;
-            panelContenedor.Location = new Point(229, 157);
-            panelContenedor.Margin = new Padding(3, 4, 3, 4);
-            panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(1216, 751);
-            panelContenedor.TabIndex = 2;
-            panelContenedor.Paint += panelContenedor_Paint;
-            // 
             // panelSuperior
             // 
             panelSuperior.BackColor = Color.FromArgb(0, 0, 64);
+            panelSuperior.Controls.Add(panel1);
             panelSuperior.Dock = DockStyle.Top;
             panelSuperior.Location = new Point(229, 0);
             panelSuperior.Margin = new Padding(3, 4, 3, 4);
@@ -254,12 +247,31 @@
             panelSuperior.Size = new Size(1216, 133);
             panelSuperior.TabIndex = 1;
             // 
+            // panel1
+            // 
+            panel1.BackColor = Color.SlateGray;
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1216, 133);
+            panel1.TabIndex = 3;
+            // 
+            // panelContenedor
+            // 
+            panelContenedor.Dock = DockStyle.Bottom;
+            panelContenedor.Location = new Point(229, 133);
+            panelContenedor.Margin = new Padding(3, 4, 3, 4);
+            panelContenedor.Name = "panelContenedor";
+            panelContenedor.Size = new Size(1216, 620);
+            panelContenedor.TabIndex = 2;
+            panelContenedor.Paint += panelContenedor_Paint;
+            // 
             // principal
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SlateGray;
-            ClientSize = new Size(1445, 908);
+            ClientSize = new Size(1445, 753);
             Controls.Add(panelContenedor);
             Controls.Add(panelSuperior);
             Controls.Add(panelIzquierdo);
@@ -268,6 +280,7 @@
             Text = "Netshop";
             Load += principal_Load;
             panelIzquierdo.ResumeLayout(false);
+            panelSuperior.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -283,6 +296,7 @@
         private FontAwesome.Sharp.IconButton btnIconProductos;
         private FontAwesome.Sharp.IconButton btnSalir;
         private Panel panelSuperior;
+        private Panel panel1;
         private Panel panelContenedor;
     }
 }

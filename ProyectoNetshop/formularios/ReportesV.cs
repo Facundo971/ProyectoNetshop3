@@ -30,6 +30,7 @@ namespace ProyectoNetshop.formularios
         {
             tbDniVendedorReporte.Text = dni.ToString();
             tbNombreVendedorReporte.Text = nombreCompleto;
+            dgvReporteVentaVendedor.Visible = false;
         }
 
         private void tbDniVendedorReporte_TextChanged(object sender, EventArgs e)
@@ -42,25 +43,35 @@ namespace ProyectoNetshop.formularios
             DateTime desde = fechaDesdeVendedor.Value.Date;
             DateTime hasta = fechaHastaVendedor.Value.Date;
 
-            // 1) Comprueba que "Hasta" sea igual o posterior a "Desde"
             if (hasta < desde)
             {
-                MessageBox.Show(
-                    "La fecha 'Hasta' debe ser igual o posterior a la fecha 'Desde'.",
-                    "Validación",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MessageBox.Show("La fecha 'Hasta' debe ser igual o posterior a la fecha 'Desde'.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 2) Todo OK: muestra mensaje de éxito
-            MessageBox.Show(
-                "Rango de fechas válido. Generando reporte de vendedores…",
-                "Éxito",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            MessageBox.Show("Rango de fechas válido. Generando reporte de vendedores…", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            // Aquí iría tu lógica real de generación de reporte…
+            CargarReporte();
+        }
+
+        private void CargarReporte()
+        {
+            dgvReporteVentaVendedor.Rows.Clear();
+            dgvReporteVentaVendedor.Rows.Add(1, "22/09/2025", "A", "Juan Perez", 100000);
+            dgvReporteVentaVendedor.Rows.Add(2, "22/09/2025", "B", "María Pérez", 120000);
+            dgvReporteVentaVendedor.Rows.Add(3, "22/09/2025", "A", "Ramón Pérez", 200000);
+            dgvReporteVentaVendedor.Visible = true;
+        }
+
+
+        private void dgvReporteVentaVendedor_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

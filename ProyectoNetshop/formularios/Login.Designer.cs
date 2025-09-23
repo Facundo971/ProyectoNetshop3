@@ -139,6 +139,7 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(538, 397);
             panel2.TabIndex = 7;
+            panel2.Paint += panel2_Paint;
             // 
             // cbOcultarContraseniaLoginUser
             // 

@@ -104,8 +104,9 @@
             panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
             panel1.RightToLeft = RightToLeft.No;
-            panel1.Size = new Size(1159, 292);
+            panel1.Size = new Size(1159, 652);
             panel1.TabIndex = 0;
+            panel1.Paint += panel1_Paint;
             // 
             // cbOcultalContraseniaUser
             // 
@@ -380,6 +381,7 @@
             tbTelefonoUsuario.Name = "tbTelefonoUsuario";
             tbTelefonoUsuario.Size = new Size(209, 27);
             tbTelefonoUsuario.TabIndex = 6;
+            tbTelefonoUsuario.TextChanged += tbTelefonoUsuario_TextChanged;
             // 
             // lbApellidoUsuario
             // 
@@ -449,10 +451,10 @@
             panel2.Controls.Add(cbActivosUsuarios);
             panel2.Controls.Add(dgvUsuarios);
             panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 345);
+            panel2.Location = new Point(0, 323);
             panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1159, 307);
+            panel2.Size = new Size(1159, 329);
             panel2.TabIndex = 1;
             // 
             // lbBuscadorUsuario
@@ -536,7 +538,7 @@
             dgvUsuarios.ReadOnly = true;
             dgvUsuarios.RowHeadersWidth = 51;
             dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvUsuarios.Size = new Size(1112, 213);
+            dgvUsuarios.Size = new Size(1112, 235);
             dgvUsuarios.TabIndex = 0;
             dgvUsuarios.CellContentClick += dgvUsuarios_CellContentClick;
             // 
@@ -556,6 +558,7 @@
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(3, 4, 3, 4);
             Name = "usuarios";
+            StartPosition = FormStartPosition.Manual;
             Text = "usuarios";
             Load += usuarios_Load;
             panel1.ResumeLayout(false);

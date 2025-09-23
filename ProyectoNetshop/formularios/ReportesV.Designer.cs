@@ -38,8 +38,15 @@
             label7 = new Label();
             fechaHastaVendedor = new DateTimePicker();
             fechaDesdeVendedor = new DateTimePicker();
+            dgvReporteVentaVendedor = new DataGridView();
+            idVenta = new DataGridViewTextBoxColumn();
+            fechaVenta = new DataGridViewTextBoxColumn();
+            tipoFactura = new DataGridViewTextBoxColumn();
+            clienteVenta = new DataGridViewTextBoxColumn();
+            totalVenta = new DataGridViewTextBoxColumn();
             panel2.SuspendLayout();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvReporteVentaVendedor).BeginInit();
             SuspendLayout();
             // 
             // panel2
@@ -54,6 +61,7 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(889, 133);
             panel2.TabIndex = 4;
+            panel2.Paint += panel2_Paint;
             // 
             // tbNombreVendedorReporte
             // 
@@ -155,12 +163,59 @@
             fechaDesdeVendedor.Size = new Size(209, 27);
             fechaDesdeVendedor.TabIndex = 17;
             // 
+            // dgvReporteVentaVendedor
+            // 
+            dgvReporteVentaVendedor.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvReporteVentaVendedor.Columns.AddRange(new DataGridViewColumn[] { idVenta, fechaVenta, tipoFactura, clienteVenta, totalVenta });
+            dgvReporteVentaVendedor.Location = new Point(398, 184);
+            dgvReporteVentaVendedor.Name = "dgvReporteVentaVendedor";
+            dgvReporteVentaVendedor.RowHeadersWidth = 51;
+            dgvReporteVentaVendedor.Size = new Size(679, 188);
+            dgvReporteVentaVendedor.TabIndex = 5;
+            dgvReporteVentaVendedor.CellContentClick += dgvReporteVentaVendedor_CellContentClick;
+            // 
+            // idVenta
+            // 
+            idVenta.HeaderText = "ID Venta";
+            idVenta.MinimumWidth = 6;
+            idVenta.Name = "idVenta";
+            idVenta.Width = 125;
+            // 
+            // fechaVenta
+            // 
+            fechaVenta.HeaderText = "Fecha de Venta";
+            fechaVenta.MinimumWidth = 6;
+            fechaVenta.Name = "fechaVenta";
+            fechaVenta.Width = 125;
+            // 
+            // tipoFactura
+            // 
+            tipoFactura.HeaderText = "Tipo de Factura";
+            tipoFactura.MinimumWidth = 6;
+            tipoFactura.Name = "tipoFactura";
+            tipoFactura.Width = 125;
+            // 
+            // clienteVenta
+            // 
+            clienteVenta.HeaderText = "Cliente";
+            clienteVenta.MinimumWidth = 6;
+            clienteVenta.Name = "clienteVenta";
+            clienteVenta.Width = 125;
+            // 
+            // totalVenta
+            // 
+            totalVenta.HeaderText = "Total";
+            totalVenta.MinimumWidth = 6;
+            totalVenta.Name = "totalVenta";
+            totalVenta.Width = 125;
+            // 
             // ReportesV
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SlateGray;
             ClientSize = new Size(1177, 699);
+            Controls.Add(dgvReporteVentaVendedor);
             Controls.Add(panel2);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
@@ -171,6 +226,7 @@
             panel2.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvReporteVentaVendedor).EndInit();
             ResumeLayout(false);
         }
 
@@ -186,5 +242,11 @@
         private DateTimePicker fechaHastaVendedor;
         private DateTimePicker fechaDesdeVendedor;
         private Button BGenerarReporteVendedor;
+        private DataGridView dgvReporteVentaVendedor;
+        private DataGridViewTextBoxColumn idVenta;
+        private DataGridViewTextBoxColumn fechaVenta;
+        private DataGridViewTextBoxColumn tipoFactura;
+        private DataGridViewTextBoxColumn clienteVenta;
+        private DataGridViewTextBoxColumn totalVenta;
     }
 }

@@ -104,6 +104,7 @@
             panel1.RightToLeft = RightToLeft.No;
             panel1.Size = new Size(1159, 292);
             panel1.TabIndex = 19;
+            panel1.Paint += panel1_Paint;
             // 
             // gbActivoCliente
             // 
@@ -404,10 +405,10 @@
             panel2.Controls.Add(cbActivos);
             panel2.Controls.Add(dgvClientes);
             panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 344);
+            panel2.Location = new Point(0, 291);
             panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1159, 308);
+            panel2.Size = new Size(1159, 361);
             panel2.TabIndex = 20;
             // 
             // lbBuscadorUsuario
@@ -484,7 +485,7 @@
             dgvClientes.Margin = new Padding(3, 4, 3, 4);
             dgvClientes.Name = "dgvClientes";
             dgvClientes.RowHeadersWidth = 51;
-            dgvClientes.Size = new Size(1110, 211);
+            dgvClientes.Size = new Size(1110, 264);
             dgvClientes.TabIndex = 0;
             dgvClientes.CellContentClick += dgvClientes_CellContentClick;
             // 

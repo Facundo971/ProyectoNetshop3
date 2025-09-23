@@ -353,11 +353,12 @@
             panel2.Controls.Add(cbActivos);
             panel2.Controls.Add(dgvProductos);
             panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 344);
+            panel2.Location = new Point(0, 293);
             panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1159, 308);
+            panel2.Size = new Size(1159, 359);
             panel2.TabIndex = 21;
+            panel2.Paint += panel2_Paint;
             // 
             // cbInactivos
             // 
@@ -420,8 +421,9 @@
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
             dgvProductos.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvProductos.RowHeadersWidth = 51;
-            dgvProductos.Size = new Size(1110, 203);
+            dgvProductos.Size = new Size(1110, 254);
             dgvProductos.TabIndex = 0;
+            dgvProductos.CellContentClick += dgvProductos_CellContentClick;
             // 
             // colIdProducto
             // 

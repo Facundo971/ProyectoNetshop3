@@ -31,7 +31,6 @@
             LReporteDeUsuarios = new Label();
             BGenerarReporteUsuario = new Button();
             dgvReporteUsuarios = new DataGridView();
-            panel1 = new Panel();
             idUsuario = new DataGridViewTextBoxColumn();
             nombreUsuario = new DataGridViewTextBoxColumn();
             apellidoUsuario = new DataGridViewTextBoxColumn();
@@ -42,6 +41,7 @@
             fechaNacimientoUsuario = new DataGridViewTextBoxColumn();
             perfilUsuario = new DataGridViewTextBoxColumn();
             activoUsuario = new DataGridViewTextBoxColumn();
+            panel1 = new Panel();
             ((System.ComponentModel.ISupportInitialize)dgvReporteUsuarios).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -80,20 +80,9 @@
             dgvReporteUsuarios.Location = new Point(177, 231);
             dgvReporteUsuarios.Name = "dgvReporteUsuarios";
             dgvReporteUsuarios.RowHeadersWidth = 51;
-            dgvReporteUsuarios.Size = new Size(803, 402);
+            dgvReporteUsuarios.Size = new Size(803, 240);
             dgvReporteUsuarios.TabIndex = 2;
             dgvReporteUsuarios.CellContentClick += dataGridView1_CellContentClick;
-            // 
-            // panel1
-            // 
-            panel1.BackColor = Color.FromArgb(0, 0, 64);
-            panel1.Controls.Add(LReporteDeUsuarios);
-            panel1.Controls.Add(dgvReporteUsuarios);
-            panel1.Controls.Add(BGenerarReporteUsuario);
-            panel1.Location = new Point(22, 24);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(1133, 657);
-            panel1.TabIndex = 3;
             // 
             // idUsuario
             // 
@@ -165,11 +154,23 @@
             activoUsuario.Name = "activoUsuario";
             activoUsuario.Width = 125;
             // 
+            // panel1
+            // 
+            panel1.BackColor = Color.FromArgb(0, 0, 64);
+            panel1.Controls.Add(LReporteDeUsuarios);
+            panel1.Controls.Add(dgvReporteUsuarios);
+            panel1.Controls.Add(BGenerarReporteUsuario);
+            panel1.Location = new Point(22, 24);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1133, 657);
+            panel1.TabIndex = 3;
+            panel1.Paint += panel1_Paint;
+            // 
             // FReporteUsuario
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.SlateGray;
+            BackColor = Color.FromArgb(0, 0, 64);
             ClientSize = new Size(1177, 699);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
