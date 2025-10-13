@@ -31,7 +31,7 @@ namespace ProyectoNetshop.formularios
             ibBotonBuscarClienteVenta.Click += IbBotonBuscarClienteVenta_Click;
 
             tbNombreProductoVenta.KeyPress += TextBox_OnlyLetters_KeyPress;
-            tbDescripcionProductoVenta.KeyPress += TextBox_OnlyLetters_KeyPress;
+            //tbDescripcionProductoVenta.KeyPress += TextBox_OnlyLetters_KeyPress;
             tbStockProductoVenta.KeyPress += TextBox_OnlyDigits_KeyPress;
             tbPrecioVtaProductoVenta.KeyPress += TextBox_OnlyDigits_KeyPress;
             tbCantidadProductoVenta.KeyPress += TextBox_OnlyDigits_KeyPress;
@@ -134,7 +134,7 @@ namespace ProyectoNetshop.formularios
         private void IbBotonBuscarProductoVenta_Click(object sender, EventArgs e)
         {
             string nombreProd = tbNombreProductoVenta.Text.Trim();
-            string descripcion = tbDescripcionProductoVenta.Text.Trim();
+            //string descripcion = tbDescripcionProductoVenta.Text.Trim();
             string stockText = tbStockProductoVenta.Text.Trim();
             string precioText = tbPrecioVtaProductoVenta.Text.Trim();
             string cantidadText = tbCantidadProductoVenta.Text.Trim();
@@ -146,12 +146,12 @@ namespace ProyectoNetshop.formularios
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(descripcion))
-            {
-                MessageBox.Show("La descripción del producto no puede quedar vacía.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbDescripcionProductoVenta.Focus();
-                return;
-            }
+            //if (string.IsNullOrWhiteSpace(descripcion))
+            //{
+            //    MessageBox.Show("La descripción del producto no puede quedar vacía.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    tbDescripcionProductoVenta.Focus();
+            //    return;
+            //}
 
             if (string.IsNullOrWhiteSpace(stockText))
             {
@@ -159,7 +159,7 @@ namespace ProyectoNetshop.formularios
                 tbStockProductoVenta.Focus();
                 return;
             }
-            
+
             if (string.IsNullOrWhiteSpace(precioText))
             {
                 MessageBox.Show("Debe ingresar el precio de venta del producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -247,7 +247,7 @@ namespace ProyectoNetshop.formularios
             tbDniClienteVenta.Clear();
             tbNombreClienteVenta.Clear();
             tbNombreProductoVenta.Clear();
-            tbDescripcionProductoVenta.Clear();
+            //tbDescripcionProductoVenta.Clear();
             tbStockProductoVenta.Clear();
             tbPrecioVtaProductoVenta.Clear();
             tbCantidadProductoVenta.Clear();
@@ -256,6 +256,26 @@ namespace ProyectoNetshop.formularios
 
             dtpFechaVenta.Value = DateTime.Today;
             dtpFechaVenta.Checked = false;
+        }
+
+        private void tbPrecioVtaProductoVenta_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbDescripcionProductoVenta_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

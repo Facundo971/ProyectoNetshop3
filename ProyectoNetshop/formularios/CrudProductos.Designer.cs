@@ -211,7 +211,7 @@
             cbCategoriaProducto.Location = new Point(389, 173);
             cbCategoriaProducto.Margin = new Padding(3, 4, 3, 4);
             cbCategoriaProducto.Name = "cbCategoriaProducto";
-            cbCategoriaProducto.Size = new Size(205, 28);
+            cbCategoriaProducto.Size = new Size(209, 28);
             cbCategoriaProducto.TabIndex = 25;
             cbCategoriaProducto.SelectedIndexChanged += cbCategoria_SelectedIndexChanged;
             // 

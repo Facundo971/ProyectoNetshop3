@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             groupBox1 = new GroupBox();
             label4 = new Label();
             label3 = new Label();
@@ -52,10 +52,8 @@
             label7 = new Label();
             label8 = new Label();
             tbStockProductoVenta = new TextBox();
-            label1 = new Label();
             label2 = new Label();
             ibBotonBuscarProductoVenta = new FontAwesome.Sharp.IconButton();
-            tbDescripcionProductoVenta = new TextBox();
             tbNombreProductoVenta = new TextBox();
             groupBox4 = new GroupBox();
             dtpFechaVenta = new DateTimePicker();
@@ -69,6 +67,15 @@
             colSubtotal = new DataGridViewTextBoxColumn();
             totalVenta = new DataGridViewTextBoxColumn();
             fechaVenta = new DataGridViewTextBoxColumn();
+            tbMarcaProductoVenta = new TextBox();
+            pbImagenProductoVenta = new PictureBox();
+            tbIdProductoVenta = new TextBox();
+            label1 = new Label();
+            label10 = new Label();
+            label13 = new Label();
+            tbCategoriaProductoVenta = new TextBox();
+            label14 = new Label();
+            tbEmailClienteVenta = new TextBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -76,6 +83,7 @@
             groupBox5.SuspendLayout();
             groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvVentas).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pbImagenProductoVenta).BeginInit();
             SuspendLayout();
             // 
             // groupBox1
@@ -102,11 +110,11 @@
             label4.BackColor = Color.Transparent;
             label4.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label4.ForeColor = SystemColors.ButtonFace;
-            label4.Location = new Point(241, 33);
+            label4.Location = new Point(268, 37);
             label4.Name = "label4";
-            label4.Size = new Size(72, 29);
+            label4.Size = new Size(145, 29);
             label4.TabIndex = 28;
-            label4.Text = "Nombre";
+            label4.Text = "Nombre Completo";
             // 
             // label3
             // 
@@ -114,7 +122,7 @@
             label3.BackColor = Color.Transparent;
             label3.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label3.ForeColor = SystemColors.ButtonFace;
-            label3.Location = new Point(39, 36);
+            label3.Location = new Point(54, 37);
             label3.Name = "label3";
             label3.Size = new Size(42, 29);
             label3.TabIndex = 27;
@@ -123,7 +131,7 @@
             // tbNombreVendedorVenta
             // 
             tbNombreVendedorVenta.Font = new Font("Segoe UI", 9F);
-            tbNombreVendedorVenta.Location = new Point(131, 69);
+            tbNombreVendedorVenta.Location = new Point(203, 70);
             tbNombreVendedorVenta.Margin = new Padding(3, 4, 3, 4);
             tbNombreVendedorVenta.Name = "tbNombreVendedorVenta";
             tbNombreVendedorVenta.ReadOnly = true;
@@ -133,19 +141,20 @@
             // tbDniVendedorVenta
             // 
             tbDniVendedorVenta.Font = new Font("Segoe UI", 9F);
-            tbDniVendedorVenta.Location = new Point(19, 69);
+            tbDniVendedorVenta.Location = new Point(26, 69);
             tbDniVendedorVenta.Margin = new Padding(3, 4, 3, 4);
             tbDniVendedorVenta.Name = "tbDniVendedorVenta";
             tbDniVendedorVenta.ReadOnly = true;
-            tbDniVendedorVenta.Size = new Size(84, 27);
+            tbDniVendedorVenta.Size = new Size(100, 27);
             tbDniVendedorVenta.TabIndex = 0;
             // 
             // groupBox2
             // 
             groupBox2.BackColor = Color.FromArgb(0, 0, 64);
+            groupBox2.Controls.Add(tbEmailClienteVenta);
+            groupBox2.Controls.Add(label14);
             groupBox2.Controls.Add(label5);
             groupBox2.Controls.Add(label6);
-            groupBox2.Controls.Add(ibBotonBuscarClienteVenta);
             groupBox2.Controls.Add(tbNombreClienteVenta);
             groupBox2.Controls.Add(tbDniClienteVenta);
             groupBox2.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
@@ -165,11 +174,12 @@
             label5.BackColor = Color.Transparent;
             label5.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label5.ForeColor = SystemColors.ButtonFace;
-            label5.Location = new Point(216, 33);
+            label5.Location = new Point(21, 37);
             label5.Name = "label5";
-            label5.Size = new Size(72, 29);
+            label5.Size = new Size(145, 29);
             label5.TabIndex = 30;
-            label5.Text = "Nombre";
+            label5.Text = "Nombre Completo";
+            label5.Click += label5_Click;
             // 
             // label6
             // 
@@ -177,7 +187,7 @@
             label6.BackColor = Color.Transparent;
             label6.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label6.ForeColor = SystemColors.ButtonFace;
-            label6.Location = new Point(43, 33);
+            label6.Location = new Point(430, 35);
             label6.Name = "label6";
             label6.Size = new Size(42, 29);
             label6.TabIndex = 29;
@@ -192,7 +202,7 @@
             ibBotonBuscarClienteVenta.IconColor = Color.Black;
             ibBotonBuscarClienteVenta.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ibBotonBuscarClienteVenta.IconSize = 30;
-            ibBotonBuscarClienteVenta.Location = new Point(393, 44);
+            ibBotonBuscarClienteVenta.Location = new Point(1007, 622);
             ibBotonBuscarClienteVenta.Margin = new Padding(3, 4, 3, 4);
             ibBotonBuscarClienteVenta.Name = "ibBotonBuscarClienteVenta";
             ibBotonBuscarClienteVenta.Size = new Size(120, 64);
@@ -205,19 +215,19 @@
             // tbNombreClienteVenta
             // 
             tbNombreClienteVenta.Font = new Font("Segoe UI", 9F);
-            tbNombreClienteVenta.Location = new Point(131, 69);
+            tbNombreClienteVenta.Location = new Point(172, 37);
             tbNombreClienteVenta.Margin = new Padding(3, 4, 3, 4);
             tbNombreClienteVenta.Name = "tbNombreClienteVenta";
-            tbNombreClienteVenta.Size = new Size(239, 27);
+            tbNombreClienteVenta.Size = new Size(200, 27);
             tbNombreClienteVenta.TabIndex = 1;
             // 
             // tbDniClienteVenta
             // 
             tbDniClienteVenta.Font = new Font("Segoe UI", 9F);
-            tbDniClienteVenta.Location = new Point(21, 69);
+            tbDniClienteVenta.Location = new Point(400, 67);
             tbDniClienteVenta.Margin = new Padding(3, 4, 3, 4);
             tbDniClienteVenta.Name = "tbDniClienteVenta";
-            tbDniClienteVenta.Size = new Size(81, 27);
+            tbDniClienteVenta.Size = new Size(100, 27);
             tbDniClienteVenta.TabIndex = 0;
             // 
             // label12
@@ -277,6 +287,13 @@
             // groupBox3
             // 
             groupBox3.BackColor = Color.FromArgb(0, 0, 64);
+            groupBox3.Controls.Add(tbCategoriaProductoVenta);
+            groupBox3.Controls.Add(label13);
+            groupBox3.Controls.Add(label10);
+            groupBox3.Controls.Add(label1);
+            groupBox3.Controls.Add(tbIdProductoVenta);
+            groupBox3.Controls.Add(pbImagenProductoVenta);
+            groupBox3.Controls.Add(tbMarcaProductoVenta);
             groupBox3.Controls.Add(ibBotonAgregarProductoVenta);
             groupBox3.Controls.Add(label9);
             groupBox3.Controls.Add(tbCantidadProductoVenta);
@@ -284,10 +301,7 @@
             groupBox3.Controls.Add(label7);
             groupBox3.Controls.Add(label8);
             groupBox3.Controls.Add(tbStockProductoVenta);
-            groupBox3.Controls.Add(label1);
             groupBox3.Controls.Add(label2);
-            groupBox3.Controls.Add(ibBotonBuscarProductoVenta);
-            groupBox3.Controls.Add(tbDescripcionProductoVenta);
             groupBox3.Controls.Add(tbNombreProductoVenta);
             groupBox3.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             groupBox3.ForeColor = SystemColors.ButtonFace;
@@ -299,6 +313,7 @@
             groupBox3.TabIndex = 26;
             groupBox3.TabStop = false;
             groupBox3.Text = "Productos";
+            groupBox3.Enter += groupBox3_Enter;
             // 
             // ibBotonAgregarProductoVenta
             // 
@@ -309,7 +324,7 @@
             ibBotonAgregarProductoVenta.IconColor = Color.Black;
             ibBotonAgregarProductoVenta.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ibBotonAgregarProductoVenta.IconSize = 26;
-            ibBotonAgregarProductoVenta.Location = new Point(440, 153);
+            ibBotonAgregarProductoVenta.Location = new Point(442, 108);
             ibBotonAgregarProductoVenta.Margin = new Padding(3, 4, 3, 4);
             ibBotonAgregarProductoVenta.Name = "ibBotonAgregarProductoVenta";
             ibBotonAgregarProductoVenta.Size = new Size(126, 64);
@@ -324,7 +339,7 @@
             label9.BackColor = Color.Transparent;
             label9.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label9.ForeColor = SystemColors.ButtonFace;
-            label9.Location = new Point(299, 141);
+            label9.Location = new Point(277, 176);
             label9.Name = "label9";
             label9.Size = new Size(76, 29);
             label9.TabIndex = 34;
@@ -333,20 +348,22 @@
             // tbCantidadProductoVenta
             // 
             tbCantidadProductoVenta.Font = new Font("Segoe UI", 9F);
-            tbCantidadProductoVenta.Location = new Point(299, 177);
+            tbCantidadProductoVenta.Location = new Point(356, 176);
             tbCantidadProductoVenta.Margin = new Padding(3, 4, 3, 4);
             tbCantidadProductoVenta.Name = "tbCantidadProductoVenta";
-            tbCantidadProductoVenta.Size = new Size(84, 27);
+            tbCantidadProductoVenta.Size = new Size(60, 27);
             tbCantidadProductoVenta.TabIndex = 33;
             // 
             // tbPrecioVtaProductoVenta
             // 
             tbPrecioVtaProductoVenta.Font = new Font("Segoe UI", 9F);
-            tbPrecioVtaProductoVenta.Location = new Point(133, 177);
+            tbPrecioVtaProductoVenta.Location = new Point(136, 217);
             tbPrecioVtaProductoVenta.Margin = new Padding(3, 4, 3, 4);
             tbPrecioVtaProductoVenta.Name = "tbPrecioVtaProductoVenta";
-            tbPrecioVtaProductoVenta.Size = new Size(105, 27);
+            tbPrecioVtaProductoVenta.ReadOnly = true;
+            tbPrecioVtaProductoVenta.Size = new Size(111, 27);
             tbPrecioVtaProductoVenta.TabIndex = 32;
+            tbPrecioVtaProductoVenta.TextChanged += tbPrecioVtaProductoVenta_TextChanged;
             // 
             // label7
             // 
@@ -354,11 +371,11 @@
             label7.BackColor = Color.Transparent;
             label7.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label7.ForeColor = SystemColors.ButtonFace;
-            label7.Location = new Point(131, 141);
+            label7.Location = new Point(6, 215);
             label7.Name = "label7";
-            label7.Size = new Size(123, 29);
+            label7.Size = new Size(126, 29);
             label7.TabIndex = 31;
-            label7.Text = "Precio de venta";
+            label7.Text = "Precio de Venta";
             // 
             // label8
             // 
@@ -366,7 +383,7 @@
             label8.BackColor = Color.Transparent;
             label8.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label8.ForeColor = SystemColors.ButtonFace;
-            label8.Location = new Point(37, 143);
+            label8.Location = new Point(286, 217);
             label8.Name = "label8";
             label8.Size = new Size(55, 29);
             label8.TabIndex = 30;
@@ -375,23 +392,12 @@
             // tbStockProductoVenta
             // 
             tbStockProductoVenta.Font = new Font("Segoe UI", 9F);
-            tbStockProductoVenta.Location = new Point(19, 177);
+            tbStockProductoVenta.Location = new Point(356, 217);
             tbStockProductoVenta.Margin = new Padding(3, 4, 3, 4);
             tbStockProductoVenta.Name = "tbStockProductoVenta";
-            tbStockProductoVenta.Size = new Size(84, 27);
+            tbStockProductoVenta.ReadOnly = true;
+            tbStockProductoVenta.Size = new Size(60, 27);
             tbStockProductoVenta.TabIndex = 28;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            label1.ForeColor = SystemColors.ButtonFace;
-            label1.Location = new Point(229, 33);
-            label1.Name = "label1";
-            label1.Size = new Size(98, 29);
-            label1.TabIndex = 27;
-            label1.Text = "Descripcion";
             // 
             // label2
             // 
@@ -399,7 +405,7 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label2.ForeColor = SystemColors.ButtonFace;
-            label2.Location = new Point(30, 35);
+            label2.Location = new Point(131, 38);
             label2.Name = "label2";
             label2.Size = new Size(72, 29);
             label2.TabIndex = 26;
@@ -414,7 +420,7 @@
             ibBotonBuscarProductoVenta.IconColor = Color.Black;
             ibBotonBuscarProductoVenta.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ibBotonBuscarProductoVenta.IconSize = 30;
-            ibBotonBuscarProductoVenta.Location = new Point(440, 44);
+            ibBotonBuscarProductoVenta.Location = new Point(481, 642);
             ibBotonBuscarProductoVenta.Margin = new Padding(3, 4, 3, 4);
             ibBotonBuscarProductoVenta.Name = "ibBotonBuscarProductoVenta";
             ibBotonBuscarProductoVenta.Size = new Size(126, 64);
@@ -423,22 +429,13 @@
             ibBotonBuscarProductoVenta.TextImageRelation = TextImageRelation.ImageBeforeText;
             ibBotonBuscarProductoVenta.UseVisualStyleBackColor = true;
             // 
-            // tbDescripcionProductoVenta
-            // 
-            tbDescripcionProductoVenta.Font = new Font("Segoe UI", 9F);
-            tbDescripcionProductoVenta.Location = new Point(131, 69);
-            tbDescripcionProductoVenta.Margin = new Padding(3, 4, 3, 4);
-            tbDescripcionProductoVenta.Name = "tbDescripcionProductoVenta";
-            tbDescripcionProductoVenta.Size = new Size(290, 27);
-            tbDescripcionProductoVenta.TabIndex = 1;
-            // 
             // tbNombreProductoVenta
             // 
             tbNombreProductoVenta.Font = new Font("Segoe UI", 9F);
-            tbNombreProductoVenta.Location = new Point(19, 69);
+            tbNombreProductoVenta.Location = new Point(91, 70);
             tbNombreProductoVenta.Margin = new Padding(3, 4, 3, 4);
             tbNombreProductoVenta.Name = "tbNombreProductoVenta";
-            tbNombreProductoVenta.Size = new Size(84, 27);
+            tbNombreProductoVenta.Size = new Size(156, 27);
             tbNombreProductoVenta.TabIndex = 0;
             // 
             // groupBox4
@@ -513,14 +510,14 @@
             // dgvVentas
             // 
             dgvVentas.BackgroundColor = Color.SlateGray;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvVentas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Control;
+            dataGridViewCellStyle2.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvVentas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvVentas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvVentas.Columns.AddRange(new DataGridViewColumn[] { codIdProducto, colDescripcion, colCantidad, colSubtotal, totalVenta, fechaVenta });
             dgvVentas.Location = new Point(14, 477);
@@ -573,6 +570,86 @@
             fechaVenta.Name = "fechaVenta";
             fechaVenta.Width = 125;
             // 
+            // tbMarcaProductoVenta
+            // 
+            tbMarcaProductoVenta.Location = new Point(136, 176);
+            tbMarcaProductoVenta.Multiline = true;
+            tbMarcaProductoVenta.Name = "tbMarcaProductoVenta";
+            tbMarcaProductoVenta.ReadOnly = true;
+            tbMarcaProductoVenta.Size = new Size(111, 27);
+            tbMarcaProductoVenta.TabIndex = 36;
+            // 
+            // pbImagenProductoVenta
+            // 
+            pbImagenProductoVenta.Image = Properties.Resources.producto_defecto;
+            pbImagenProductoVenta.Location = new Point(265, 35);
+            pbImagenProductoVenta.Name = "pbImagenProductoVenta";
+            pbImagenProductoVenta.Size = new Size(156, 99);
+            pbImagenProductoVenta.SizeMode = PictureBoxSizeMode.StretchImage;
+            pbImagenProductoVenta.TabIndex = 37;
+            pbImagenProductoVenta.TabStop = false;
+            // 
+            // tbIdProductoVenta
+            // 
+            tbIdProductoVenta.Location = new Point(26, 70);
+            tbIdProductoVenta.Multiline = true;
+            tbIdProductoVenta.Name = "tbIdProductoVenta";
+            tbIdProductoVenta.Size = new Size(42, 27);
+            tbIdProductoVenta.TabIndex = 38;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(32, 38);
+            label1.Name = "label1";
+            label1.Size = new Size(30, 29);
+            label1.TabIndex = 39;
+            label1.Text = "ID";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(26, 134);
+            label10.Name = "label10";
+            label10.Size = new Size(82, 29);
+            label10.TabIndex = 40;
+            label10.Text = "Categoria";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(37, 177);
+            label13.Name = "label13";
+            label13.Size = new Size(58, 29);
+            label13.TabIndex = 33;
+            label13.Text = "Marca";
+            // 
+            // tbCategoriaProductoVenta
+            // 
+            tbCategoriaProductoVenta.Location = new Point(136, 136);
+            tbCategoriaProductoVenta.Multiline = true;
+            tbCategoriaProductoVenta.Name = "tbCategoriaProductoVenta";
+            tbCategoriaProductoVenta.ReadOnly = true;
+            tbCategoriaProductoVenta.Size = new Size(111, 27);
+            tbCategoriaProductoVenta.TabIndex = 41;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(18, 85);
+            label14.Name = "label14";
+            label14.Size = new Size(148, 29);
+            label14.TabIndex = 31;
+            label14.Text = "Correo Electronico";
+            // 
+            // tbEmailClienteVenta
+            // 
+            tbEmailClienteVenta.Location = new Point(172, 87);
+            tbEmailClienteVenta.Multiline = true;
+            tbEmailClienteVenta.Name = "tbEmailClienteVenta";
+            tbEmailClienteVenta.Size = new Size(200, 27);
+            tbEmailClienteVenta.TabIndex = 32;
+            // 
             // ventas
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -581,11 +658,13 @@
             ClientSize = new Size(1177, 699);
             Controls.Add(dgvVentas);
             Controls.Add(groupBox6);
+            Controls.Add(ibBotonBuscarClienteVenta);
             Controls.Add(groupBox5);
             Controls.Add(groupBox4);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
+            Controls.Add(ibBotonBuscarProductoVenta);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(3, 4, 3, 4);
             Name = "ventas";
@@ -602,6 +681,7 @@
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvVentas).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pbImagenProductoVenta).EndInit();
             ResumeLayout(false);
         }
 
@@ -620,7 +700,6 @@
         private FontAwesome.Sharp.IconButton ibBotonGuardarVenta;
         private GroupBox groupBox3;
         private FontAwesome.Sharp.IconButton ibBotonBuscarProductoVenta;
-        private TextBox tbDescripcionProductoVenta;
         private TextBox tbNombreProductoVenta;
         private Label label4;
         private Label label3;
@@ -632,7 +711,6 @@
         private Label label7;
         private Label label8;
         private TextBox tbStockProductoVenta;
-        private Label label1;
         private Label label2;
         private FontAwesome.Sharp.IconButton ibBotonAgregarProductoVenta;
         private GroupBox groupBox4;
@@ -647,5 +725,14 @@
         private DataGridViewTextBoxColumn colSubtotal;
         private DataGridViewTextBoxColumn totalVenta;
         private DataGridViewTextBoxColumn fechaVenta;
+        private TextBox tbMarcaProductoVenta;
+        private Label label1;
+        private TextBox tbIdProductoVenta;
+        private PictureBox pbImagenProductoVenta;
+        private Label label13;
+        private Label label10;
+        private TextBox tbCategoriaProductoVenta;
+        private Label label14;
+        private TextBox tbEmailClienteVenta;
     }
 }

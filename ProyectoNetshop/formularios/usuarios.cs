@@ -29,6 +29,12 @@ namespace ProyectoNetshop.formularios
             // Al hacer clic en cualquier celda de la grilla llamamos al método que carga los datos de esa fila
             dgvUsuarios.CellClick += DgvUsuarios_CellClick;
 
+            // Manejar clics en zonas vacías del grid
+            dgvUsuarios.MouseDown += DgvUsuarios_MouseDown;
+
+            // Si se hace clic en el formulario fuera del grid, limpiar selección
+            this.Click += Form_Or_Container_Click;
+
             // Cada vez que se cambie el texto de búsqueda por DNI se aplica el filtro a la grilla
             tbBusquedaDniUsuario.TextChanged += Busqueda_TextChanged;
             tbBusquedaNombreUsuario.TextChanged += Busqueda_TextChanged;
@@ -200,6 +206,39 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Nuevo manejador: clic del mouse sobre el DataGridView
+        private void DgvUsuarios_MouseDown(object? sender, MouseEventArgs e)
+        {
+            var hit = dgvUsuarios.HitTest(e.X, e.Y);
+
+            // Si el clic no fue sobre una fila válida (hit.RowIndex < 0) limpiamos selección
+            if (hit.RowIndex < 0)
+            {
+                dgvUsuarios.ClearSelection();
+                _usuarioSeleccionadoId = -1;
+                LimpiarControles();
+            }
+            else
+            {
+                // Si clic sobre una fila, seleccionamos esa fila (comportamiento visual)
+                dgvUsuarios.ClearSelection();
+                dgvUsuarios.Rows[hit.RowIndex].Selected = true;
+
+                // También podemos forzar que se dispare el mismo flujo que CellClick
+                // para cargar controles si no se usa CellClick por Key/Mouse:
+                // var args = new DataGridViewCellEventArgs(hit.ColumnIndex, hit.RowIndex);
+                // DgvUsuarios_CellClick(this, args);
+            }
+        }
+
+        // Manejar clics fuera del DataGridView — ejemplo en el formulario o contenedores principales
+        private void Form_Or_Container_Click(object? sender, EventArgs e)
+        {
+            dgvUsuarios.ClearSelection();
+            _usuarioSeleccionadoId = -1;
+            LimpiarControles();
+        }
+
         private void tbNombre_KeyPress(object sender, KeyPressEventArgs e)
         {
             // Permite solo letras y teclas de control
@@ -230,6 +269,12 @@ namespace ProyectoNetshop.formularios
             if (dr != DialogResult.Yes)
                 return;
 
+            // Si estamos en modo actualizar, obtenemos el usuario actualmente mostrado en la grilla
+            Usuario_model usuarioSeleccionado = null;
+            if (_usuarioSeleccionadoId >= 0 && dgvUsuarios.CurrentRow != null)
+                usuarioSeleccionado = dgvUsuarios.CurrentRow.DataBoundItem as Usuario_model;
+
+
             // Se armar el objeto Usuario_model
             var usuario = new Usuario_model
             {
@@ -241,7 +286,11 @@ namespace ProyectoNetshop.formularios
                 sexo = rbMasculinoUsuario.Checked ? "Masculino"
                                   : rbFemeninoUsuario.Checked ? "Femenino"
                                                                   : "Otros",
-                fecha_nacimiento = fechaNacimientoUsuario.Checked ? fechaNacimientoUsuario.Value.Date : (DateTime?)null,
+                //fecha_nacimiento = fechaNacimientoUsuario.Checked ? fechaNacimientoUsuario.Value.Date : (DateTime?)null,
+                // Si el DateTimePicker está chequeado uso su valor, si no estoy en actualización uso null,
+                // si estoy actualizando y no lo tocaron, conservo el valor del usuario seleccionado.
+                fecha_nacimiento = fechaNacimientoUsuario.Checked ? fechaNacimientoUsuario.Value.Date
+                                                                  : (_usuarioSeleccionadoId >= 0 ? usuarioSeleccionado?.fecha_nacimiento : (DateTime?)null),
                 telefono = long.TryParse(tbTelefonoUsuario.Text.Trim(), out long tel) ? (long?)tel : (long?)null,
                 dni = int.Parse(tbDniUsuario.Text),
                 id_perfil = Convert.ToInt32(cbPerfilUsuario.SelectedValue)
@@ -314,7 +363,26 @@ namespace ProyectoNetshop.formularios
                 DateTime? fn = rd.IsDBNull(7)
                     ? (DateTime?)null
                     : rd.GetDateTime(7);
-                long? tel = rd.IsDBNull(8) ? (long?)null : rd.GetInt64(8);
+                //long? tel = rd.IsDBNull(8) ? (long?)null : rd.GetInt64(8);
+                // telefono: manejar bigint o varchar en la DB
+                long? tel = null;
+                if (!rd.IsDBNull(8))
+                {
+                    var fieldType = rd.GetFieldType(8);
+                    if (fieldType == typeof(long) || fieldType == typeof(Int64))
+                    {
+                        tel = rd.GetInt64(8);
+                    }
+                    else
+                    {
+                        // intentar leer como string y parsear de forma segura
+                        string telStr = rd.GetString(8);
+                        if (long.TryParse(telStr, out long parsed))
+                            tel = parsed;
+                        else
+                            tel = null; // valor por defecto si no es numérico
+                    }
+                }
 
                 var usuario = new Usuario_model
                 {
@@ -356,10 +424,22 @@ namespace ProyectoNetshop.formularios
             rbFemeninoUsuario.Checked = u.sexo == "Femenino";
             rbOtrosUsuario.Checked = u.sexo == "Otros";
 
+            //if (!u.fecha_nacimiento.HasValue)
+            //    fechaNacimientoUsuario.CustomFormat = " ";
+            //else
+            //    fechaNacimientoUsuario.CustomFormat = "dd/MM/yyyy";
+
             if (!u.fecha_nacimiento.HasValue)
+            {
+                fechaNacimientoUsuario.Checked = false;
                 fechaNacimientoUsuario.CustomFormat = " ";
+            }
             else
+            {
+                fechaNacimientoUsuario.Checked = true;
                 fechaNacimientoUsuario.CustomFormat = "dd/MM/yyyy";
+                fechaNacimientoUsuario.Value = u.fecha_nacimiento.Value;
+            }
 
             tbTelefonoUsuario.Text = u.telefono?.ToString() ?? string.Empty;
             tbDniUsuario.Text = u.dni.ToString();
@@ -429,6 +509,9 @@ namespace ProyectoNetshop.formularios
 
             // Indica que ya no hay un usuario seleccionado
             _usuarioSeleccionadoId = -1;
+
+            // Ocultar el groupbox en modo "nuevo usuario"
+            gbActivoUsuario.Visible = false;
         }
         private void btnEliminar_Click(object sender, EventArgs e)
         {

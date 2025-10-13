@@ -38,6 +38,9 @@ namespace ProyectoNetshop.formularios
             Load += CrudProductos_Load;
             dgvProductos.CellClick += DgvProductos_CellClick;
 
+            dgvProductos.MouseDown += DgvProductos_MouseDown;
+            this.Click += Form_Or_Container_Click;
+
             // Búsqueda en tiempo real
             tbBusquedaNombreProducto.TextChanged += Busqueda_TextChanged;
             // Suscribir sanitizador y disparador a los TextBox de precio
@@ -65,6 +68,28 @@ namespace ProyectoNetshop.formularios
                 e.Handled = true;                     // bloquear cualquier otro carácter
         }
 
+        private void DgvProductos_MouseDown(object? sender, MouseEventArgs e)
+        {
+            var hit = dgvProductos.HitTest(e.X, e.Y);
+            if (hit.RowIndex < 0)
+            {
+                dgvProductos.ClearSelection();
+                _productoSeleccionadoId = -1;
+                LimpiarControlesProducto();
+            }
+            else
+            {
+                dgvProductos.ClearSelection();
+                dgvProductos.Rows[hit.RowIndex].Selected = true;
+            }
+        }
+
+        private void Form_Or_Container_Click(object? sender, EventArgs e)
+        {
+            dgvProductos.ClearSelection();
+            _productoSeleccionadoId = -1;
+            LimpiarControlesProducto();
+        }
 
         private void TbBusquedaPrecio_SanitizarTextChanged(object? sender, EventArgs e)
         {
@@ -152,113 +177,365 @@ namespace ProyectoNetshop.formularios
                 filas = Producto_controller.actualizarProducto(producto);
             }
 
-            // Resultado
+            //// Resultado
+            //if (filas == 1)
+            //{
+            //    MessageBox.Show(_productoSeleccionadoId < 0 ? "Producto creado con éxito." : "Producto actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    FiltrarYRefrescarProductos(); // recarga inmediata como usuarios
+            //    LimpiarControlesProducto();
+            //}
+            //else
+            //    MessageBox.Show("Ocurrió un error durante la operación.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             if (filas == 1)
             {
                 MessageBox.Show(_productoSeleccionadoId < 0 ? "Producto creado con éxito." : "Producto actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                FiltrarYRefrescarProductos(); // recarga inmediata como usuarios
-                LimpiarControlesProducto();
+
+                // Refrescar la grilla
+                FiltrarYRefrescarProductos();
+
+                // Intentar localizar el producto afectado y seleccionarlo
+                var lista = dgvProductos.DataSource as List<Producto_model>;
+                Producto_model encontrado = null;
+                if (_productoSeleccionadoId > 0 && lista != null)
+                    encontrado = lista.FirstOrDefault(x => x.id_producto == _productoSeleccionadoId);
+
+                if (encontrado == null && lista != null)
+                    encontrado = lista.FirstOrDefault(x => x.nombre == producto.nombre && x.id_marca == producto.id_marca && x.id_categoria == producto.id_categoria);
+
+                if (encontrado != null)
+                {
+                    for (int i = 0; i < dgvProductos.Rows.Count; i++)
+                    {
+                        var itm = dgvProductos.Rows[i].DataBoundItem as Producto_model;
+                        if (itm != null && itm.id_producto == encontrado.id_producto)
+                        {
+                            dgvProductos.ClearSelection();
+                            dgvProductos.Rows[i].Selected = true;
+                            CargarProductoEnControles(encontrado);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    LimpiarControlesProducto();
+                }
             }
             else
+            {
                 MessageBox.Show("Ocurrió un error durante la operación.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
 
             FiltrarYRefrescarProductos();
             LimpiarControlesProducto();
         }
 
+        //private void FiltrarYRefrescarProductos()
+        //{
+        //    var marcas = ObtenerMarcas();
+        //    var categorias = ObtenerCategorias();
+        //    var productos = ObtenerProductos();
+
+        //    // Filtrar por activo/inactivo según CheckBoxes (cbActivos = eliminado == 1, cbInactivos = eliminado == 0)
+        //    var filtrados = productos
+        //        .Where(p => (cbActivosProductos.Checked && p.eliminado == 1) || (cbInactivosProductos.Checked && p.eliminado == 0))
+        //        .ToList();
+
+        //    // Búsqueda por nombre en tiempo real (si hay texto)
+        //    var textoNom = tbBusquedaNombreProducto.Text.Trim();
+        //    if (!string.IsNullOrEmpty(textoNom))
+        //        filtrados = filtrados.Where(p => p.nombre != null && p.nombre.IndexOf(textoNom, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+
+        //    // Ejemplo: buscar por SKU o id (si tenés)
+        //    // var textoId = tbBusquedaIdProducto?.Text.Trim();
+        //    // if (!string.IsNullOrEmpty(textoId) && int.TryParse(textoId, out int idBuscado))
+        //    //     filtrados = filtrados.Where(p => p.id_producto == idBuscado).ToList();
+
+        //    // Parsear precio min/max (si están)
+        //    if (int.TryParse(tbBusquedaPrecioMinProducto.Text.Trim(), out int precioMin))
+        //        filtrados = filtrados.Where(p => p.precio >= precioMin).ToList();
+
+        //    if (int.TryParse(tbBusquedaPrecioMaxProducto.Text.Trim(), out int precioMax))
+        //        filtrados = filtrados.Where(p => p.precio <= precioMax).ToList();
+
+
+        //    // Mapear descripciones de marca y categoría en la lista filtrada
+        //    foreach (var p in filtrados)
+        //    {
+        //        p.descripcionMarca = marcas.FirstOrDefault(m => m.id_marca == p.id_marca)?.descripcion ?? "Desconocido";
+        //        p.descripcionCategoria = categorias.FirstOrDefault(c => c.id_categoria == p.id_categoria)?.descripcion ?? "Desconocido";
+        //    }
+
+        //    // Asignar DataSource con la lista filtrada (mantener Producto_model para DataBoundItem)
+        //    dgvProductos.DataSource = null;
+        //    dgvProductos.DataSource = filtrados;
+
+        //    // Por defecto, no hay selección hasta que el usuario la haga
+        //    btnBorrarProducto.Enabled = false;
+
+        //    //// UI post-procesamiento
+        //    //if (dgvProductos.Rows.Count == 0)
+        //    //{
+        //    //    LimpiarControlesProducto();
+        //    //    btnBorrarProducto.Enabled = false;
+        //    //    _productoSeleccionadoId = -1;
+        //    //}
+        //    //else
+        //    //{
+        //    //    // Inicialmente sin selección visual, pero botón inhabilitado hasta que el usuario seleccione una fila
+        //    //    dgvProductos.ClearSelection();
+        //    //    _productoSeleccionadoId = -1;
+        //    //    btnBorrarProducto.Enabled = false;
+        //    //}
+        //    if (dgvProductos.Rows.Count == 0)
+        //    {
+        //        // si no hay filas, solo limpiar visualmente (NO borrar filtros)
+        //        dgvProductos.ClearSelection();
+        //        _productoSeleccionadoId = -1;
+        //        _productoSeleccionadoEliminado = 1;
+        //        return;
+        //    }
+
+        //    // intentar restaurar selección anterior si existe
+        //    if (_productoSeleccionadoId > 0)
+        //    {
+        //        bool restored = false;
+        //        for (int i = 0; i < dgvProductos.Rows.Count; i++)
+        //        {
+        //            var itm = dgvProductos.Rows[i].DataBoundItem as Producto_model;
+        //            if (itm != null && itm.id_producto == _productoSeleccionadoId)
+        //            {
+        //                dgvProductos.ClearSelection();
+        //                dgvProductos.Rows[i].Selected = true;
+
+        //                // cargar controles desde la fila seleccionada
+        //                tbNombreProducto.Text = itm.nombre ?? string.Empty;
+        //                tbDescripcionProducto.Text = itm.descripcion ?? string.Empty;
+        //                tbPrecioProducto.Text = ((int)itm.precio).ToString();
+        //                tbPrecioVentaProducto.Text = ((int)itm.precio_vta).ToString();
+        //                tbStockProducto.Text = itm.stock.ToString();
+        //                try { cbMarcaProducto.SelectedValue = itm.id_marca; } catch { cbMarcaProducto.SelectedIndex = -1; }
+        //                try { cbCategoriaProducto.SelectedValue = itm.id_categoria; } catch { cbCategoriaProducto.SelectedIndex = -1; }
+        //                gbEstadoProducto.Visible = (itm.eliminado == 0);
+        //                _productoSeleccionadoEliminado = itm.eliminado;
+
+        //                // habilitar boton BORRAR solo si el producto NO está eliminado
+        //                btnBorrarProducto.Enabled = (itm.eliminado != 0);
+
+        //                CargarImagenEnPictureBox(itm.imagen);
+
+        //                restored = true;
+        //                break;
+        //            }
+        //        }
+        //        if (!restored)
+        //        {
+        //            // no restaura: dejar formulario tal cual (no borrar lo que el usuario esté escribiendo)
+        //            dgvProductos.ClearSelection();
+        //            _productoSeleccionadoId = -1;
+        //            _productoSeleccionadoEliminado = 1;
+        //            btnBorrarProducto.Enabled = false;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // no selección previa: mantener formulario intacto, solo limpiar selección visual
+        //        dgvProductos.ClearSelection();
+        //        btnBorrarProducto.Enabled = false;
+        //    }
+        //}
+
         private void FiltrarYRefrescarProductos()
         {
-            var marcas = ObtenerMarcas();
-            var categorias = ObtenerCategorias();
             var productos = ObtenerProductos();
-
-            // Filtrar por activo/inactivo según CheckBoxes (cbActivos = eliminado == 1, cbInactivos = eliminado == 0)
             var filtrados = productos
                 .Where(p => (cbActivosProductos.Checked && p.eliminado == 1) || (cbInactivosProductos.Checked && p.eliminado == 0))
                 .ToList();
 
-            // Búsqueda por nombre en tiempo real (si hay texto)
             var textoNom = tbBusquedaNombreProducto.Text.Trim();
             if (!string.IsNullOrEmpty(textoNom))
                 filtrados = filtrados.Where(p => p.nombre != null && p.nombre.IndexOf(textoNom, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
-
-            // Ejemplo: buscar por SKU o id (si tenés)
-            // var textoId = tbBusquedaIdProducto?.Text.Trim();
-            // if (!string.IsNullOrEmpty(textoId) && int.TryParse(textoId, out int idBuscado))
-            //     filtrados = filtrados.Where(p => p.id_producto == idBuscado).ToList();
-
-            // Parsear precio min/max (si están)
             if (int.TryParse(tbBusquedaPrecioMinProducto.Text.Trim(), out int precioMin))
                 filtrados = filtrados.Where(p => p.precio >= precioMin).ToList();
-
             if (int.TryParse(tbBusquedaPrecioMaxProducto.Text.Trim(), out int precioMax))
                 filtrados = filtrados.Where(p => p.precio <= precioMax).ToList();
 
+            // Obtener marcas y categorias para mapear las descripciones (igual que hacés en Load)
+            var marcas = ObtenerMarcas();
+            var categorias = ObtenerCategorias();
 
-            // Mapear descripciones de marca y categoría en la lista filtrada
-            foreach (var p in filtrados)
+            for (int i = 0; i < filtrados.Count; i++)
             {
-                p.descripcionMarca = marcas.FirstOrDefault(m => m.id_marca == p.id_marca)?.descripcion ?? "Desconocido";
-                p.descripcionCategoria = categorias.FirstOrDefault(c => c.id_categoria == p.id_categoria)?.descripcion ?? "Desconocido";
+                var item = filtrados[i];
+                item.descripcionMarca = marcas.FirstOrDefault(m => m.id_marca == item.id_marca)?.descripcion ?? "Desconocido";
+                item.descripcionCategoria = categorias.FirstOrDefault(c => c.id_categoria == item.id_categoria)?.descripcion ?? "Desconocido";
             }
 
-            // Asignar DataSource con la lista filtrada (mantener Producto_model para DataBoundItem)
             dgvProductos.DataSource = null;
             dgvProductos.DataSource = filtrados;
 
-            // UI post-procesamiento
-            if (dgvProductos.Rows.Count == 0)
-            {
-                LimpiarControlesProducto();
-                btnBorrarProducto.Enabled = false;
-                _productoSeleccionadoId = -1;
-            }
-            else
-            {
-                dgvProductos.ClearSelection();
-                _productoSeleccionadoId = -1;
-            }
+            // Por defecto: sin selección visual y sin habilitar borrar hasta que se seleccione una fila
+            dgvProductos.ClearSelection();
+            _productoSeleccionadoId = -1;
+            // recalcular estado del botón borrar
+            ActualizarEstadoBtnBorrar();
         }
 
+        private void CargarProductoEnControles(Producto_model p)
+        {
+            if (p == null) { LimpiarControlesProducto(); return; }
+
+            _productoSeleccionadoId = p.id_producto;
+            _productoSeleccionadoEliminado = p.eliminado;
+
+            tbNombreProducto.Text = p.nombre ?? string.Empty;
+            tbDescripcionProducto.Text = p.descripcion ?? string.Empty;
+            tbPrecioProducto.Text = ((int)p.precio).ToString();
+            tbPrecioVentaProducto.Text = ((int)p.precio_vta).ToString();
+            tbStockProducto.Text = p.stock.ToString();
+
+            try { cbMarcaProducto.SelectedValue = p.id_marca; } catch { cbMarcaProducto.SelectedIndex = -1; }
+            try { cbCategoriaProducto.SelectedValue = p.id_categoria; } catch { cbCategoriaProducto.SelectedIndex = -1; }
+
+            // según convención: eliminado == 0 => producto eliminado
+            rbProductoEliminadoSi.Checked = (p.eliminado == 0);
+            rbProductoEliminadoNo.Checked = (p.eliminado != 1);
+
+            gbEstadoProducto.Visible = (p.eliminado == 0);
+
+            // habilitar BORRAR solo si el producto NO está eliminado (es decir podemos marcarlo como eliminado)
+            ActualizarEstadoBtnBorrar();
+
+            CargarImagenEnPictureBox(p.imagen);
+        }
+
+
+        //private void CargarProductoEnControles(Producto_model p)
+        //{
+        //    if (p == null)
+        //    {
+        //        LimpiarControlesProducto();
+        //        return;
+        //    }
+
+        //    _productoSeleccionadoId = p.id_producto;
+        //    _productoSeleccionadoEliminado = p.eliminado;
+
+        //    tbNombreProducto.Text = p.nombre ?? string.Empty;
+        //    tbDescripcionProducto.Text = p.descripcion ?? string.Empty;
+
+        //    tbPrecioProducto.Text = ((int)p.precio).ToString();
+        //    tbPrecioVentaProducto.Text = ((int)p.precio_vta).ToString();
+
+        //    tbStockProducto.Text = p.stock.ToString();
+
+        //    // según convención: eliminado == 0 => producto eliminado; NO eliminado => eliminado != 0
+        //    rbProductoEliminadoSi.Checked = (p.eliminado == 0);    // "Si está eliminado"
+        //    rbProductoEliminadoNo.Checked = (p.eliminado != 0);   // "No está eliminado"
+
+        //    try { cbMarcaProducto.SelectedValue = p.id_marca; } catch { cbMarcaProducto.SelectedIndex = -1; }
+        //    try { cbCategoriaProducto.SelectedValue = p.id_categoria; } catch { cbCategoriaProducto.SelectedIndex = -1; }
+
+        //    // Mostrar el groupbox solo si el producto está eliminado
+        //    gbEstadoProducto.Visible = (p.eliminado == 0);
+
+        //    // Habilitar el botón BORRAR solo si el producto NO está eliminado (porque quieres marcarlo como eliminado)
+        //    btnBorrarProducto.Enabled = (p.eliminado != 0);
+
+        //    CargarImagenEnPictureBox(p.imagen);
+        //}
+
+
+
+        //private void LimpiarControlesProducto()
+        //{
+        //    tbNombreProducto.Clear();
+        //    tbDescripcionProducto.Clear();
+
+        //    // Quitar imagen del PictureBox y liberar la imagen si fue cargada dinámicamente
+        //    // Liberar imagen actual si existe
+        //    if (pbImagenProducto.Image != null)
+        //    {
+        //        pbImagenProducto.Image.Dispose();
+        //        pbImagenProducto.Image = null;
+        //    }
+
+        //    // _imagenSeleccionadaPath guarda la ruta; al limpiar la dejamos en null
+        //    _imagenSeleccionadaPath = null;
+
+        //    // Asignar imagen por defecto al PictureBox (recomendado: agregar la imagen a Resources)
+        //    try
+        //    {
+        //        // Si añadiste una imagen llamada prod_default en Properties.Resources
+        //        pbImagenProducto.Image = (Bitmap)Properties.Resources.producto_defecto.Clone();
+        //        pbImagenProducto.SizeMode = PictureBoxSizeMode.StretchImage;
+        //    }
+        //    catch
+        //    {
+        //        // Si no existe resource, dejamos el PictureBox vacío
+        //        pbImagenProducto.Image = null;
+        //    }
+
+        //    tbPrecioProducto.Clear();
+        //    tbPrecioVentaProducto.Clear();
+        //    tbStockProducto.Clear();
+        //    rbProductoEliminadoNo.Checked = true; // descomentar si corresponde
+        //    rbProductoEliminadoSi.Checked = false;
+        //    cbMarcaProducto.SelectedIndex = -1;
+        //    cbCategoriaProducto.SelectedIndex = -1;
+
+        //    _productoSeleccionadoId = -1;
+
+        //    _productoSeleccionadoEliminado = 1;
+
+        //    btnBorrarProducto.Enabled = false;
+        //    // ocultar el groupbox en modo nuevo/ninguna selección
+        //    gbEstadoProducto.Visible = false;
+        //}
 
         private void LimpiarControlesProducto()
         {
             tbNombreProducto.Clear();
             tbDescripcionProducto.Clear();
 
-            // Quitar imagen del PictureBox y liberar la imagen si fue cargada dinámicamente
-            // Liberar imagen actual si existe
             if (pbImagenProducto.Image != null)
             {
                 pbImagenProducto.Image.Dispose();
                 pbImagenProducto.Image = null;
             }
-
-            // _imagenSeleccionadaPath guarda la ruta; al limpiar la dejamos en null
-            _imagenSeleccionadaPath = null;
-
-            // Asignar imagen por defecto al PictureBox (recomendado: agregar la imagen a Resources)
             try
             {
-                // Si añadiste una imagen llamada prod_default en Properties.Resources
                 pbImagenProducto.Image = (Bitmap)Properties.Resources.producto_defecto.Clone();
                 pbImagenProducto.SizeMode = PictureBoxSizeMode.StretchImage;
             }
             catch
             {
-                // Si no existe resource, dejamos el PictureBox vacío
                 pbImagenProducto.Image = null;
             }
 
+            _imagenSeleccionadaPath = null;
             tbPrecioProducto.Clear();
             tbPrecioVentaProducto.Clear();
             tbStockProducto.Clear();
-            rbProductoEliminadoNo.Checked = true; // descomentar si corresponde
+
+            rbProductoEliminadoNo.Checked = true;
             rbProductoEliminadoSi.Checked = false;
             cbMarcaProducto.SelectedIndex = -1;
             cbCategoriaProducto.SelectedIndex = -1;
 
+            // estado interno por defecto (sin selección)
             _productoSeleccionadoId = -1;
+            _productoSeleccionadoEliminado = 1;
+
+            // UI: ocultar groupbox y deshabilitar botones
+            gbEstadoProducto.Visible = false;
+            btnBorrarProducto.Enabled = false;
+            btnGuardarProducto.Enabled = false;
+
+            // asegurar estado consistente
+            ActualizarEstadoBtnBorrar();
         }
 
         private List<Producto_model> ObtenerProductos()
@@ -545,38 +822,76 @@ namespace ProyectoNetshop.formularios
             //dgvProductos.CellFormatting += DgvProductos_CellFormatting;
         }
 
+        //private void DgvProductos_CellClick(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    if (e.RowIndex < 0) return;
+
+        //    var p = dgvProductos.Rows[e.RowIndex].DataBoundItem as Producto_model;
+        //    if (p == null) return;
+
+        //    _productoSeleccionadoId = p.id_producto;
+        //    _productoSeleccionadoEliminado = p.eliminado; // guardar estado para usarlo en el botón
+
+        //    tbNombreProducto.Text = p.nombre ?? string.Empty;
+        //    tbDescripcionProducto.Text = p.descripcion ?? string.Empty;
+
+        //    //tbPrecioProducto.Text = p.precio.ToString("F2");
+        //    //tbPrecioVentaProducto.Text = p.precio_vta.ToString("F2");
+
+        //    // Mostrar precios sin coma ni decimales (parte entera)
+        //    tbPrecioProducto.Text = ((int)p.precio).ToString();
+        //    tbPrecioVentaProducto.Text = ((int)p.precio_vta).ToString();
+
+        //    tbStockProducto.Text = p.stock.ToString();
+
+        //    rbProductoEliminadoSi.Checked = p.eliminado == 0;
+        //    rbProductoEliminadoNo.Checked = p.eliminado != 0;
+
+        //    try { cbMarcaProducto.SelectedValue = p.id_marca; } catch { cbMarcaProducto.SelectedIndex = -1; }
+        //    try { cbCategoriaProducto.SelectedValue = p.id_categoria; } catch { cbCategoriaProducto.SelectedIndex = -1; }
+
+        //    // Mostrar o ocultar el GroupBox de estado si está eliminado (0)
+        //    gbEstadoProducto.Visible = (p.eliminado == 0);
+
+        //    // Habilitar btnBorrarProducto solo si eliminado == 0 (según tu regla)
+        //    btnBorrarProducto.Enabled = (p.eliminado == 0);
+
+        //    // Cargar imagen en el PictureBox (helper)
+        //    CargarImagenEnPictureBox(p.imagen);
+        //}
+
         private void DgvProductos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
-
             var p = dgvProductos.Rows[e.RowIndex].DataBoundItem as Producto_model;
             if (p == null) return;
 
             _productoSeleccionadoId = p.id_producto;
-            _productoSeleccionadoEliminado = p.eliminado; // guardar estado para usarlo en el botón
+            _productoSeleccionadoEliminado = p.eliminado;
 
             tbNombreProducto.Text = p.nombre ?? string.Empty;
             tbDescripcionProducto.Text = p.descripcion ?? string.Empty;
-            tbPrecioProducto.Text = p.precio.ToString("F2");
-            tbPrecioVentaProducto.Text = p.precio_vta.ToString("F2");
-            tbStockProducto.Text = p.stock.ToString();
 
-            rbProductoEliminadoSi.Checked = p.eliminado == 0;
-            rbProductoEliminadoNo.Checked = p.eliminado != 0;
+            // mostrar la parte entera como pediste
+            tbPrecioProducto.Text = ((int)p.precio).ToString();
+            tbPrecioVentaProducto.Text = ((int)p.precio_vta).ToString();
+
+            tbStockProducto.Text = p.stock.ToString();
 
             try { cbMarcaProducto.SelectedValue = p.id_marca; } catch { cbMarcaProducto.SelectedIndex = -1; }
             try { cbCategoriaProducto.SelectedValue = p.id_categoria; } catch { cbCategoriaProducto.SelectedIndex = -1; }
 
-            // Mostrar o ocultar el GroupBox de estado si está eliminado (0)
+            // Radios y groupbox según convención: eliminado == 0 => SI (está eliminado)
+            rbProductoEliminadoSi.Checked = (p.eliminado == 0);   // SI: está eliminado
+            rbProductoEliminadoNo.Checked = (p.eliminado == 1);   // NO: no está eliminado
+
             gbEstadoProducto.Visible = (p.eliminado == 0);
 
-            // Habilitar btnEliminar solo si el producto NO está eliminado (1)
-            btnBorrarProducto.Enabled = (p.eliminado == 1);
+            // Usar la función central para habilitar/deshabilitar el botón
+            ActualizarEstadoBtnBorrar();
 
-            // Cargar imagen en el PictureBox (helper)
             CargarImagenEnPictureBox(p.imagen);
         }
-
 
         private void CargarImagenEnPictureBox(string rutaImagen)
         {
@@ -716,6 +1031,7 @@ namespace ProyectoNetshop.formularios
             if (!baseValida)
             {
                 btnGuardarProducto.Enabled = false;
+                ActualizarEstadoBtnBorrar();
                 return;
             }
 
@@ -740,10 +1056,13 @@ namespace ProyectoNetshop.formularios
             if (!precioOk || !ventaOk || !stockOk)
             {
                 btnGuardarProducto.Enabled = false;
+                ActualizarEstadoBtnBorrar();
                 return;
             }
 
             btnGuardarProducto.Enabled = (precioVenta < precioOriginal);
+            // recalcular también el estado del botón borrar después de validar
+            ActualizarEstadoBtnBorrar();
         }
 
         private void tbNombre_TextChanged(object sender, EventArgs e)
@@ -794,45 +1113,21 @@ namespace ProyectoNetshop.formularios
 
         private void btnEliminar_Click(object sender, EventArgs e)
         {
-            //tbNombreProducto.Text = "";
-            //tbPrecioProducto.Text = "";
-            //tbPrecioVentaProducto.Text = "";
-            //tbDescripcionProducto.Text = "";
-            //tbStockProducto.Text = "";
-            //cbMarcaProducto.SelectedIndex = -1;
-            //cbCategoriaProducto.SelectedIndex = -1;
-            //btnGuardarProducto.Enabled = false;
-            // Si no hay selección activa: comportamiento de "limpiar campos" durante creación
+            // Si no hay selección: limpiar formulario (modo "nuevo")
             if (_productoSeleccionadoId < 0)
             {
-                // Borrar datos del formulario al crear un registro nuevo
-                tbNombreProducto.Clear();
-                tbPrecioProducto.Clear();
-                tbPrecioVentaProducto.Clear();
-                tbDescripcionProducto.Clear();
-                tbStockProducto.Clear();
-                cbMarcaProducto.SelectedIndex = -1;
-                cbCategoriaProducto.SelectedIndex = -1;
-
-                // Reset imagen a por defecto o limpiar
-                pbImagenProducto.Image?.Dispose();
-                pbImagenProducto.Image = (Bitmap)Properties.Resources.producto_defecto.Clone(); // o usar tu método de placeholder
-                _imagenSeleccionadaPath = null;
-
-                btnGuardarProducto.Enabled = false;
+                LimpiarControlesProducto();
                 return;
             }
 
-            // Si hay producto seleccionado: solo permitir marcar como eliminado si actualmente NO está eliminado
+            // Si ya está eliminado, avisar
             if (_productoSeleccionadoEliminado == 0)
             {
-                // Producto ya eliminado: botón deshabilitado por CellClick, pero comprobamos por seguridad
                 MessageBox.Show("El producto ya se encuentra eliminado.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnBorrarProducto.Enabled = false;
                 return;
             }
 
-            // Confirmación y cambio de estado en BD: marcar como eliminado (0)
             var dr = MessageBox.Show("¿Seguro que deseas marcar este producto como eliminado?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dr != DialogResult.Yes) return;
 
@@ -840,8 +1135,6 @@ namespace ProyectoNetshop.formularios
             if (filas == 1)
             {
                 MessageBox.Show("Producto marcado como eliminado.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Actualizar UI: recargar lista y limpiar controles
                 FiltrarYRefrescarProductos();
                 LimpiarControlesProducto();
             }
@@ -850,6 +1143,33 @@ namespace ProyectoNetshop.formularios
                 MessageBox.Show("Ocurrió un error al cambiar el estado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private bool TieneDatosEnFormulario()
+        {
+            if (!string.IsNullOrWhiteSpace(tbNombreProducto.Text)) return true;
+            if (!string.IsNullOrWhiteSpace(tbDescripcionProducto.Text)) return true;
+            if (!string.IsNullOrWhiteSpace(tbPrecioProducto.Text)) return true;
+            if (!string.IsNullOrWhiteSpace(tbPrecioVentaProducto.Text)) return true;
+            if (!string.IsNullOrWhiteSpace(tbStockProducto.Text)) return true;
+            if (cbMarcaProducto.SelectedIndex >= 0) return true;
+            if (cbCategoriaProducto.SelectedIndex >= 0) return true;
+            if (!string.IsNullOrWhiteSpace(_imagenSeleccionadaPath)) return true;
+            return false;
+        }
+
+
+        private void ActualizarEstadoBtnBorrar()
+        {
+            // habilitar cuando hay producto seleccionado y NO está eliminado
+            bool seleccionValida = (_productoSeleccionadoId > 0) && (_productoSeleccionadoEliminado != 0);
+
+            // o habilitar cuando hay datos escritos en el formulario (modo "limpiar campos")
+            bool formularioConDatos = TieneDatosEnFormulario();
+
+            btnBorrarProducto.Enabled = seleccionValida || formularioConDatos;
+        }
+
+
 
         private void cbActivos_CheckedChanged(object sender, EventArgs e)
         {
