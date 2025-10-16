@@ -168,7 +168,9 @@
             ClientSize = new Size(582, 441);
             Controls.Add(panel3);
             Controls.Add(panel2);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "FInicioSesion";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Iniciar Sesion";

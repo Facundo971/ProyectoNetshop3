@@ -47,12 +47,11 @@
             // BGenerarTotalVentasGerente
             // 
             BGenerarTotalVentasGerente.Cursor = Cursors.Hand;
-            BGenerarTotalVentasGerente.Dock = DockStyle.Bottom;
             BGenerarTotalVentasGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            BGenerarTotalVentasGerente.Location = new Point(0, 646);
+            BGenerarTotalVentasGerente.Location = new Point(15, 747);
             BGenerarTotalVentasGerente.Margin = new Padding(3, 4, 3, 4);
             BGenerarTotalVentasGerente.Name = "BGenerarTotalVentasGerente";
-            BGenerarTotalVentasGerente.Size = new Size(288, 53);
+            BGenerarTotalVentasGerente.Size = new Size(258, 53);
             BGenerarTotalVentasGerente.TabIndex = 0;
             BGenerarTotalVentasGerente.Text = "Total de ventas";
             BGenerarTotalVentasGerente.UseVisualStyleBackColor = true;
@@ -71,7 +70,7 @@
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(288, 699);
+            panel1.Size = new Size(288, 800);
             panel1.TabIndex = 1;
             // 
             // label1
@@ -117,12 +116,11 @@
             // BGenerarRecaudacionGerente
             // 
             BGenerarRecaudacionGerente.Cursor = Cursors.Hand;
-            BGenerarRecaudacionGerente.Dock = DockStyle.Bottom;
             BGenerarRecaudacionGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            BGenerarRecaudacionGerente.Location = new Point(0, 540);
+            BGenerarRecaudacionGerente.Location = new Point(15, 641);
             BGenerarRecaudacionGerente.Margin = new Padding(3, 4, 3, 4);
             BGenerarRecaudacionGerente.Name = "BGenerarRecaudacionGerente";
-            BGenerarRecaudacionGerente.Size = new Size(288, 53);
+            BGenerarRecaudacionGerente.Size = new Size(258, 53);
             BGenerarRecaudacionGerente.TabIndex = 2;
             BGenerarRecaudacionGerente.Text = "Recaudación";
             BGenerarRecaudacionGerente.UseVisualStyleBackColor = true;
@@ -130,12 +128,11 @@
             // BGenerarReporteGerente
             // 
             BGenerarReporteGerente.Cursor = Cursors.Hand;
-            BGenerarReporteGerente.Dock = DockStyle.Bottom;
             BGenerarReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            BGenerarReporteGerente.Location = new Point(0, 593);
+            BGenerarReporteGerente.Location = new Point(15, 694);
             BGenerarReporteGerente.Margin = new Padding(3, 4, 3, 4);
             BGenerarReporteGerente.Name = "BGenerarReporteGerente";
-            BGenerarReporteGerente.Size = new Size(288, 53);
+            BGenerarReporteGerente.Size = new Size(258, 53);
             BGenerarReporteGerente.TabIndex = 1;
             BGenerarReporteGerente.Text = "Prductos mas vendidos";
             BGenerarReporteGerente.UseVisualStyleBackColor = true;
@@ -151,7 +148,7 @@
             panel2.Location = new Point(288, 0);
             panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(889, 133);
+            panel2.Size = new Size(912, 133);
             panel2.TabIndex = 2;
             // 
             // cbVendedoresNombreReporte
@@ -187,7 +184,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SlateGray;
-            ClientSize = new Size(1177, 699);
+            ClientSize = new Size(1200, 800);
             Controls.Add(panel2);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;

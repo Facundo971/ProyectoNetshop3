@@ -60,7 +60,7 @@
             panelIzquierdo.Location = new Point(0, 0);
             panelIzquierdo.Margin = new Padding(3, 4, 3, 4);
             panelIzquierdo.Name = "panelIzquierdo";
-            panelIzquierdo.Size = new Size(229, 753);
+            panelIzquierdo.Size = new Size(229, 953);
             panelIzquierdo.TabIndex = 0;
             // 
             // btnSalir
@@ -75,7 +75,7 @@
             btnSalir.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSalir.IconSize = 40;
             btnSalir.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSalir.Location = new Point(0, 673);
+            btnSalir.Location = new Point(0, 873);
             btnSalir.Margin = new Padding(3, 4, 3, 4);
             btnSalir.Name = "btnSalir";
             btnSalir.Padding = new Padding(11, 0, 23, 0);
@@ -258,11 +258,10 @@
             // 
             // panelContenedor
             // 
-            panelContenedor.Dock = DockStyle.Bottom;
-            panelContenedor.Location = new Point(229, 133);
+            panelContenedor.Location = new Point(480, 180);
             panelContenedor.Margin = new Padding(3, 4, 3, 4);
             panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(1216, 620);
+            panelContenedor.Size = new Size(1200, 800);
             panelContenedor.TabIndex = 2;
             panelContenedor.Paint += panelContenedor_Paint;
             // 
@@ -270,14 +269,16 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.SlateGray;
-            ClientSize = new Size(1445, 753);
+            BackColor = Color.FromArgb(0, 0, 64);
+            ClientSize = new Size(1445, 953);
             Controls.Add(panelContenedor);
             Controls.Add(panelSuperior);
             Controls.Add(panelIzquierdo);
             Margin = new Padding(3, 4, 3, 4);
             Name = "principal";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Netshop";
+            WindowState = FormWindowState.Maximized;
             Load += principal_Load;
             panelIzquierdo.ResumeLayout(false);
             panelSuperior.ResumeLayout(false);

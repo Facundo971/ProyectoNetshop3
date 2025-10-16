@@ -32,14 +32,21 @@
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             panel1 = new Panel();
+            label1 = new Label();
             gbEstadoProducto = new GroupBox();
             rbProductoEliminadoSi = new RadioButton();
             rbProductoEliminadoNo = new RadioButton();
+            tbBusquedaNombreProducto = new TextBox();
             lbPrecioVenta = new Label();
+            tbBusquedaPrecioMinProducto = new TextBox();
             tbPrecioVentaProducto = new TextBox();
+            tbBusquedaPrecioMaxProducto = new TextBox();
             cbMarcaProducto = new ComboBox();
+            cbInactivosProductos = new CheckBox();
             lbMarca = new Label();
+            cbActivosProductos = new CheckBox();
             lbCategoria = new Label();
+            dgvProductos = new DataGridView();
             cbCategoriaProducto = new ComboBox();
             btnCargarImg = new FontAwesome.Sharp.IconButton();
             pbImagenProducto = new PictureBox();
@@ -55,30 +62,28 @@
             lbNombre = new Label();
             btnGuardarProducto = new FontAwesome.Sharp.IconButton();
             tbNombreProducto = new TextBox();
-            panel2 = new Panel();
-            label1 = new Label();
-            tbBusquedaNombreProducto = new TextBox();
-            tbBusquedaPrecioMinProducto = new TextBox();
-            tbBusquedaPrecioMaxProducto = new TextBox();
-            cbInactivosProductos = new CheckBox();
-            cbActivosProductos = new CheckBox();
-            dgvProductos = new DataGridView();
             panel1.SuspendLayout();
             gbEstadoProducto.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pbImagenProducto).BeginInit();
-            panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvProductos).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pbImagenProducto).BeginInit();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(0, 0, 64);
+            panel1.Controls.Add(label1);
             panel1.Controls.Add(gbEstadoProducto);
+            panel1.Controls.Add(tbBusquedaNombreProducto);
             panel1.Controls.Add(lbPrecioVenta);
+            panel1.Controls.Add(tbBusquedaPrecioMinProducto);
             panel1.Controls.Add(tbPrecioVentaProducto);
+            panel1.Controls.Add(tbBusquedaPrecioMaxProducto);
             panel1.Controls.Add(cbMarcaProducto);
+            panel1.Controls.Add(cbInactivosProductos);
             panel1.Controls.Add(lbMarca);
+            panel1.Controls.Add(cbActivosProductos);
             panel1.Controls.Add(lbCategoria);
+            panel1.Controls.Add(dgvProductos);
             panel1.Controls.Add(cbCategoriaProducto);
             panel1.Controls.Add(btnCargarImg);
             panel1.Controls.Add(pbImagenProducto);
@@ -99,8 +104,19 @@
             panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
             panel1.RightToLeft = RightToLeft.No;
-            panel1.Size = new Size(1159, 292);
+            panel1.Size = new Size(1200, 800);
             panel1.TabIndex = 20;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            label1.ForeColor = SystemColors.ButtonFace;
+            label1.Location = new Point(783, 326);
+            label1.Name = "label1";
+            label1.Size = new Size(95, 29);
+            label1.TabIndex = 34;
+            label1.Text = "Buscar por:";
             // 
             // gbEstadoProducto
             // 
@@ -147,6 +163,15 @@
             rbProductoEliminadoNo.Text = "No";
             rbProductoEliminadoNo.UseVisualStyleBackColor = true;
             // 
+            // tbBusquedaNombreProducto
+            // 
+            tbBusquedaNombreProducto.Location = new Point(783, 359);
+            tbBusquedaNombreProducto.Multiline = true;
+            tbBusquedaNombreProducto.Name = "tbBusquedaNombreProducto";
+            tbBusquedaNombreProducto.PlaceholderText = "Nombre del producto";
+            tbBusquedaNombreProducto.Size = new Size(209, 28);
+            tbBusquedaNombreProducto.TabIndex = 33;
+            // 
             // lbPrecioVenta
             // 
             lbPrecioVenta.AutoSize = true;
@@ -159,6 +184,16 @@
             lbPrecioVenta.TabIndex = 35;
             lbPrecioVenta.Text = "Precio de venta (*)";
             // 
+            // tbBusquedaPrecioMinProducto
+            // 
+            tbBusquedaPrecioMinProducto.Location = new Point(1033, 325);
+            tbBusquedaPrecioMinProducto.Multiline = true;
+            tbBusquedaPrecioMinProducto.Name = "tbBusquedaPrecioMinProducto";
+            tbBusquedaPrecioMinProducto.PlaceholderText = "Precio minimo";
+            tbBusquedaPrecioMinProducto.Size = new Size(140, 28);
+            tbBusquedaPrecioMinProducto.TabIndex = 32;
+            tbBusquedaPrecioMinProducto.TextChanged += tbBusquedaPrecioMinProducto_TextChanged;
+            // 
             // tbPrecioVentaProducto
             // 
             tbPrecioVentaProducto.Location = new Point(24, 173);
@@ -168,6 +203,16 @@
             tbPrecioVentaProducto.TabIndex = 34;
             tbPrecioVentaProducto.TextChanged += tbPrecioVenta_TextChanged;
             tbPrecioVentaProducto.KeyPress += tbPrecioVenta_KeyPress;
+            // 
+            // tbBusquedaPrecioMaxProducto
+            // 
+            tbBusquedaPrecioMaxProducto.Location = new Point(1033, 359);
+            tbBusquedaPrecioMaxProducto.Multiline = true;
+            tbBusquedaPrecioMaxProducto.Name = "tbBusquedaPrecioMaxProducto";
+            tbBusquedaPrecioMaxProducto.PlaceholderText = "Precio maximo";
+            tbBusquedaPrecioMaxProducto.Size = new Size(140, 28);
+            tbBusquedaPrecioMaxProducto.TabIndex = 31;
+            tbBusquedaPrecioMaxProducto.TextChanged += tbBusquedaPrecioMaxProducto_TextChanged;
             // 
             // cbMarcaProducto
             // 
@@ -179,6 +224,19 @@
             cbMarcaProducto.Size = new Size(209, 28);
             cbMarcaProducto.TabIndex = 33;
             cbMarcaProducto.SelectedIndexChanged += cbMarca_SelectedIndexChanged;
+            // 
+            // cbInactivosProductos
+            // 
+            cbInactivosProductos.AutoSize = true;
+            cbInactivosProductos.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            cbInactivosProductos.ForeColor = SystemColors.ButtonFace;
+            cbInactivosProductos.Location = new Point(136, 359);
+            cbInactivosProductos.Margin = new Padding(3, 4, 3, 4);
+            cbInactivosProductos.Name = "cbInactivosProductos";
+            cbInactivosProductos.Size = new Size(99, 33);
+            cbInactivosProductos.TabIndex = 30;
+            cbInactivosProductos.Text = "Inactivos";
+            cbInactivosProductos.UseVisualStyleBackColor = true;
             // 
             // lbMarca
             // 
@@ -192,6 +250,22 @@
             lbMarca.TabIndex = 32;
             lbMarca.Text = "Marca (*)";
             // 
+            // cbActivosProductos
+            // 
+            cbActivosProductos.AutoSize = true;
+            cbActivosProductos.Checked = true;
+            cbActivosProductos.CheckState = CheckState.Checked;
+            cbActivosProductos.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            cbActivosProductos.ForeColor = SystemColors.ButtonFace;
+            cbActivosProductos.Location = new Point(28, 359);
+            cbActivosProductos.Margin = new Padding(3, 4, 3, 4);
+            cbActivosProductos.Name = "cbActivosProductos";
+            cbActivosProductos.Size = new Size(88, 33);
+            cbActivosProductos.TabIndex = 29;
+            cbActivosProductos.Text = "Activos";
+            cbActivosProductos.UseVisualStyleBackColor = true;
+            cbActivosProductos.CheckedChanged += cbActivos_CheckedChanged;
+            // 
             // lbCategoria
             // 
             lbCategoria.AutoSize = true;
@@ -203,6 +277,43 @@
             lbCategoria.Size = new Size(106, 29);
             lbCategoria.TabIndex = 26;
             lbCategoria.Text = "Categoria (*)";
+            // 
+            // dgvProductos
+            // 
+            dgvProductos.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvProductos.BackgroundColor = Color.SlateGray;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvProductos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dgvProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dgvProductos.DefaultCellStyle = dataGridViewCellStyle2;
+            dgvProductos.Location = new Point(24, 394);
+            dgvProductos.Margin = new Padding(3, 4, 3, 4);
+            dgvProductos.Name = "dgvProductos";
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            dataGridViewCellStyle3.ForeColor = SystemColors.Info;
+            dataGridViewCellStyle3.SelectionBackColor = Color.Azure;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dgvProductos.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dgvProductos.RowHeadersWidth = 51;
+            dgvProductos.Size = new Size(1149, 340);
+            dgvProductos.TabIndex = 0;
+            dgvProductos.CellContentClick += dgvProductos_CellContentClick;
             // 
             // cbCategoriaProducto
             // 
@@ -223,10 +334,10 @@
             btnCargarImg.IconColor = Color.Black;
             btnCargarImg.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnCargarImg.IconSize = 40;
-            btnCargarImg.Location = new Point(743, 212);
+            btnCargarImg.Location = new Point(765, 212);
             btnCargarImg.Margin = new Padding(3, 4, 3, 4);
             btnCargarImg.Name = "btnCargarImg";
-            btnCargarImg.Size = new Size(157, 61);
+            btnCargarImg.Size = new Size(167, 61);
             btnCargarImg.TabIndex = 28;
             btnCargarImg.Text = "Cargar imagen";
             btnCargarImg.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -242,7 +353,7 @@
             pbImagenProducto.Location = new Point(691, 16);
             pbImagenProducto.Margin = new Padding(3, 4, 3, 4);
             pbImagenProducto.Name = "pbImagenProducto";
-            pbImagenProducto.Size = new Size(256, 188);
+            pbImagenProducto.Size = new Size(310, 188);
             pbImagenProducto.SizeMode = PictureBoxSizeMode.StretchImage;
             pbImagenProducto.TabIndex = 27;
             pbImagenProducto.TabStop = false;
@@ -253,7 +364,7 @@
             lbEliminar.BackColor = Color.Transparent;
             lbEliminar.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbEliminar.ForeColor = SystemColors.ButtonFace;
-            lbEliminar.Location = new Point(1050, 156);
+            lbEliminar.Location = new Point(1100, 157);
             lbEliminar.Name = "lbEliminar";
             lbEliminar.Size = new Size(61, 29);
             lbEliminar.TabIndex = 26;
@@ -265,7 +376,7 @@
             lbGuardar.BackColor = Color.Transparent;
             lbGuardar.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbGuardar.ForeColor = SystemColors.ButtonFace;
-            lbGuardar.Location = new Point(1045, 23);
+            lbGuardar.Location = new Point(1095, 24);
             lbGuardar.Name = "lbGuardar";
             lbGuardar.Size = new Size(72, 29);
             lbGuardar.TabIndex = 25;
@@ -278,7 +389,7 @@
             btnBorrarProducto.IconColor = Color.Black;
             btnBorrarProducto.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnBorrarProducto.IconSize = 40;
-            btnBorrarProducto.Location = new Point(1033, 189);
+            btnBorrarProducto.Location = new Point(1087, 189);
             btnBorrarProducto.Margin = new Padding(3, 4, 3, 4);
             btnBorrarProducto.Name = "btnBorrarProducto";
             btnBorrarProducto.Size = new Size(86, 80);
@@ -370,7 +481,7 @@
             btnGuardarProducto.IconColor = Color.Black;
             btnGuardarProducto.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnGuardarProducto.IconSize = 40;
-            btnGuardarProducto.Location = new Point(1033, 56);
+            btnGuardarProducto.Location = new Point(1087, 56);
             btnGuardarProducto.Margin = new Padding(3, 4, 3, 4);
             btnGuardarProducto.Name = "btnGuardarProducto";
             btnGuardarProducto.Size = new Size(86, 80);
@@ -388,137 +499,12 @@
             tbNombreProducto.TextChanged += tbNombre_TextChanged;
             tbNombreProducto.KeyPress += tbNombre_KeyPress;
             // 
-            // panel2
-            // 
-            panel2.BackColor = Color.FromArgb(0, 0, 64);
-            panel2.Controls.Add(label1);
-            panel2.Controls.Add(tbBusquedaNombreProducto);
-            panel2.Controls.Add(tbBusquedaPrecioMinProducto);
-            panel2.Controls.Add(tbBusquedaPrecioMaxProducto);
-            panel2.Controls.Add(cbInactivosProductos);
-            panel2.Controls.Add(cbActivosProductos);
-            panel2.Controls.Add(dgvProductos);
-            panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 312);
-            panel2.Margin = new Padding(3, 4, 3, 4);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(1159, 340);
-            panel2.TabIndex = 21;
-            panel2.Paint += panel2_Paint;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            label1.ForeColor = SystemColors.ButtonFace;
-            label1.Location = new Point(783, 52);
-            label1.Name = "label1";
-            label1.Size = new Size(95, 29);
-            label1.TabIndex = 34;
-            label1.Text = "Buscar por:";
-            // 
-            // tbBusquedaNombreProducto
-            // 
-            tbBusquedaNombreProducto.Location = new Point(783, 85);
-            tbBusquedaNombreProducto.Multiline = true;
-            tbBusquedaNombreProducto.Name = "tbBusquedaNombreProducto";
-            tbBusquedaNombreProducto.PlaceholderText = "Nombre del producto";
-            tbBusquedaNombreProducto.Size = new Size(209, 28);
-            tbBusquedaNombreProducto.TabIndex = 33;
-            // 
-            // tbBusquedaPrecioMinProducto
-            // 
-            tbBusquedaPrecioMinProducto.Location = new Point(1033, 51);
-            tbBusquedaPrecioMinProducto.Multiline = true;
-            tbBusquedaPrecioMinProducto.Name = "tbBusquedaPrecioMinProducto";
-            tbBusquedaPrecioMinProducto.PlaceholderText = "Precio minimo";
-            tbBusquedaPrecioMinProducto.Size = new Size(86, 28);
-            tbBusquedaPrecioMinProducto.TabIndex = 32;
-            tbBusquedaPrecioMinProducto.TextChanged += tbBusquedaPrecioMinProducto_TextChanged;
-            // 
-            // tbBusquedaPrecioMaxProducto
-            // 
-            tbBusquedaPrecioMaxProducto.Location = new Point(1033, 85);
-            tbBusquedaPrecioMaxProducto.Multiline = true;
-            tbBusquedaPrecioMaxProducto.Name = "tbBusquedaPrecioMaxProducto";
-            tbBusquedaPrecioMaxProducto.PlaceholderText = "Precio maximo";
-            tbBusquedaPrecioMaxProducto.Size = new Size(86, 28);
-            tbBusquedaPrecioMaxProducto.TabIndex = 31;
-            tbBusquedaPrecioMaxProducto.TextChanged += tbBusquedaPrecioMaxProducto_TextChanged;
-            // 
-            // cbInactivosProductos
-            // 
-            cbInactivosProductos.AutoSize = true;
-            cbInactivosProductos.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            cbInactivosProductos.ForeColor = SystemColors.ButtonFace;
-            cbInactivosProductos.Location = new Point(136, 85);
-            cbInactivosProductos.Margin = new Padding(3, 4, 3, 4);
-            cbInactivosProductos.Name = "cbInactivosProductos";
-            cbInactivosProductos.Size = new Size(99, 33);
-            cbInactivosProductos.TabIndex = 30;
-            cbInactivosProductos.Text = "Inactivos";
-            cbInactivosProductos.UseVisualStyleBackColor = true;
-            // 
-            // cbActivosProductos
-            // 
-            cbActivosProductos.AutoSize = true;
-            cbActivosProductos.Checked = true;
-            cbActivosProductos.CheckState = CheckState.Checked;
-            cbActivosProductos.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            cbActivosProductos.ForeColor = SystemColors.ButtonFace;
-            cbActivosProductos.Location = new Point(28, 85);
-            cbActivosProductos.Margin = new Padding(3, 4, 3, 4);
-            cbActivosProductos.Name = "cbActivosProductos";
-            cbActivosProductos.Size = new Size(88, 33);
-            cbActivosProductos.TabIndex = 29;
-            cbActivosProductos.Text = "Activos";
-            cbActivosProductos.UseVisualStyleBackColor = true;
-            cbActivosProductos.CheckedChanged += cbActivos_CheckedChanged;
-            // 
-            // dgvProductos
-            // 
-            dgvProductos.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dgvProductos.BackgroundColor = Color.SlateGray;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvProductos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dgvProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgvProductos.DefaultCellStyle = dataGridViewCellStyle2;
-            dgvProductos.Location = new Point(24, 120);
-            dgvProductos.Margin = new Padding(3, 4, 3, 4);
-            dgvProductos.Name = "dgvProductos";
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = SystemColors.Control;
-            dataGridViewCellStyle3.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            dataGridViewCellStyle3.ForeColor = SystemColors.Info;
-            dataGridViewCellStyle3.SelectionBackColor = Color.Azure;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dgvProductos.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            dgvProductos.RowHeadersWidth = 51;
-            dgvProductos.Size = new Size(1110, 202);
-            dgvProductos.TabIndex = 0;
-            dgvProductos.CellContentClick += dgvProductos_CellContentClick;
-            // 
             // CrudProductos
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SlateGray;
-            ClientSize = new Size(1159, 652);
-            Controls.Add(panel2);
+            ClientSize = new Size(1200, 800);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(3, 4, 3, 4);
@@ -529,10 +515,8 @@
             panel1.PerformLayout();
             gbEstadoProducto.ResumeLayout(false);
             gbEstadoProducto.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pbImagenProducto).EndInit();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvProductos).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pbImagenProducto).EndInit();
             ResumeLayout(false);
         }
 
@@ -553,7 +537,6 @@
         private TextBox tbNombreProducto;
         private PictureBox pbImagenProducto;
         private FontAwesome.Sharp.IconButton btnCargarImg;
-        private Panel panel2;
         private CheckBox cbInactivosProductos;
         private CheckBox cbActivosProductos;
         private DataGridView dgvProductos;

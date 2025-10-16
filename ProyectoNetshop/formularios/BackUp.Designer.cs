@@ -45,7 +45,7 @@
             LBackUp.AutoSize = true;
             LBackUp.Font = new Font("Dubai", 20F, FontStyle.Bold | FontStyle.Italic);
             LBackUp.ForeColor = SystemColors.ButtonFace;
-            LBackUp.Location = new Point(465, 30);
+            LBackUp.Location = new Point(487, 113);
             LBackUp.Name = "LBackUp";
             LBackUp.Size = new Size(146, 57);
             LBackUp.TabIndex = 0;
@@ -56,7 +56,7 @@
             LBaseDeDatos.AutoSize = true;
             LBaseDeDatos.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             LBaseDeDatos.ForeColor = SystemColors.ButtonFace;
-            LBaseDeDatos.Location = new Point(218, 155);
+            LBaseDeDatos.Location = new Point(240, 238);
             LBaseDeDatos.Name = "LBaseDeDatos";
             LBaseDeDatos.Size = new Size(113, 29);
             LBaseDeDatos.TabIndex = 1;
@@ -67,7 +67,7 @@
             LGuardarRuta.AutoSize = true;
             LGuardarRuta.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             LGuardarRuta.ForeColor = SystemColors.ButtonFace;
-            LGuardarRuta.Location = new Point(285, 250);
+            LGuardarRuta.Location = new Point(307, 333);
             LGuardarRuta.Name = "LGuardarRuta";
             LGuardarRuta.Size = new Size(46, 29);
             LGuardarRuta.TabIndex = 2;
@@ -76,7 +76,7 @@
             // TBBaseDeDatos
             // 
             TBBaseDeDatos.Font = new Font("Segoe UI", 9F);
-            TBBaseDeDatos.Location = new Point(346, 157);
+            TBBaseDeDatos.Location = new Point(368, 240);
             TBBaseDeDatos.Margin = new Padding(3, 4, 3, 4);
             TBBaseDeDatos.Multiline = true;
             TBBaseDeDatos.Name = "TBBaseDeDatos";
@@ -86,7 +86,7 @@
             // 
             // TBGuardarRuta
             // 
-            TBGuardarRuta.Location = new Point(346, 252);
+            TBGuardarRuta.Location = new Point(368, 335);
             TBGuardarRuta.Margin = new Padding(3, 4, 3, 4);
             TBGuardarRuta.Multiline = true;
             TBGuardarRuta.Name = "TBGuardarRuta";
@@ -99,7 +99,7 @@
             BConectar.Cursor = Cursors.Hand;
             BConectar.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             BConectar.ForeColor = SystemColors.ActiveCaptionText;
-            BConectar.Location = new Point(779, 145);
+            BConectar.Location = new Point(801, 228);
             BConectar.Margin = new Padding(3, 4, 3, 4);
             BConectar.Name = "BConectar";
             BConectar.Size = new Size(120, 50);
@@ -113,7 +113,7 @@
             BGuardarRuta.Cursor = Cursors.Hand;
             BGuardarRuta.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             BGuardarRuta.ForeColor = SystemColors.ActiveCaptionText;
-            BGuardarRuta.Location = new Point(779, 243);
+            BGuardarRuta.Location = new Point(801, 326);
             BGuardarRuta.Margin = new Padding(3, 4, 3, 4);
             BGuardarRuta.Name = "BGuardarRuta";
             BGuardarRuta.Size = new Size(120, 50);
@@ -127,7 +127,7 @@
             BBackUp.Cursor = Cursors.Hand;
             BBackUp.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             BBackUp.ForeColor = SystemColors.ActiveCaptionText;
-            BBackUp.Location = new Point(479, 399);
+            BBackUp.Location = new Point(501, 482);
             BBackUp.Margin = new Padding(3, 4, 3, 4);
             BBackUp.Name = "BBackUp";
             BBackUp.Size = new Size(120, 50);
@@ -147,9 +147,9 @@
             panel1.Controls.Add(BConectar);
             panel1.Controls.Add(LGuardarRuta);
             panel1.Controls.Add(TBGuardarRuta);
-            panel1.Location = new Point(22, 22);
+            panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1130, 655);
+            panel1.Size = new Size(1200, 800);
             panel1.TabIndex = 8;
             panel1.Paint += panel1_Paint;
             // 
@@ -158,7 +158,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 64);
-            ClientSize = new Size(1177, 699);
+            ClientSize = new Size(1200, 800);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(3, 4, 3, 4);

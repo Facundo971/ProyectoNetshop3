@@ -12,6 +12,8 @@ using System.Text.RegularExpressions;
 
 namespace ProyectoNetshop.formularios
 {
+    //ibBotonBuscarClienteVenta
+    //ibBotonBuscarProductoVenta
     public partial class ventas : Form
     {
         private readonly int vendedorDni;
@@ -28,7 +30,7 @@ namespace ProyectoNetshop.formularios
 
             tbDniClienteVenta.KeyPress += TextBox_OnlyDigits_KeyPress;
             tbNombreClienteVenta.KeyPress += TextBox_OnlyLetters_KeyPress;
-            ibBotonBuscarClienteVenta.Click += IbBotonBuscarClienteVenta_Click;
+            //ibBotonBuscarClienteVenta.Click += IbBotonBuscarClienteVenta_Click;
 
             tbNombreProductoVenta.KeyPress += TextBox_OnlyLetters_KeyPress;
             //tbDescripcionProductoVenta.KeyPress += TextBox_OnlyLetters_KeyPress;
@@ -36,7 +38,7 @@ namespace ProyectoNetshop.formularios
             tbPrecioVtaProductoVenta.KeyPress += TextBox_OnlyDigits_KeyPress;
             tbCantidadProductoVenta.KeyPress += TextBox_OnlyDigits_KeyPress;
 
-            ibBotonBuscarProductoVenta.Click += IbBotonBuscarProductoVenta_Click;
+            //ibBotonBuscarProductoVenta.Click += IbBotonBuscarProductoVenta_Click;
             ibBotonAgregarProductoVenta.Click += IbBotonAgregarProductoVenta_Click;
 
             ibBotonAgregarProductoVenta.Enabled = false;
@@ -64,39 +66,39 @@ namespace ProyectoNetshop.formularios
             }
         }
 
-        private void IbBotonBuscarClienteVenta_Click(object sender, EventArgs e)
-        {
-            string dniText = tbDniClienteVenta.Text.Trim();
-            string nombreTxt = tbNombreClienteVenta.Text.Trim();
+        //private void IbBotonBuscarClienteVenta_Click(object sender, EventArgs e)
+        //{
+        //    string dniText = tbDniClienteVenta.Text.Trim();
+        //    string nombreTxt = tbNombreClienteVenta.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(dniText) || string.IsNullOrWhiteSpace(nombreTxt))
-            {
-                MessageBox.Show("Debe ingresar el DNI y el nombre del cliente para buscar.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //    if (string.IsNullOrWhiteSpace(dniText) || string.IsNullOrWhiteSpace(nombreTxt))
+        //    {
+        //        MessageBox.Show("Debe ingresar el DNI y el nombre del cliente para buscar.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                if (string.IsNullOrWhiteSpace(dniText))
-                    tbDniClienteVenta.Focus();
-                else
-                    tbNombreClienteVenta.Focus();
+        //        if (string.IsNullOrWhiteSpace(dniText))
+        //            tbDniClienteVenta.Focus();
+        //        else
+        //            tbNombreClienteVenta.Focus();
 
-                return;
-            }
+        //        return;
+        //    }
 
-            if (!Regex.IsMatch(dniText, @"^\d{8}$"))
-            {
-                MessageBox.Show("El DNI debe contener exactamente 8 dígitos numéricos.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbDniClienteVenta.Focus();
-                return;
-            }
+        //    if (!Regex.IsMatch(dniText, @"^\d{8}$"))
+        //    {
+        //        MessageBox.Show("El DNI debe contener exactamente 8 dígitos numéricos.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        tbDniClienteVenta.Focus();
+        //        return;
+        //    }
 
-            if (Regex.IsMatch(nombreTxt, @"\d"))
-            {
-                MessageBox.Show("El nombre no puede contener dígitos.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbNombreClienteVenta.Focus();
-                return;
-            }
+        //    if (Regex.IsMatch(nombreTxt, @"\d"))
+        //    {
+        //        MessageBox.Show("El nombre no puede contener dígitos.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        tbNombreClienteVenta.Focus();
+        //        return;
+        //    }
 
-            MessageBox.Show("Datos válidos. Iniciando búsqueda del cliente…", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+        //    MessageBox.Show("Datos válidos. Iniciando búsqueda del cliente…", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //}
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -131,79 +133,79 @@ namespace ProyectoNetshop.formularios
             dgvVentas.Rows.Add("HP Pavilion x360", "Convertible Touch 13'' i7", 3, 480000, 1440000, "22/09/2025");
         }
 
-        private void IbBotonBuscarProductoVenta_Click(object sender, EventArgs e)
-        {
-            string nombreProd = tbNombreProductoVenta.Text.Trim();
-            //string descripcion = tbDescripcionProductoVenta.Text.Trim();
-            string stockText = tbStockProductoVenta.Text.Trim();
-            string precioText = tbPrecioVtaProductoVenta.Text.Trim();
-            string cantidadText = tbCantidadProductoVenta.Text.Trim();
+        //private void IbBotonBuscarProductoVenta_Click(object sender, EventArgs e)
+        //{
+        //    string nombreProd = tbNombreProductoVenta.Text.Trim();
+        //    //string descripcion = tbDescripcionProductoVenta.Text.Trim();
+        //    string stockText = tbStockProductoVenta.Text.Trim();
+        //    string precioText = tbPrecioVtaProductoVenta.Text.Trim();
+        //    string cantidadText = tbCantidadProductoVenta.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(nombreProd))
-            {
-                MessageBox.Show("El nombre del producto no puede quedar vacío.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbNombreProductoVenta.Focus();
-                return;
-            }
+        //    if (string.IsNullOrWhiteSpace(nombreProd))
+        //    {
+        //        MessageBox.Show("El nombre del producto no puede quedar vacío.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        tbNombreProductoVenta.Focus();
+        //        return;
+        //    }
 
-            //if (string.IsNullOrWhiteSpace(descripcion))
-            //{
-            //    MessageBox.Show("La descripción del producto no puede quedar vacía.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    tbDescripcionProductoVenta.Focus();
-            //    return;
-            //}
+        //    //if (string.IsNullOrWhiteSpace(descripcion))
+        //    //{
+        //    //    MessageBox.Show("La descripción del producto no puede quedar vacía.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //    //    tbDescripcionProductoVenta.Focus();
+        //    //    return;
+        //    //}
 
-            if (string.IsNullOrWhiteSpace(stockText))
-            {
-                MessageBox.Show("Debe ingresar el stock del producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbStockProductoVenta.Focus();
-                return;
-            }
+        //    if (string.IsNullOrWhiteSpace(stockText))
+        //    {
+        //        MessageBox.Show("Debe ingresar el stock del producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        tbStockProductoVenta.Focus();
+        //        return;
+        //    }
 
-            if (string.IsNullOrWhiteSpace(precioText))
-            {
-                MessageBox.Show("Debe ingresar el precio de venta del producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbPrecioVtaProductoVenta.Focus();
-                return;
-            }
+        //    if (string.IsNullOrWhiteSpace(precioText))
+        //    {
+        //        MessageBox.Show("Debe ingresar el precio de venta del producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        tbPrecioVtaProductoVenta.Focus();
+        //        return;
+        //    }
 
-            if (string.IsNullOrWhiteSpace(cantidadText))
-            {
-                MessageBox.Show("Debe ingresar la cantidad a vender.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbCantidadProductoVenta.Focus();
-                return;
-            }
+        //    if (string.IsNullOrWhiteSpace(cantidadText))
+        //    {
+        //        MessageBox.Show("Debe ingresar la cantidad a vender.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        tbCantidadProductoVenta.Focus();
+        //        return;
+        //    }
 
-            if (!int.TryParse(stockText, out int stock) || stock < 0)
-            {
-                MessageBox.Show("El stock debe ser un número entero no negativo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbStockProductoVenta.Focus();
-                return;
-            }
-            if (!decimal.TryParse(precioText, out decimal precio) || precio < 0)
-            {
-                MessageBox.Show("El precio debe ser un número no negativo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbPrecioVtaProductoVenta.Focus();
-                return;
-            }
-            if (!int.TryParse(cantidadText, out int cantidad) || cantidad < 0)
-            {
-                MessageBox.Show("La cantidad debe ser un número entero no negativo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbCantidadProductoVenta.Focus();
-                return;
-            }
+        //    if (!int.TryParse(stockText, out int stock) || stock < 0)
+        //    {
+        //        MessageBox.Show("El stock debe ser un número entero no negativo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        tbStockProductoVenta.Focus();
+        //        return;
+        //    }
+        //    if (!decimal.TryParse(precioText, out decimal precio) || precio < 0)
+        //    {
+        //        MessageBox.Show("El precio debe ser un número no negativo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        tbPrecioVtaProductoVenta.Focus();
+        //        return;
+        //    }
+        //    if (!int.TryParse(cantidadText, out int cantidad) || cantidad < 0)
+        //    {
+        //        MessageBox.Show("La cantidad debe ser un número entero no negativo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        tbCantidadProductoVenta.Focus();
+        //        return;
+        //    }
 
-            if (cantidad > stock)
-            {
-                MessageBox.Show("La cantidad a vender no puede superar el stock disponible.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tbCantidadProductoVenta.Focus();
-                return;
-            }
+        //    if (cantidad > stock)
+        //    {
+        //        MessageBox.Show("La cantidad a vender no puede superar el stock disponible.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        tbCantidadProductoVenta.Focus();
+        //        return;
+        //    }
 
-            MessageBox.Show("Datos válidos. Ya puede agregar el producto.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //    MessageBox.Show("Datos válidos. Ya puede agregar el producto.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            ibBotonAgregarProductoVenta.Enabled = true;
-        }
+        //    ibBotonAgregarProductoVenta.Enabled = true;
+        //}
 
         private void IbBotonAgregarProductoVenta_Click(object sender, EventArgs e)
         {
@@ -214,7 +216,7 @@ namespace ProyectoNetshop.formularios
 
         private void ibBotonBuscarClienteVenta_Click(object sender, EventArgs e)
         {
-
+            //XXX
         }
 
         private void ibBotonGuardarVenta_Click(object sender, EventArgs e)

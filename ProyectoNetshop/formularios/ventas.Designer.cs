@@ -28,16 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             groupBox1 = new GroupBox();
             label4 = new Label();
             label3 = new Label();
             tbNombreVendedorVenta = new TextBox();
             tbDniVendedorVenta = new TextBox();
             groupBox2 = new GroupBox();
+            tbEmailClienteVenta = new TextBox();
+            label14 = new Label();
             label5 = new Label();
             label6 = new Label();
-            ibBotonBuscarClienteVenta = new FontAwesome.Sharp.IconButton();
             tbNombreClienteVenta = new TextBox();
             tbDniClienteVenta = new TextBox();
             label12 = new Label();
@@ -45,6 +46,16 @@
             ibBotonBorrarVenta = new FontAwesome.Sharp.IconButton();
             ibBotonGuardarVenta = new FontAwesome.Sharp.IconButton();
             groupBox3 = new GroupBox();
+            gbEstadoVenta = new GroupBox();
+            rbPendienteVenta = new RadioButton();
+            rbCanceladoVenta = new RadioButton();
+            tbCategoriaProductoVenta = new TextBox();
+            label13 = new Label();
+            label10 = new Label();
+            label1 = new Label();
+            tbIdProductoVenta = new TextBox();
+            pbImagenProductoVenta = new PictureBox();
+            tbMarcaProductoVenta = new TextBox();
             ibBotonAgregarProductoVenta = new FontAwesome.Sharp.IconButton();
             label9 = new Label();
             tbCantidadProductoVenta = new TextBox();
@@ -53,7 +64,6 @@
             label8 = new Label();
             tbStockProductoVenta = new TextBox();
             label2 = new Label();
-            ibBotonBuscarProductoVenta = new FontAwesome.Sharp.IconButton();
             tbNombreProductoVenta = new TextBox();
             groupBox4 = new GroupBox();
             dtpFechaVenta = new DateTimePicker();
@@ -61,29 +71,27 @@
             cbTipoFacturaVenta = new ComboBox();
             groupBox6 = new GroupBox();
             dgvVentas = new DataGridView();
+            Nro_Venta = new DataGridViewTextBoxColumn();
             codIdProducto = new DataGridViewTextBoxColumn();
             colDescripcion = new DataGridViewTextBoxColumn();
+            fechaVenta = new DataGridViewTextBoxColumn();
             colCantidad = new DataGridViewTextBoxColumn();
             colSubtotal = new DataGridViewTextBoxColumn();
             totalVenta = new DataGridViewTextBoxColumn();
-            fechaVenta = new DataGridViewTextBoxColumn();
-            tbMarcaProductoVenta = new TextBox();
-            pbImagenProductoVenta = new PictureBox();
-            tbIdProductoVenta = new TextBox();
-            label1 = new Label();
-            label10 = new Label();
-            label13 = new Label();
-            tbCategoriaProductoVenta = new TextBox();
-            label14 = new Label();
-            tbEmailClienteVenta = new TextBox();
+            cbVentasFinalizadas = new CheckBox();
+            cbVentasPendientes = new CheckBox();
+            cbVentasCanceladas = new CheckBox();
+            label15 = new Label();
+            lbTotalVendidoVenta = new Label();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
+            gbEstadoVenta.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pbImagenProductoVenta).BeginInit();
             groupBox4.SuspendLayout();
             groupBox5.SuspendLayout();
             groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvVentas).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pbImagenProductoVenta).BeginInit();
             SuspendLayout();
             // 
             // groupBox1
@@ -168,6 +176,23 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "Cliente";
             // 
+            // tbEmailClienteVenta
+            // 
+            tbEmailClienteVenta.Location = new Point(172, 87);
+            tbEmailClienteVenta.Multiline = true;
+            tbEmailClienteVenta.Name = "tbEmailClienteVenta";
+            tbEmailClienteVenta.Size = new Size(200, 27);
+            tbEmailClienteVenta.TabIndex = 32;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(18, 85);
+            label14.Name = "label14";
+            label14.Size = new Size(148, 29);
+            label14.TabIndex = 31;
+            label14.Text = "Correo Electronico";
+            // 
             // label5
             // 
             label5.AutoSize = true;
@@ -187,30 +212,11 @@
             label6.BackColor = Color.Transparent;
             label6.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label6.ForeColor = SystemColors.ButtonFace;
-            label6.Location = new Point(430, 35);
+            label6.Location = new Point(428, 35);
             label6.Name = "label6";
             label6.Size = new Size(42, 29);
             label6.TabIndex = 29;
             label6.Text = "DNI";
-            // 
-            // ibBotonBuscarClienteVenta
-            // 
-            ibBotonBuscarClienteVenta.Cursor = Cursors.Hand;
-            ibBotonBuscarClienteVenta.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
-            ibBotonBuscarClienteVenta.ForeColor = SystemColors.ActiveCaptionText;
-            ibBotonBuscarClienteVenta.IconChar = FontAwesome.Sharp.IconChar.Search;
-            ibBotonBuscarClienteVenta.IconColor = Color.Black;
-            ibBotonBuscarClienteVenta.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ibBotonBuscarClienteVenta.IconSize = 30;
-            ibBotonBuscarClienteVenta.Location = new Point(1007, 622);
-            ibBotonBuscarClienteVenta.Margin = new Padding(3, 4, 3, 4);
-            ibBotonBuscarClienteVenta.Name = "ibBotonBuscarClienteVenta";
-            ibBotonBuscarClienteVenta.Size = new Size(120, 64);
-            ibBotonBuscarClienteVenta.TabIndex = 24;
-            ibBotonBuscarClienteVenta.Text = "Buscar";
-            ibBotonBuscarClienteVenta.TextImageRelation = TextImageRelation.ImageBeforeText;
-            ibBotonBuscarClienteVenta.UseVisualStyleBackColor = true;
-            ibBotonBuscarClienteVenta.Click += ibBotonBuscarClienteVenta_Click;
             // 
             // tbNombreClienteVenta
             // 
@@ -227,7 +233,7 @@
             tbDniClienteVenta.Location = new Point(400, 67);
             tbDniClienteVenta.Margin = new Padding(3, 4, 3, 4);
             tbDniClienteVenta.Name = "tbDniClienteVenta";
-            tbDniClienteVenta.Size = new Size(100, 27);
+            tbDniClienteVenta.Size = new Size(95, 27);
             tbDniClienteVenta.TabIndex = 0;
             // 
             // label12
@@ -287,6 +293,7 @@
             // groupBox3
             // 
             groupBox3.BackColor = Color.FromArgb(0, 0, 64);
+            groupBox3.Controls.Add(gbEstadoVenta);
             groupBox3.Controls.Add(tbCategoriaProductoVenta);
             groupBox3.Controls.Add(label13);
             groupBox3.Controls.Add(label10);
@@ -309,11 +316,116 @@
             groupBox3.Margin = new Padding(3, 4, 3, 4);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(3, 4, 3, 4);
-            groupBox3.Size = new Size(593, 251);
+            groupBox3.Size = new Size(593, 260);
             groupBox3.TabIndex = 26;
             groupBox3.TabStop = false;
             groupBox3.Text = "Productos";
             groupBox3.Enter += groupBox3_Enter;
+            // 
+            // gbEstadoVenta
+            // 
+            gbEstadoVenta.Controls.Add(rbPendienteVenta);
+            gbEstadoVenta.Controls.Add(rbCanceladoVenta);
+            gbEstadoVenta.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            gbEstadoVenta.ForeColor = SystemColors.ButtonFace;
+            gbEstadoVenta.Location = new Point(443, 131);
+            gbEstadoVenta.Margin = new Padding(3, 4, 3, 4);
+            gbEstadoVenta.Name = "gbEstadoVenta";
+            gbEstadoVenta.Padding = new Padding(3, 4, 3, 4);
+            gbEstadoVenta.Size = new Size(126, 103);
+            gbEstadoVenta.TabIndex = 42;
+            gbEstadoVenta.TabStop = false;
+            gbEstadoVenta.Text = "Estado";
+            gbEstadoVenta.Visible = false;
+            // 
+            // rbPendienteVenta
+            // 
+            rbPendienteVenta.AutoSize = true;
+            rbPendienteVenta.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            rbPendienteVenta.ForeColor = SystemColors.ButtonFace;
+            rbPendienteVenta.Location = new Point(10, 22);
+            rbPendienteVenta.Margin = new Padding(3, 4, 3, 4);
+            rbPendienteVenta.Name = "rbPendienteVenta";
+            rbPendienteVenta.Size = new Size(105, 33);
+            rbPendienteVenta.TabIndex = 1;
+            rbPendienteVenta.Text = "Pendiente";
+            rbPendienteVenta.UseVisualStyleBackColor = true;
+            // 
+            // rbCanceladoVenta
+            // 
+            rbCanceladoVenta.AutoSize = true;
+            rbCanceladoVenta.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            rbCanceladoVenta.ForeColor = SystemColors.ButtonFace;
+            rbCanceladoVenta.Location = new Point(10, 62);
+            rbCanceladoVenta.Margin = new Padding(3, 4, 3, 4);
+            rbCanceladoVenta.Name = "rbCanceladoVenta";
+            rbCanceladoVenta.Size = new Size(107, 33);
+            rbCanceladoVenta.TabIndex = 21;
+            rbCanceladoVenta.Text = "Cancelado";
+            rbCanceladoVenta.UseVisualStyleBackColor = true;
+            // 
+            // tbCategoriaProductoVenta
+            // 
+            tbCategoriaProductoVenta.Location = new Point(136, 136);
+            tbCategoriaProductoVenta.Multiline = true;
+            tbCategoriaProductoVenta.Name = "tbCategoriaProductoVenta";
+            tbCategoriaProductoVenta.ReadOnly = true;
+            tbCategoriaProductoVenta.Size = new Size(111, 27);
+            tbCategoriaProductoVenta.TabIndex = 41;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(37, 177);
+            label13.Name = "label13";
+            label13.Size = new Size(58, 29);
+            label13.TabIndex = 33;
+            label13.Text = "Marca";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(26, 134);
+            label10.Name = "label10";
+            label10.Size = new Size(82, 29);
+            label10.TabIndex = 40;
+            label10.Text = "Categoria";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(32, 38);
+            label1.Name = "label1";
+            label1.Size = new Size(30, 29);
+            label1.TabIndex = 39;
+            label1.Text = "ID";
+            // 
+            // tbIdProductoVenta
+            // 
+            tbIdProductoVenta.Location = new Point(26, 70);
+            tbIdProductoVenta.Multiline = true;
+            tbIdProductoVenta.Name = "tbIdProductoVenta";
+            tbIdProductoVenta.Size = new Size(42, 27);
+            tbIdProductoVenta.TabIndex = 38;
+            // 
+            // pbImagenProductoVenta
+            // 
+            pbImagenProductoVenta.Image = Properties.Resources.producto_defecto;
+            pbImagenProductoVenta.Location = new Point(265, 35);
+            pbImagenProductoVenta.Name = "pbImagenProductoVenta";
+            pbImagenProductoVenta.Size = new Size(156, 99);
+            pbImagenProductoVenta.SizeMode = PictureBoxSizeMode.StretchImage;
+            pbImagenProductoVenta.TabIndex = 37;
+            pbImagenProductoVenta.TabStop = false;
+            // 
+            // tbMarcaProductoVenta
+            // 
+            tbMarcaProductoVenta.Location = new Point(136, 176);
+            tbMarcaProductoVenta.Multiline = true;
+            tbMarcaProductoVenta.Name = "tbMarcaProductoVenta";
+            tbMarcaProductoVenta.ReadOnly = true;
+            tbMarcaProductoVenta.Size = new Size(111, 27);
+            tbMarcaProductoVenta.TabIndex = 36;
             // 
             // ibBotonAgregarProductoVenta
             // 
@@ -324,7 +436,7 @@
             ibBotonAgregarProductoVenta.IconColor = Color.Black;
             ibBotonAgregarProductoVenta.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ibBotonAgregarProductoVenta.IconSize = 26;
-            ibBotonAgregarProductoVenta.Location = new Point(442, 108);
+            ibBotonAgregarProductoVenta.Location = new Point(443, 34);
             ibBotonAgregarProductoVenta.Margin = new Padding(3, 4, 3, 4);
             ibBotonAgregarProductoVenta.Name = "ibBotonAgregarProductoVenta";
             ibBotonAgregarProductoVenta.Size = new Size(126, 64);
@@ -411,24 +523,6 @@
             label2.TabIndex = 26;
             label2.Text = "Nombre";
             // 
-            // ibBotonBuscarProductoVenta
-            // 
-            ibBotonBuscarProductoVenta.Cursor = Cursors.Hand;
-            ibBotonBuscarProductoVenta.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
-            ibBotonBuscarProductoVenta.ForeColor = SystemColors.ActiveCaptionText;
-            ibBotonBuscarProductoVenta.IconChar = FontAwesome.Sharp.IconChar.Search;
-            ibBotonBuscarProductoVenta.IconColor = Color.Black;
-            ibBotonBuscarProductoVenta.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ibBotonBuscarProductoVenta.IconSize = 30;
-            ibBotonBuscarProductoVenta.Location = new Point(481, 642);
-            ibBotonBuscarProductoVenta.Margin = new Padding(3, 4, 3, 4);
-            ibBotonBuscarProductoVenta.Name = "ibBotonBuscarProductoVenta";
-            ibBotonBuscarProductoVenta.Size = new Size(126, 64);
-            ibBotonBuscarProductoVenta.TabIndex = 25;
-            ibBotonBuscarProductoVenta.Text = "Buscar";
-            ibBotonBuscarProductoVenta.TextImageRelation = TextImageRelation.ImageBeforeText;
-            ibBotonBuscarProductoVenta.UseVisualStyleBackColor = true;
-            // 
             // tbNombreProductoVenta
             // 
             tbNombreProductoVenta.Font = new Font("Segoe UI", 9F);
@@ -468,7 +562,7 @@
             groupBox5.Controls.Add(cbTipoFacturaVenta);
             groupBox5.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             groupBox5.ForeColor = SystemColors.ButtonFace;
-            groupBox5.Location = new Point(632, 299);
+            groupBox5.Location = new Point(632, 309);
             groupBox5.Margin = new Padding(3, 4, 3, 4);
             groupBox5.Name = "groupBox5";
             groupBox5.Padding = new Padding(3, 4, 3, 4);
@@ -483,7 +577,7 @@
             cbTipoFacturaVenta.Font = new Font("Segoe UI", 9F);
             cbTipoFacturaVenta.FormattingEnabled = true;
             cbTipoFacturaVenta.Items.AddRange(new object[] { "A", "B", "C", "E", "M", "T" });
-            cbTipoFacturaVenta.Location = new Point(21, 48);
+            cbTipoFacturaVenta.Location = new Point(21, 53);
             cbTipoFacturaVenta.Margin = new Padding(3, 4, 3, 4);
             cbTipoFacturaVenta.Name = "cbTipoFacturaVenta";
             cbTipoFacturaVenta.Size = new Size(228, 28);
@@ -503,30 +597,37 @@
             groupBox6.Margin = new Padding(3, 4, 3, 4);
             groupBox6.Name = "groupBox6";
             groupBox6.Padding = new Padding(3, 4, 3, 4);
-            groupBox6.Size = new Size(187, 251);
+            groupBox6.Size = new Size(187, 260);
             groupBox6.TabIndex = 31;
             groupBox6.TabStop = false;
             // 
             // dgvVentas
             // 
             dgvVentas.BackgroundColor = Color.SlateGray;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Control;
-            dataGridViewCellStyle2.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvVentas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvVentas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvVentas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvVentas.Columns.AddRange(new DataGridViewColumn[] { codIdProducto, colDescripcion, colCantidad, colSubtotal, totalVenta, fechaVenta });
-            dgvVentas.Location = new Point(14, 477);
+            dgvVentas.Columns.AddRange(new DataGridViewColumn[] { Nro_Venta, codIdProducto, colDescripcion, fechaVenta, colCantidad, colSubtotal, totalVenta });
+            dgvVentas.Location = new Point(14, 500);
             dgvVentas.Margin = new Padding(3, 4, 3, 4);
             dgvVentas.Name = "dgvVentas";
             dgvVentas.RowHeadersWidth = 51;
-            dgvVentas.Size = new Size(1149, 127);
+            dgvVentas.Size = new Size(1149, 253);
             dgvVentas.TabIndex = 32;
             dgvVentas.CellContentClick += dataGridView1_CellContentClick;
+            // 
+            // Nro_Venta
+            // 
+            Nro_Venta.HeaderText = "Nrro Venta";
+            Nro_Venta.MinimumWidth = 6;
+            Nro_Venta.Name = "Nro_Venta";
+            Nro_Venta.Width = 125;
             // 
             // codIdProducto
             // 
@@ -541,6 +642,13 @@
             colDescripcion.MinimumWidth = 320;
             colDescripcion.Name = "colDescripcion";
             colDescripcion.Width = 470;
+            // 
+            // fechaVenta
+            // 
+            fechaVenta.HeaderText = "Fecha de Venta";
+            fechaVenta.MinimumWidth = 6;
+            fechaVenta.Name = "fechaVenta";
+            fechaVenta.Width = 125;
             // 
             // colCantidad
             // 
@@ -563,108 +671,84 @@
             totalVenta.Name = "totalVenta";
             totalVenta.Width = 125;
             // 
-            // fechaVenta
+            // cbVentasFinalizadas
             // 
-            fechaVenta.HeaderText = "Fecha";
-            fechaVenta.MinimumWidth = 6;
-            fechaVenta.Name = "fechaVenta";
-            fechaVenta.Width = 125;
+            cbVentasFinalizadas.AutoSize = true;
+            cbVentasFinalizadas.Checked = true;
+            cbVentasFinalizadas.CheckState = CheckState.Checked;
+            cbVentasFinalizadas.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            cbVentasFinalizadas.ForeColor = SystemColors.ButtonFace;
+            cbVentasFinalizadas.Location = new Point(14, 466);
+            cbVentasFinalizadas.Name = "cbVentasFinalizadas";
+            cbVentasFinalizadas.Size = new Size(101, 33);
+            cbVentasFinalizadas.TabIndex = 33;
+            cbVentasFinalizadas.Text = "Vendidos";
+            cbVentasFinalizadas.UseVisualStyleBackColor = true;
             // 
-            // tbMarcaProductoVenta
+            // cbVentasPendientes
             // 
-            tbMarcaProductoVenta.Location = new Point(136, 176);
-            tbMarcaProductoVenta.Multiline = true;
-            tbMarcaProductoVenta.Name = "tbMarcaProductoVenta";
-            tbMarcaProductoVenta.ReadOnly = true;
-            tbMarcaProductoVenta.Size = new Size(111, 27);
-            tbMarcaProductoVenta.TabIndex = 36;
+            cbVentasPendientes.AutoSize = true;
+            cbVentasPendientes.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            cbVentasPendientes.ForeColor = SystemColors.ButtonFace;
+            cbVentasPendientes.Location = new Point(121, 466);
+            cbVentasPendientes.Name = "cbVentasPendientes";
+            cbVentasPendientes.Size = new Size(113, 33);
+            cbVentasPendientes.TabIndex = 34;
+            cbVentasPendientes.Text = "Pendientes";
+            cbVentasPendientes.UseVisualStyleBackColor = true;
             // 
-            // pbImagenProductoVenta
+            // cbVentasCanceladas
             // 
-            pbImagenProductoVenta.Image = Properties.Resources.producto_defecto;
-            pbImagenProductoVenta.Location = new Point(265, 35);
-            pbImagenProductoVenta.Name = "pbImagenProductoVenta";
-            pbImagenProductoVenta.Size = new Size(156, 99);
-            pbImagenProductoVenta.SizeMode = PictureBoxSizeMode.StretchImage;
-            pbImagenProductoVenta.TabIndex = 37;
-            pbImagenProductoVenta.TabStop = false;
+            cbVentasCanceladas.AutoSize = true;
+            cbVentasCanceladas.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            cbVentasCanceladas.ForeColor = SystemColors.ButtonFace;
+            cbVentasCanceladas.Location = new Point(240, 466);
+            cbVentasCanceladas.Name = "cbVentasCanceladas";
+            cbVentasCanceladas.Size = new Size(115, 33);
+            cbVentasCanceladas.TabIndex = 35;
+            cbVentasCanceladas.Text = "Cancelados";
+            cbVentasCanceladas.UseVisualStyleBackColor = true;
             // 
-            // tbIdProductoVenta
+            // label15
             // 
-            tbIdProductoVenta.Location = new Point(26, 70);
-            tbIdProductoVenta.Multiline = true;
-            tbIdProductoVenta.Name = "tbIdProductoVenta";
-            tbIdProductoVenta.Size = new Size(42, 27);
-            tbIdProductoVenta.TabIndex = 38;
+            label15.AutoSize = true;
+            label15.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            label15.ForeColor = SystemColors.ButtonFace;
+            label15.Location = new Point(860, 757);
+            label15.Name = "label15";
+            label15.Size = new Size(173, 34);
+            label15.TabIndex = 36;
+            label15.Text = "TOTAL VENDIDO:";
             // 
-            // label1
+            // lbTotalVendidoVenta
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(32, 38);
-            label1.Name = "label1";
-            label1.Size = new Size(30, 29);
-            label1.TabIndex = 39;
-            label1.Text = "ID";
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Location = new Point(26, 134);
-            label10.Name = "label10";
-            label10.Size = new Size(82, 29);
-            label10.TabIndex = 40;
-            label10.Text = "Categoria";
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Location = new Point(37, 177);
-            label13.Name = "label13";
-            label13.Size = new Size(58, 29);
-            label13.TabIndex = 33;
-            label13.Text = "Marca";
-            // 
-            // tbCategoriaProductoVenta
-            // 
-            tbCategoriaProductoVenta.Location = new Point(136, 136);
-            tbCategoriaProductoVenta.Multiline = true;
-            tbCategoriaProductoVenta.Name = "tbCategoriaProductoVenta";
-            tbCategoriaProductoVenta.ReadOnly = true;
-            tbCategoriaProductoVenta.Size = new Size(111, 27);
-            tbCategoriaProductoVenta.TabIndex = 41;
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Location = new Point(18, 85);
-            label14.Name = "label14";
-            label14.Size = new Size(148, 29);
-            label14.TabIndex = 31;
-            label14.Text = "Correo Electronico";
-            // 
-            // tbEmailClienteVenta
-            // 
-            tbEmailClienteVenta.Location = new Point(172, 87);
-            tbEmailClienteVenta.Multiline = true;
-            tbEmailClienteVenta.Name = "tbEmailClienteVenta";
-            tbEmailClienteVenta.Size = new Size(200, 27);
-            tbEmailClienteVenta.TabIndex = 32;
+            lbTotalVendidoVenta.AutoSize = true;
+            lbTotalVendidoVenta.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbTotalVendidoVenta.ForeColor = SystemColors.ButtonFace;
+            lbTotalVendidoVenta.Location = new Point(1042, 757);
+            lbTotalVendidoVenta.Name = "lbTotalVendidoVenta";
+            lbTotalVendidoVenta.Size = new Size(85, 34);
+            lbTotalVendidoVenta.TabIndex = 37;
+            lbTotalVendidoVenta.Text = "$123,50";
             // 
             // ventas
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 64);
-            ClientSize = new Size(1177, 699);
+            ClientSize = new Size(1200, 800);
+            Controls.Add(lbTotalVendidoVenta);
+            Controls.Add(label15);
+            Controls.Add(cbVentasCanceladas);
+            Controls.Add(cbVentasPendientes);
+            Controls.Add(cbVentasFinalizadas);
             Controls.Add(dgvVentas);
             Controls.Add(groupBox6);
-            Controls.Add(ibBotonBuscarClienteVenta);
             Controls.Add(groupBox5);
             Controls.Add(groupBox4);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
-            Controls.Add(ibBotonBuscarProductoVenta);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(3, 4, 3, 4);
             Name = "ventas";
@@ -676,13 +760,16 @@
             groupBox2.PerformLayout();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
+            gbEstadoVenta.ResumeLayout(false);
+            gbEstadoVenta.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pbImagenProductoVenta).EndInit();
             groupBox4.ResumeLayout(false);
             groupBox5.ResumeLayout(false);
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvVentas).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pbImagenProductoVenta).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -693,13 +780,11 @@
         private GroupBox groupBox2;
         private TextBox tbNombreClienteVenta;
         private TextBox tbDniClienteVenta;
-        private FontAwesome.Sharp.IconButton ibBotonBuscarClienteVenta;
         private Label label12;
         private Label label11;
         private FontAwesome.Sharp.IconButton ibBotonBorrarVenta;
         private FontAwesome.Sharp.IconButton ibBotonGuardarVenta;
         private GroupBox groupBox3;
-        private FontAwesome.Sharp.IconButton ibBotonBuscarProductoVenta;
         private TextBox tbNombreProductoVenta;
         private Label label4;
         private Label label3;
@@ -719,12 +804,6 @@
         private GroupBox groupBox6;
         private ComboBox cbTipoFacturaVenta;
         private DataGridView dgvVentas;
-        private DataGridViewTextBoxColumn codIdProducto;
-        private DataGridViewTextBoxColumn colDescripcion;
-        private DataGridViewTextBoxColumn colCantidad;
-        private DataGridViewTextBoxColumn colSubtotal;
-        private DataGridViewTextBoxColumn totalVenta;
-        private DataGridViewTextBoxColumn fechaVenta;
         private TextBox tbMarcaProductoVenta;
         private Label label1;
         private TextBox tbIdProductoVenta;
@@ -734,5 +813,20 @@
         private TextBox tbCategoriaProductoVenta;
         private Label label14;
         private TextBox tbEmailClienteVenta;
+        private CheckBox cbVentasFinalizadas;
+        private CheckBox cbVentasPendientes;
+        private CheckBox cbVentasCanceladas;
+        private DataGridViewTextBoxColumn Nro_Venta;
+        private DataGridViewTextBoxColumn codIdProducto;
+        private DataGridViewTextBoxColumn colDescripcion;
+        private DataGridViewTextBoxColumn fechaVenta;
+        private DataGridViewTextBoxColumn colCantidad;
+        private DataGridViewTextBoxColumn colSubtotal;
+        private DataGridViewTextBoxColumn totalVenta;
+        private GroupBox gbEstadoVenta;
+        private RadioButton rbPendienteVenta;
+        private RadioButton rbCanceladoVenta;
+        private Label label15;
+        private Label lbTotalVendidoVenta;
     }
 }

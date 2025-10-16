@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
             panel1 = new Panel();
             cbOcultalContraseniaUser = new CheckBox();
             lbDniUsuario = new Label();
@@ -58,29 +58,33 @@
             lbNombreUsuario = new Label();
             btnGuardar = new FontAwesome.Sharp.IconButton();
             tbNombreUsuario = new TextBox();
-            panel2 = new Panel();
-            lbBuscadorUsuario = new Label();
-            tbBusquedaNombreUsuario = new TextBox();
-            tbBusquedaDniUsuario = new TextBox();
-            cbInactivosUsuarios = new CheckBox();
-            cbActivosUsuarios = new CheckBox();
-            dgvUsuarios = new DataGridView();
             sqlCommand1 = new Microsoft.Data.SqlClient.SqlCommand();
+            dgvUsuarios = new DataGridView();
+            cbActivosUsuarios = new CheckBox();
+            cbInactivosUsuarios = new CheckBox();
+            tbBusquedaDniUsuario = new TextBox();
+            tbBusquedaNombreUsuario = new TextBox();
+            lbBuscadorUsuario = new Label();
             panel1.SuspendLayout();
             gbActivoUsuario.SuspendLayout();
             gbSexoUsuario.SuspendLayout();
-            panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvUsuarios).BeginInit();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(0, 0, 64);
+            panel1.Controls.Add(lbBuscadorUsuario);
             panel1.Controls.Add(cbOcultalContraseniaUser);
+            panel1.Controls.Add(tbBusquedaNombreUsuario);
             panel1.Controls.Add(lbDniUsuario);
+            panel1.Controls.Add(tbBusquedaDniUsuario);
             panel1.Controls.Add(tbDniUsuario);
+            panel1.Controls.Add(cbInactivosUsuarios);
             panel1.Controls.Add(gbActivoUsuario);
+            panel1.Controls.Add(cbActivosUsuarios);
             panel1.Controls.Add(lbBorrar);
+            panel1.Controls.Add(dgvUsuarios);
             panel1.Controls.Add(lbGuardar);
             panel1.Controls.Add(lbPerfilUsuario);
             panel1.Controls.Add(cbPerfilUsuario);
@@ -104,7 +108,7 @@
             panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
             panel1.RightToLeft = RightToLeft.No;
-            panel1.Size = new Size(1159, 652);
+            panel1.Size = new Size(1200, 800);
             panel1.TabIndex = 0;
             panel1.Paint += panel1_Paint;
             // 
@@ -124,7 +128,7 @@
             lbDniUsuario.BackColor = Color.Transparent;
             lbDniUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbDniUsuario.ForeColor = SystemColors.ButtonFace;
-            lbDniUsuario.Location = new Point(97, 207);
+            lbDniUsuario.Location = new Point(98, 207);
             lbDniUsuario.Name = "lbDniUsuario";
             lbDniUsuario.Size = new Size(66, 29);
             lbDniUsuario.TabIndex = 28;
@@ -132,7 +136,7 @@
             // 
             // tbDniUsuario
             // 
-            tbDniUsuario.Location = new Point(24, 239);
+            tbDniUsuario.Location = new Point(25, 239);
             tbDniUsuario.Multiline = true;
             tbDniUsuario.Name = "tbDniUsuario";
             tbDniUsuario.Size = new Size(210, 27);
@@ -145,7 +149,7 @@
             gbActivoUsuario.Controls.Add(rbActivoUsuarioNo);
             gbActivoUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             gbActivoUsuario.ForeColor = SystemColors.ButtonFace;
-            gbActivoUsuario.Location = new Point(737, 176);
+            gbActivoUsuario.Location = new Point(744, 207);
             gbActivoUsuario.Margin = new Padding(3, 4, 3, 4);
             gbActivoUsuario.Name = "gbActivoUsuario";
             gbActivoUsuario.Padding = new Padding(3, 4, 3, 4);
@@ -189,7 +193,7 @@
             lbBorrar.BackColor = Color.Transparent;
             lbBorrar.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbBorrar.ForeColor = SystemColors.ButtonFace;
-            lbBorrar.Location = new Point(1045, 157);
+            lbBorrar.Location = new Point(1100, 157);
             lbBorrar.Name = "lbBorrar";
             lbBorrar.Size = new Size(61, 29);
             lbBorrar.TabIndex = 26;
@@ -201,7 +205,7 @@
             lbGuardar.BackColor = Color.Transparent;
             lbGuardar.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbGuardar.ForeColor = SystemColors.ButtonFace;
-            lbGuardar.Location = new Point(1040, 23);
+            lbGuardar.Location = new Point(1095, 23);
             lbGuardar.Name = "lbGuardar";
             lbGuardar.Size = new Size(72, 29);
             lbGuardar.TabIndex = 25;
@@ -237,7 +241,7 @@
             gbSexoUsuario.Controls.Add(rbFemeninoUsuario);
             gbSexoUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             gbSexoUsuario.ForeColor = SystemColors.ButtonFace;
-            gbSexoUsuario.Location = new Point(737, 23);
+            gbSexoUsuario.Location = new Point(744, 23);
             gbSexoUsuario.Margin = new Padding(3, 4, 3, 4);
             gbSexoUsuario.Name = "gbSexoUsuario";
             gbSexoUsuario.Padding = new Padding(3, 4, 3, 4);
@@ -250,7 +254,7 @@
             // 
             rbOtrosUsuario.AutoSize = true;
             rbOtrosUsuario.Checked = true;
-            rbOtrosUsuario.Location = new Point(19, 99);
+            rbOtrosUsuario.Location = new Point(19, 103);
             rbOtrosUsuario.Name = "rbOtrosUsuario";
             rbOtrosUsuario.Size = new Size(75, 33);
             rbOtrosUsuario.TabIndex = 22;
@@ -263,7 +267,7 @@
             rbMasculinoUsuario.AutoSize = true;
             rbMasculinoUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             rbMasculinoUsuario.ForeColor = SystemColors.ButtonFace;
-            rbMasculinoUsuario.Location = new Point(19, 21);
+            rbMasculinoUsuario.Location = new Point(19, 23);
             rbMasculinoUsuario.Margin = new Padding(3, 4, 3, 4);
             rbMasculinoUsuario.Name = "rbMasculinoUsuario";
             rbMasculinoUsuario.Size = new Size(106, 33);
@@ -276,7 +280,7 @@
             rbFemeninoUsuario.AutoSize = true;
             rbFemeninoUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             rbFemeninoUsuario.ForeColor = SystemColors.ButtonFace;
-            rbFemeninoUsuario.Location = new Point(19, 61);
+            rbFemeninoUsuario.Location = new Point(19, 64);
             rbFemeninoUsuario.Margin = new Padding(3, 4, 3, 4);
             rbFemeninoUsuario.Name = "rbFemeninoUsuario";
             rbFemeninoUsuario.Size = new Size(104, 33);
@@ -291,7 +295,7 @@
             btnBorrar.IconColor = Color.Black;
             btnBorrar.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnBorrar.IconSize = 40;
-            btnBorrar.Location = new Point(1033, 189);
+            btnBorrar.Location = new Point(1088, 189);
             btnBorrar.Margin = new Padding(3, 4, 3, 4);
             btnBorrar.Name = "btnBorrar";
             btnBorrar.Size = new Size(86, 80);
@@ -327,7 +331,7 @@
             lbEmailUsuario.BackColor = Color.Transparent;
             lbEmailUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbEmailUsuario.ForeColor = SystemColors.ButtonFace;
-            lbEmailUsuario.Location = new Point(93, 139);
+            lbEmailUsuario.Location = new Point(94, 139);
             lbEmailUsuario.Name = "lbEmailUsuario";
             lbEmailUsuario.Size = new Size(76, 29);
             lbEmailUsuario.TabIndex = 11;
@@ -336,7 +340,7 @@
             // 
             // tbEmailUsuario
             // 
-            tbEmailUsuario.Location = new Point(25, 171);
+            tbEmailUsuario.Location = new Point(26, 171);
             tbEmailUsuario.Margin = new Padding(3, 4, 3, 4);
             tbEmailUsuario.Name = "tbEmailUsuario";
             tbEmailUsuario.Size = new Size(209, 27);
@@ -389,7 +393,7 @@
             lbApellidoUsuario.BackColor = Color.Transparent;
             lbApellidoUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbApellidoUsuario.ForeColor = SystemColors.ButtonFace;
-            lbApellidoUsuario.Location = new Point(85, 72);
+            lbApellidoUsuario.Location = new Point(86, 72);
             lbApellidoUsuario.Name = "lbApellidoUsuario";
             lbApellidoUsuario.Size = new Size(95, 29);
             lbApellidoUsuario.TabIndex = 5;
@@ -397,7 +401,7 @@
             // 
             // tbApellidoUsuario
             // 
-            tbApellidoUsuario.Location = new Point(25, 105);
+            tbApellidoUsuario.Location = new Point(26, 105);
             tbApellidoUsuario.Margin = new Padding(3, 4, 3, 4);
             tbApellidoUsuario.Name = "tbApellidoUsuario";
             tbApellidoUsuario.Size = new Size(209, 27);
@@ -410,7 +414,7 @@
             lbNombreUsuario.BackColor = Color.Transparent;
             lbNombreUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             lbNombreUsuario.ForeColor = SystemColors.ButtonFace;
-            lbNombreUsuario.Location = new Point(85, 7);
+            lbNombreUsuario.Location = new Point(86, 7);
             lbNombreUsuario.Name = "lbNombreUsuario";
             lbNombreUsuario.Size = new Size(96, 29);
             lbNombreUsuario.TabIndex = 3;
@@ -423,7 +427,7 @@
             btnGuardar.IconColor = Color.Black;
             btnGuardar.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnGuardar.IconSize = 40;
-            btnGuardar.Location = new Point(1033, 56);
+            btnGuardar.Location = new Point(1088, 56);
             btnGuardar.Margin = new Padding(3, 4, 3, 4);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(86, 80);
@@ -433,7 +437,7 @@
             // 
             // tbNombreUsuario
             // 
-            tbNombreUsuario.Location = new Point(24, 40);
+            tbNombreUsuario.Location = new Point(25, 40);
             tbNombreUsuario.Margin = new Padding(3, 4, 3, 4);
             tbNombreUsuario.Name = "tbNombreUsuario";
             tbNombreUsuario.Size = new Size(209, 27);
@@ -441,72 +445,44 @@
             tbNombreUsuario.TextChanged += tbNombreUsuario_TextChanged;
             tbNombreUsuario.KeyPress += tbNombre_KeyPress;
             // 
-            // panel2
+            // sqlCommand1
             // 
-            panel2.BackColor = Color.FromArgb(0, 0, 64);
-            panel2.Controls.Add(lbBuscadorUsuario);
-            panel2.Controls.Add(tbBusquedaNombreUsuario);
-            panel2.Controls.Add(tbBusquedaDniUsuario);
-            panel2.Controls.Add(cbInactivosUsuarios);
-            panel2.Controls.Add(cbActivosUsuarios);
-            panel2.Controls.Add(dgvUsuarios);
-            panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 323);
-            panel2.Margin = new Padding(3, 4, 3, 4);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(1159, 329);
-            panel2.TabIndex = 1;
+            sqlCommand1.CommandTimeout = 30;
+            sqlCommand1.EnableOptimizedParameterBinding = false;
             // 
-            // lbBuscadorUsuario
+            // dgvUsuarios
             // 
-            lbBuscadorUsuario.AutoSize = true;
-            lbBuscadorUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            lbBuscadorUsuario.ForeColor = SystemColors.ButtonFace;
-            lbBuscadorUsuario.Location = new Point(840, 1);
-            lbBuscadorUsuario.Name = "lbBuscadorUsuario";
-            lbBuscadorUsuario.Size = new Size(95, 29);
-            lbBuscadorUsuario.TabIndex = 33;
-            lbBuscadorUsuario.Text = "Buscar por:";
-            // 
-            // tbBusquedaNombreUsuario
-            // 
-            tbBusquedaNombreUsuario.Location = new Point(910, 33);
-            tbBusquedaNombreUsuario.Multiline = true;
-            tbBusquedaNombreUsuario.Name = "tbBusquedaNombreUsuario";
-            tbBusquedaNombreUsuario.PlaceholderText = "Busqueda por Nombre";
-            tbBusquedaNombreUsuario.Size = new Size(209, 27);
-            tbBusquedaNombreUsuario.TabIndex = 32;
-            tbBusquedaNombreUsuario.TextChanged += tbBusquedaNombreUsuario_TextChanged;
-            // 
-            // tbBusquedaDniUsuario
-            // 
-            tbBusquedaDniUsuario.Location = new Point(653, 33);
-            tbBusquedaDniUsuario.Multiline = true;
-            tbBusquedaDniUsuario.Name = "tbBusquedaDniUsuario";
-            tbBusquedaDniUsuario.PlaceholderText = "Busqueda por DNI";
-            tbBusquedaDniUsuario.Size = new Size(209, 27);
-            tbBusquedaDniUsuario.TabIndex = 31;
-            tbBusquedaDniUsuario.TextChanged += tbBusquedaDniUsuario_TextChanged;
-            // 
-            // cbInactivosUsuarios
-            // 
-            cbInactivosUsuarios.AutoSize = true;
-            cbInactivosUsuarios.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            cbInactivosUsuarios.ForeColor = SystemColors.ButtonFace;
-            cbInactivosUsuarios.Location = new Point(134, 27);
-            cbInactivosUsuarios.Margin = new Padding(3, 4, 3, 4);
-            cbInactivosUsuarios.Name = "cbInactivosUsuarios";
-            cbInactivosUsuarios.Size = new Size(99, 33);
-            cbInactivosUsuarios.TabIndex = 30;
-            cbInactivosUsuarios.Text = "Inactivos";
-            cbInactivosUsuarios.UseVisualStyleBackColor = true;
+            dgvUsuarios.AllowUserToAddRows = false;
+            dgvUsuarios.AllowUserToDeleteRows = false;
+            dgvUsuarios.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvUsuarios.BackgroundColor = Color.SlateGray;
+            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = SystemColors.Control;
+            dataGridViewCellStyle10.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            dataGridViewCellStyle10.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = DataGridViewTriState.True;
+            dgvUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvUsuarios.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dgvUsuarios.Location = new Point(25, 394);
+            dgvUsuarios.Margin = new Padding(3, 4, 3, 4);
+            dgvUsuarios.MultiSelect = false;
+            dgvUsuarios.Name = "dgvUsuarios";
+            dgvUsuarios.ReadOnly = true;
+            dgvUsuarios.RowHeadersWidth = 51;
+            dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvUsuarios.Size = new Size(1149, 340);
+            dgvUsuarios.TabIndex = 0;
+            dgvUsuarios.CellContentClick += dgvUsuarios_CellContentClick;
             // 
             // cbActivosUsuarios
             // 
             cbActivosUsuarios.AutoSize = true;
             cbActivosUsuarios.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             cbActivosUsuarios.ForeColor = SystemColors.ButtonFace;
-            cbActivosUsuarios.Location = new Point(25, 27);
+            cbActivosUsuarios.Location = new Point(25, 359);
             cbActivosUsuarios.Margin = new Padding(3, 4, 3, 4);
             cbActivosUsuarios.Name = "cbActivosUsuarios";
             cbActivosUsuarios.Size = new Size(88, 33);
@@ -515,45 +491,56 @@
             cbActivosUsuarios.UseVisualStyleBackColor = true;
             cbActivosUsuarios.CheckedChanged += cbActivosUsuarios_CheckedChanged;
             // 
-            // dgvUsuarios
+            // cbInactivosUsuarios
             // 
-            dgvUsuarios.AllowUserToAddRows = false;
-            dgvUsuarios.AllowUserToDeleteRows = false;
-            dgvUsuarios.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dgvUsuarios.BackgroundColor = Color.SlateGray;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvUsuarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvUsuarios.EditMode = DataGridViewEditMode.EditProgrammatically;
-            dgvUsuarios.Location = new Point(24, 68);
-            dgvUsuarios.Margin = new Padding(3, 4, 3, 4);
-            dgvUsuarios.MultiSelect = false;
-            dgvUsuarios.Name = "dgvUsuarios";
-            dgvUsuarios.ReadOnly = true;
-            dgvUsuarios.RowHeadersWidth = 51;
-            dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvUsuarios.Size = new Size(1112, 235);
-            dgvUsuarios.TabIndex = 0;
-            dgvUsuarios.CellContentClick += dgvUsuarios_CellContentClick;
+            cbInactivosUsuarios.AutoSize = true;
+            cbInactivosUsuarios.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            cbInactivosUsuarios.ForeColor = SystemColors.ButtonFace;
+            cbInactivosUsuarios.Location = new Point(135, 359);
+            cbInactivosUsuarios.Margin = new Padding(3, 4, 3, 4);
+            cbInactivosUsuarios.Name = "cbInactivosUsuarios";
+            cbInactivosUsuarios.Size = new Size(99, 33);
+            cbInactivosUsuarios.TabIndex = 30;
+            cbInactivosUsuarios.Text = "Inactivos";
+            cbInactivosUsuarios.UseVisualStyleBackColor = true;
             // 
-            // sqlCommand1
+            // tbBusquedaDniUsuario
             // 
-            sqlCommand1.CommandTimeout = 30;
-            sqlCommand1.EnableOptimizedParameterBinding = false;
+            tbBusquedaDniUsuario.Location = new Point(619, 359);
+            tbBusquedaDniUsuario.Multiline = true;
+            tbBusquedaDniUsuario.Name = "tbBusquedaDniUsuario";
+            tbBusquedaDniUsuario.PlaceholderText = "Busqueda por DNI";
+            tbBusquedaDniUsuario.Size = new Size(209, 27);
+            tbBusquedaDniUsuario.TabIndex = 31;
+            tbBusquedaDniUsuario.TextChanged += tbBusquedaDniUsuario_TextChanged;
+            // 
+            // tbBusquedaNombreUsuario
+            // 
+            tbBusquedaNombreUsuario.Location = new Point(876, 359);
+            tbBusquedaNombreUsuario.Multiline = true;
+            tbBusquedaNombreUsuario.Name = "tbBusquedaNombreUsuario";
+            tbBusquedaNombreUsuario.PlaceholderText = "Busqueda por Nombre";
+            tbBusquedaNombreUsuario.Size = new Size(209, 27);
+            tbBusquedaNombreUsuario.TabIndex = 32;
+            tbBusquedaNombreUsuario.TextChanged += tbBusquedaNombreUsuario_TextChanged;
+            // 
+            // lbBuscadorUsuario
+            // 
+            lbBuscadorUsuario.AutoSize = true;
+            lbBuscadorUsuario.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            lbBuscadorUsuario.ForeColor = SystemColors.ButtonFace;
+            lbBuscadorUsuario.Location = new Point(806, 327);
+            lbBuscadorUsuario.Name = "lbBuscadorUsuario";
+            lbBuscadorUsuario.Size = new Size(95, 29);
+            lbBuscadorUsuario.TabIndex = 33;
+            lbBuscadorUsuario.Text = "Buscar por:";
             // 
             // usuarios
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SlateGray;
-            ClientSize = new Size(1159, 652);
-            Controls.Add(panel2);
+            ClientSize = new Size(1200, 800);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(3, 4, 3, 4);
@@ -567,8 +554,6 @@
             gbActivoUsuario.PerformLayout();
             gbSexoUsuario.ResumeLayout(false);
             gbSexoUsuario.PerformLayout();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvUsuarios).EndInit();
             ResumeLayout(false);
         }
@@ -590,15 +575,11 @@
         private FontAwesome.Sharp.IconButton btnBorrar;
         private RadioButton rbFemeninoUsuario;
         private RadioButton rbMasculinoUsuario;
-        private Panel panel2;
-        private DataGridView dgvUsuarios;
         private GroupBox gbSexoUsuario;
         private Label lbPerfilUsuario;
         private ComboBox cbPerfilUsuario;
         private Label lbBorrar;
         private Label lbGuardar;
-        private CheckBox cbInactivosUsuarios;
-        private CheckBox cbActivosUsuarios;
         private Label lbFechaNacimientoUsuario;
         private DateTimePicker fechaNacimientoUsuario;
         private GroupBox gbActivoUsuario;
@@ -607,10 +588,13 @@
         private TextBox tbDniUsuario;
         private Label lbDniUsuario;
         private RadioButton rbOtrosUsuario;
-        private Label lbBuscadorUsuario;
-        private TextBox tbBusquedaNombreUsuario;
-        private TextBox tbBusquedaDniUsuario;
         private Microsoft.Data.SqlClient.SqlCommand sqlCommand1;
         private CheckBox cbOcultalContraseniaUser;
+        private DataGridView dgvUsuarios;
+        private CheckBox cbActivosUsuarios;
+        private CheckBox cbInactivosUsuarios;
+        private TextBox tbBusquedaDniUsuario;
+        private TextBox tbBusquedaNombreUsuario;
+        private Label lbBuscadorUsuario;
     }
 }

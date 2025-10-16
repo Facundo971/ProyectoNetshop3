@@ -115,10 +115,10 @@
             // 
             BGenerarReporteVendedor.Cursor = Cursors.Hand;
             BGenerarReporteVendedor.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
-            BGenerarReporteVendedor.Location = new Point(3, 541);
+            BGenerarReporteVendedor.Location = new Point(14, 541);
             BGenerarReporteVendedor.Margin = new Padding(3, 4, 3, 4);
             BGenerarReporteVendedor.Name = "BGenerarReporteVendedor";
-            BGenerarReporteVendedor.Size = new Size(285, 50);
+            BGenerarReporteVendedor.Size = new Size(255, 50);
             BGenerarReporteVendedor.TabIndex = 21;
             BGenerarReporteVendedor.Text = "Generar Reporte";
             BGenerarReporteVendedor.UseVisualStyleBackColor = true;
