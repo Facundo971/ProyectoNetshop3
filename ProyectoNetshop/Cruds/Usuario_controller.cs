@@ -73,19 +73,22 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
-
         public static List<Usuario_model> ObtenerVendedores()
         {
             var lista = new List<Usuario_model>();
 
             using var conexion = BaseDeDatos.obtenerConexion();
-            using var cmd = new SqlCommand(@"SELECT dni, nombre, apellido FROM usuario WHERE id_perfil = 2 AND activo = 1;", conexion);
+            using var cmd = new SqlCommand(@"
+        SELECT id_usuario, dni, nombre, apellido 
+        FROM usuario 
+        WHERE id_perfil = 2 AND activo = 1;", conexion);
 
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
                 lista.Add(new Usuario_model
                 {
+                    id_usuario = reader.GetInt32(reader.GetOrdinal("id_usuario")),
                     dni = reader.GetInt32(reader.GetOrdinal("dni")),
                     nombre = reader.GetString(reader.GetOrdinal("nombre")),
                     apellido = reader.GetString(reader.GetOrdinal("apellido"))
@@ -106,6 +109,18 @@ namespace ProyectoNetshop.Cruds
 
             int count = Convert.ToInt32(cmd.ExecuteScalar());
             return count > 0;
+        }
+
+        public static int ObtenerIdUsuarioPorNombre(string nombre)
+        {
+            using var conexion = BD.BaseDeDatos.obtenerConexion();
+            using var cmd = conexion.CreateCommand();
+
+            cmd.CommandText = "SELECT id_usuario FROM usuario WHERE nombre = @nombre";
+            cmd.Parameters.Add("@nombre", SqlDbType.VarChar, 100).Value = nombre.Trim();
+
+            object resultado = cmd.ExecuteScalar();
+            return resultado != null ? Convert.ToInt32(resultado) : -1;
         }
     }
 }

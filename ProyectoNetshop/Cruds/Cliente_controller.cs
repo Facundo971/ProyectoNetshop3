@@ -68,5 +68,49 @@ namespace ProyectoNetshop.Cruds
             int count = Convert.ToInt32(cmd.ExecuteScalar());
             return count > 0;
         }
+
+        //public static int ObtenerIdClientePorDni(int dni)
+        //{
+        //    using var conexion = BD.BaseDeDatos.obtenerConexion();
+        //    using var cmd = conexion.CreateCommand();
+
+        //    cmd.CommandText = "SELECT id_cliente FROM cliente WHERE dni = @dni";
+        //    cmd.Parameters.Add("@dni", SqlDbType.Int).Value = dni;
+
+        //    object resultado = cmd.ExecuteScalar();
+        //    return resultado != null ? Convert.ToInt32(resultado) : -1;
+        //}
+
+        public static List<Cliente_model> BuscarClientes(string nombre, string dni, string email)
+        {
+            var lista = new List<Cliente_model>();
+            using var conexion = BD.BaseDeDatos.obtenerConexion();
+            using var cmd = conexion.CreateCommand();
+
+            cmd.CommandText = @"SELECT id_cliente, nombre, apellido, dni, email FROM cliente
+                        WHERE activo = 1 AND
+                              (@nombre = '' OR nombre + ' ' + apellido LIKE '%' + @nombre + '%') AND
+                              (@dni = '' OR CAST(dni AS VARCHAR) LIKE '%' + @dni + '%') AND
+                              (@email = '' OR email LIKE '%' + @email + '%');";
+
+            cmd.Parameters.Add("@nombre", SqlDbType.VarChar, 200).Value = nombre ?? "";
+            cmd.Parameters.Add("@dni", SqlDbType.VarChar, 20).Value = dni ?? "";
+            cmd.Parameters.Add("@email", SqlDbType.VarChar, 200).Value = email ?? "";
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                lista.Add(new Cliente_model
+                {
+                    id_cliente = reader.GetInt32(reader.GetOrdinal("id_cliente")),
+                    nombre = reader.GetString(reader.GetOrdinal("nombre")),
+                    apellido = reader.GetString(reader.GetOrdinal("apellido")),
+                    dni = reader.GetInt32(reader.GetOrdinal("dni")),
+                    email = reader.GetString(reader.GetOrdinal("email"))
+                });
+            }
+
+            return lista;
+        }
     }
 }

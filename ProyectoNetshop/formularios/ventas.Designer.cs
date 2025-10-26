@@ -30,11 +30,13 @@
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             groupBox1 = new GroupBox();
+            tbIdVendedorVenta = new TextBox();
             label4 = new Label();
             label3 = new Label();
             tbNombreVendedorVenta = new TextBox();
             tbDniVendedorVenta = new TextBox();
             groupBox2 = new GroupBox();
+            tbIdClienteVenta = new TextBox();
             tbEmailClienteVenta = new TextBox();
             label14 = new Label();
             label5 = new Label();
@@ -48,7 +50,6 @@
             groupBox3 = new GroupBox();
             gbEstadoVenta = new GroupBox();
             rbPendienteVenta = new RadioButton();
-            rbCanceladoVenta = new RadioButton();
             tbCategoriaProductoVenta = new TextBox();
             label13 = new Label();
             label10 = new Label();
@@ -71,18 +72,13 @@
             cbTipoFacturaVenta = new ComboBox();
             groupBox6 = new GroupBox();
             dgvVentas = new DataGridView();
-            Nro_Venta = new DataGridViewTextBoxColumn();
-            codIdProducto = new DataGridViewTextBoxColumn();
-            colDescripcion = new DataGridViewTextBoxColumn();
-            fechaVenta = new DataGridViewTextBoxColumn();
-            colCantidad = new DataGridViewTextBoxColumn();
-            colSubtotal = new DataGridViewTextBoxColumn();
-            totalVenta = new DataGridViewTextBoxColumn();
-            cbVentasFinalizadas = new CheckBox();
-            cbVentasPendientes = new CheckBox();
-            cbVentasCanceladas = new CheckBox();
             label15 = new Label();
             lbTotalVendidoVenta = new Label();
+            bListaProductosVenta = new Button();
+            bListaClientesVenta = new Button();
+            cbVentaProductoVendidos = new CheckBox();
+            cbVentaProductoCancelados = new CheckBox();
+            cbVentaProductoPendientes = new CheckBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -97,13 +93,14 @@
             // groupBox1
             // 
             groupBox1.BackColor = Color.FromArgb(0, 0, 64);
+            groupBox1.Controls.Add(tbIdVendedorVenta);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(tbNombreVendedorVenta);
             groupBox1.Controls.Add(tbDniVendedorVenta);
             groupBox1.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             groupBox1.ForeColor = SystemColors.ButtonFace;
-            groupBox1.Location = new Point(14, 16);
+            groupBox1.Location = new Point(14, 60);
             groupBox1.Margin = new Padding(3, 4, 3, 4);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(3, 4, 3, 4);
@@ -112,13 +109,22 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Vendedor";
             // 
+            // tbIdVendedorVenta
+            // 
+            tbIdVendedorVenta.Font = new Font("Segoe UI", 9F);
+            tbIdVendedorVenta.Location = new Point(518, 70);
+            tbIdVendedorVenta.Multiline = true;
+            tbIdVendedorVenta.Name = "tbIdVendedorVenta";
+            tbIdVendedorVenta.Size = new Size(51, 27);
+            tbIdVendedorVenta.TabIndex = 29;
+            // 
             // label4
             // 
             label4.AutoSize = true;
             label4.BackColor = Color.Transparent;
             label4.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label4.ForeColor = SystemColors.ButtonFace;
-            label4.Location = new Point(268, 37);
+            label4.Location = new Point(273, 38);
             label4.Name = "label4";
             label4.Size = new Size(145, 29);
             label4.TabIndex = 28;
@@ -145,6 +151,7 @@
             tbNombreVendedorVenta.ReadOnly = true;
             tbNombreVendedorVenta.Size = new Size(290, 27);
             tbNombreVendedorVenta.TabIndex = 1;
+            tbNombreVendedorVenta.TextChanged += tbNombreVendedorVenta_TextChanged;
             // 
             // tbDniVendedorVenta
             // 
@@ -159,6 +166,7 @@
             // groupBox2
             // 
             groupBox2.BackColor = Color.FromArgb(0, 0, 64);
+            groupBox2.Controls.Add(tbIdClienteVenta);
             groupBox2.Controls.Add(tbEmailClienteVenta);
             groupBox2.Controls.Add(label14);
             groupBox2.Controls.Add(label5);
@@ -167,7 +175,7 @@
             groupBox2.Controls.Add(tbDniClienteVenta);
             groupBox2.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             groupBox2.ForeColor = SystemColors.ButtonFace;
-            groupBox2.Location = new Point(632, 16);
+            groupBox2.Location = new Point(632, 60);
             groupBox2.Margin = new Padding(3, 4, 3, 4);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(3, 4, 3, 4);
@@ -176,18 +184,29 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "Cliente";
             // 
+            // tbIdClienteVenta
+            // 
+            tbIdClienteVenta.Font = new Font("Segoe UI", 9F);
+            tbIdClienteVenta.Location = new Point(420, 100);
+            tbIdClienteVenta.Multiline = true;
+            tbIdClienteVenta.Name = "tbIdClienteVenta";
+            tbIdClienteVenta.Size = new Size(51, 26);
+            tbIdClienteVenta.TabIndex = 33;
+            // 
             // tbEmailClienteVenta
             // 
+            tbEmailClienteVenta.Font = new Font("Segoe UI", 9F);
             tbEmailClienteVenta.Location = new Point(172, 87);
+            tbEmailClienteVenta.Margin = new Padding(3, 4, 3, 4);
             tbEmailClienteVenta.Multiline = true;
             tbEmailClienteVenta.Name = "tbEmailClienteVenta";
             tbEmailClienteVenta.Size = new Size(200, 27);
-            tbEmailClienteVenta.TabIndex = 32;
+            tbEmailClienteVenta.TabIndex = 1;
             // 
             // label14
             // 
             label14.AutoSize = true;
-            label14.Location = new Point(18, 85);
+            label14.Location = new Point(20, 85);
             label14.Name = "label14";
             label14.Size = new Size(148, 29);
             label14.TabIndex = 31;
@@ -199,7 +218,7 @@
             label5.BackColor = Color.Transparent;
             label5.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label5.ForeColor = SystemColors.ButtonFace;
-            label5.Location = new Point(21, 37);
+            label5.Location = new Point(21, 36);
             label5.Name = "label5";
             label5.Size = new Size(145, 29);
             label5.TabIndex = 30;
@@ -212,7 +231,7 @@
             label6.BackColor = Color.Transparent;
             label6.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label6.ForeColor = SystemColors.ButtonFace;
-            label6.Location = new Point(428, 35);
+            label6.Location = new Point(426, 37);
             label6.Name = "label6";
             label6.Size = new Size(42, 29);
             label6.TabIndex = 29;
@@ -226,11 +245,12 @@
             tbNombreClienteVenta.Name = "tbNombreClienteVenta";
             tbNombreClienteVenta.Size = new Size(200, 27);
             tbNombreClienteVenta.TabIndex = 1;
+            tbNombreClienteVenta.TextChanged += tbNombreClienteVenta_TextChanged;
             // 
             // tbDniClienteVenta
             // 
             tbDniClienteVenta.Font = new Font("Segoe UI", 9F);
-            tbDniClienteVenta.Location = new Point(400, 67);
+            tbDniClienteVenta.Location = new Point(400, 69);
             tbDniClienteVenta.Margin = new Padding(3, 4, 3, 4);
             tbDniClienteVenta.Name = "tbDniClienteVenta";
             tbDniClienteVenta.Size = new Size(95, 27);
@@ -312,7 +332,7 @@
             groupBox3.Controls.Add(tbNombreProductoVenta);
             groupBox3.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             groupBox3.ForeColor = SystemColors.ButtonFace;
-            groupBox3.Location = new Point(14, 169);
+            groupBox3.Location = new Point(14, 213);
             groupBox3.Margin = new Padding(3, 4, 3, 4);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(3, 4, 3, 4);
@@ -325,14 +345,13 @@
             // gbEstadoVenta
             // 
             gbEstadoVenta.Controls.Add(rbPendienteVenta);
-            gbEstadoVenta.Controls.Add(rbCanceladoVenta);
             gbEstadoVenta.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             gbEstadoVenta.ForeColor = SystemColors.ButtonFace;
-            gbEstadoVenta.Location = new Point(443, 131);
+            gbEstadoVenta.Location = new Point(443, 177);
             gbEstadoVenta.Margin = new Padding(3, 4, 3, 4);
             gbEstadoVenta.Name = "gbEstadoVenta";
             gbEstadoVenta.Padding = new Padding(3, 4, 3, 4);
-            gbEstadoVenta.Size = new Size(126, 103);
+            gbEstadoVenta.Size = new Size(126, 67);
             gbEstadoVenta.TabIndex = 42;
             gbEstadoVenta.TabStop = false;
             gbEstadoVenta.Text = "Estado";
@@ -343,7 +362,7 @@
             rbPendienteVenta.AutoSize = true;
             rbPendienteVenta.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             rbPendienteVenta.ForeColor = SystemColors.ButtonFace;
-            rbPendienteVenta.Location = new Point(10, 22);
+            rbPendienteVenta.Location = new Point(10, 24);
             rbPendienteVenta.Margin = new Padding(3, 4, 3, 4);
             rbPendienteVenta.Name = "rbPendienteVenta";
             rbPendienteVenta.Size = new Size(105, 33);
@@ -351,21 +370,9 @@
             rbPendienteVenta.Text = "Pendiente";
             rbPendienteVenta.UseVisualStyleBackColor = true;
             // 
-            // rbCanceladoVenta
-            // 
-            rbCanceladoVenta.AutoSize = true;
-            rbCanceladoVenta.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            rbCanceladoVenta.ForeColor = SystemColors.ButtonFace;
-            rbCanceladoVenta.Location = new Point(10, 62);
-            rbCanceladoVenta.Margin = new Padding(3, 4, 3, 4);
-            rbCanceladoVenta.Name = "rbCanceladoVenta";
-            rbCanceladoVenta.Size = new Size(107, 33);
-            rbCanceladoVenta.TabIndex = 21;
-            rbCanceladoVenta.Text = "Cancelado";
-            rbCanceladoVenta.UseVisualStyleBackColor = true;
-            // 
             // tbCategoriaProductoVenta
             // 
+            tbCategoriaProductoVenta.Font = new Font("Segoe UI", 9F);
             tbCategoriaProductoVenta.Location = new Point(136, 136);
             tbCategoriaProductoVenta.Multiline = true;
             tbCategoriaProductoVenta.Name = "tbCategoriaProductoVenta";
@@ -402,6 +409,7 @@
             // 
             // tbIdProductoVenta
             // 
+            tbIdProductoVenta.Font = new Font("Segoe UI", 9F);
             tbIdProductoVenta.Location = new Point(26, 70);
             tbIdProductoVenta.Multiline = true;
             tbIdProductoVenta.Name = "tbIdProductoVenta";
@@ -420,6 +428,7 @@
             // 
             // tbMarcaProductoVenta
             // 
+            tbMarcaProductoVenta.Font = new Font("Segoe UI", 9F);
             tbMarcaProductoVenta.Location = new Point(136, 176);
             tbMarcaProductoVenta.Multiline = true;
             tbMarcaProductoVenta.Name = "tbMarcaProductoVenta";
@@ -436,7 +445,7 @@
             ibBotonAgregarProductoVenta.IconColor = Color.Black;
             ibBotonAgregarProductoVenta.IconFont = FontAwesome.Sharp.IconFont.Auto;
             ibBotonAgregarProductoVenta.IconSize = 26;
-            ibBotonAgregarProductoVenta.Location = new Point(443, 34);
+            ibBotonAgregarProductoVenta.Location = new Point(443, 35);
             ibBotonAgregarProductoVenta.Margin = new Padding(3, 4, 3, 4);
             ibBotonAgregarProductoVenta.Name = "ibBotonAgregarProductoVenta";
             ibBotonAgregarProductoVenta.Size = new Size(126, 64);
@@ -444,6 +453,7 @@
             ibBotonAgregarProductoVenta.Text = "Agregar";
             ibBotonAgregarProductoVenta.TextImageRelation = TextImageRelation.ImageBeforeText;
             ibBotonAgregarProductoVenta.UseVisualStyleBackColor = true;
+            ibBotonAgregarProductoVenta.Click += ibBotonAgregarProductoVenta_Click_1;
             // 
             // label9
             // 
@@ -538,7 +548,7 @@
             groupBox4.Controls.Add(dtpFechaVenta);
             groupBox4.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             groupBox4.ForeColor = SystemColors.ButtonFace;
-            groupBox4.Location = new Point(632, 169);
+            groupBox4.Location = new Point(632, 213);
             groupBox4.Margin = new Padding(3, 4, 3, 4);
             groupBox4.Name = "groupBox4";
             groupBox4.Padding = new Padding(3, 4, 3, 4);
@@ -562,11 +572,11 @@
             groupBox5.Controls.Add(cbTipoFacturaVenta);
             groupBox5.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             groupBox5.ForeColor = SystemColors.ButtonFace;
-            groupBox5.Location = new Point(632, 309);
+            groupBox5.Location = new Point(632, 359);
             groupBox5.Margin = new Padding(3, 4, 3, 4);
             groupBox5.Name = "groupBox5";
             groupBox5.Padding = new Padding(3, 4, 3, 4);
-            groupBox5.Size = new Size(337, 120);
+            groupBox5.Size = new Size(337, 114);
             groupBox5.TabIndex = 30;
             groupBox5.TabStop = false;
             groupBox5.Text = "Factura";
@@ -593,7 +603,7 @@
             groupBox6.Controls.Add(label12);
             groupBox6.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             groupBox6.ForeColor = SystemColors.ButtonFace;
-            groupBox6.Location = new Point(976, 169);
+            groupBox6.Location = new Point(976, 213);
             groupBox6.Margin = new Padding(3, 4, 3, 4);
             groupBox6.Name = "groupBox6";
             groupBox6.Padding = new Padding(3, 4, 3, 4);
@@ -613,135 +623,115 @@
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dgvVentas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvVentas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvVentas.Columns.AddRange(new DataGridViewColumn[] { Nro_Venta, codIdProducto, colDescripcion, fechaVenta, colCantidad, colSubtotal, totalVenta });
-            dgvVentas.Location = new Point(14, 500);
+            dgvVentas.Location = new Point(14, 540);
             dgvVentas.Margin = new Padding(3, 4, 3, 4);
             dgvVentas.Name = "dgvVentas";
             dgvVentas.RowHeadersWidth = 51;
-            dgvVentas.Size = new Size(1149, 253);
+            dgvVentas.Size = new Size(1149, 233);
             dgvVentas.TabIndex = 32;
             dgvVentas.CellContentClick += dataGridView1_CellContentClick;
-            // 
-            // Nro_Venta
-            // 
-            Nro_Venta.HeaderText = "Nrro Venta";
-            Nro_Venta.MinimumWidth = 6;
-            Nro_Venta.Name = "Nro_Venta";
-            Nro_Venta.Width = 125;
-            // 
-            // codIdProducto
-            // 
-            codIdProducto.HeaderText = "Nombre";
-            codIdProducto.MinimumWidth = 6;
-            codIdProducto.Name = "codIdProducto";
-            codIdProducto.Width = 125;
-            // 
-            // colDescripcion
-            // 
-            colDescripcion.HeaderText = "Descripcion";
-            colDescripcion.MinimumWidth = 320;
-            colDescripcion.Name = "colDescripcion";
-            colDescripcion.Width = 470;
-            // 
-            // fechaVenta
-            // 
-            fechaVenta.HeaderText = "Fecha de Venta";
-            fechaVenta.MinimumWidth = 6;
-            fechaVenta.Name = "fechaVenta";
-            fechaVenta.Width = 125;
-            // 
-            // colCantidad
-            // 
-            colCantidad.HeaderText = "Cantidad";
-            colCantidad.MinimumWidth = 6;
-            colCantidad.Name = "colCantidad";
-            colCantidad.Width = 125;
-            // 
-            // colSubtotal
-            // 
-            colSubtotal.HeaderText = "Subtotal";
-            colSubtotal.MinimumWidth = 6;
-            colSubtotal.Name = "colSubtotal";
-            colSubtotal.Width = 125;
-            // 
-            // totalVenta
-            // 
-            totalVenta.HeaderText = "Total Venta";
-            totalVenta.MinimumWidth = 6;
-            totalVenta.Name = "totalVenta";
-            totalVenta.Width = 125;
-            // 
-            // cbVentasFinalizadas
-            // 
-            cbVentasFinalizadas.AutoSize = true;
-            cbVentasFinalizadas.Checked = true;
-            cbVentasFinalizadas.CheckState = CheckState.Checked;
-            cbVentasFinalizadas.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            cbVentasFinalizadas.ForeColor = SystemColors.ButtonFace;
-            cbVentasFinalizadas.Location = new Point(14, 466);
-            cbVentasFinalizadas.Name = "cbVentasFinalizadas";
-            cbVentasFinalizadas.Size = new Size(101, 33);
-            cbVentasFinalizadas.TabIndex = 33;
-            cbVentasFinalizadas.Text = "Vendidos";
-            cbVentasFinalizadas.UseVisualStyleBackColor = true;
-            // 
-            // cbVentasPendientes
-            // 
-            cbVentasPendientes.AutoSize = true;
-            cbVentasPendientes.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            cbVentasPendientes.ForeColor = SystemColors.ButtonFace;
-            cbVentasPendientes.Location = new Point(121, 466);
-            cbVentasPendientes.Name = "cbVentasPendientes";
-            cbVentasPendientes.Size = new Size(113, 33);
-            cbVentasPendientes.TabIndex = 34;
-            cbVentasPendientes.Text = "Pendientes";
-            cbVentasPendientes.UseVisualStyleBackColor = true;
-            // 
-            // cbVentasCanceladas
-            // 
-            cbVentasCanceladas.AutoSize = true;
-            cbVentasCanceladas.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
-            cbVentasCanceladas.ForeColor = SystemColors.ButtonFace;
-            cbVentasCanceladas.Location = new Point(240, 466);
-            cbVentasCanceladas.Name = "cbVentasCanceladas";
-            cbVentasCanceladas.Size = new Size(115, 33);
-            cbVentasCanceladas.TabIndex = 35;
-            cbVentasCanceladas.Text = "Cancelados";
-            cbVentasCanceladas.UseVisualStyleBackColor = true;
             // 
             // label15
             // 
             label15.AutoSize = true;
             label15.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             label15.ForeColor = SystemColors.ButtonFace;
-            label15.Location = new Point(860, 757);
+            label15.Location = new Point(955, 775);
             label15.Name = "label15";
-            label15.Size = new Size(173, 34);
+            label15.Size = new Size(81, 34);
             label15.TabIndex = 36;
-            label15.Text = "TOTAL VENDIDO:";
+            label15.Text = "TOTAL:";
             // 
             // lbTotalVendidoVenta
             // 
             lbTotalVendidoVenta.AutoSize = true;
             lbTotalVendidoVenta.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lbTotalVendidoVenta.ForeColor = SystemColors.ButtonFace;
-            lbTotalVendidoVenta.Location = new Point(1042, 757);
+            lbTotalVendidoVenta.Location = new Point(1032, 775);
             lbTotalVendidoVenta.Name = "lbTotalVendidoVenta";
-            lbTotalVendidoVenta.Size = new Size(85, 34);
+            lbTotalVendidoVenta.Size = new Size(63, 34);
             lbTotalVendidoVenta.TabIndex = 37;
-            lbTotalVendidoVenta.Text = "$123,50";
+            lbTotalVendidoVenta.Text = "$0,00";
+            lbTotalVendidoVenta.Click += lbTotalVendidoVenta_Click;
+            // 
+            // bListaProductosVenta
+            // 
+            bListaProductosVenta.Cursor = Cursors.Hand;
+            bListaProductosVenta.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            bListaProductosVenta.ForeColor = SystemColors.ActiveCaptionText;
+            bListaProductosVenta.Location = new Point(1037, 12);
+            bListaProductosVenta.Name = "bListaProductosVenta";
+            bListaProductosVenta.Size = new Size(126, 48);
+            bListaProductosVenta.TabIndex = 30;
+            bListaProductosVenta.Text = "Productos";
+            bListaProductosVenta.UseVisualStyleBackColor = true;
+            // 
+            // bListaClientesVenta
+            // 
+            bListaClientesVenta.Cursor = Cursors.Hand;
+            bListaClientesVenta.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            bListaClientesVenta.ForeColor = SystemColors.ActiveCaptionText;
+            bListaClientesVenta.Location = new Point(878, 12);
+            bListaClientesVenta.Name = "bListaClientesVenta";
+            bListaClientesVenta.Size = new Size(126, 48);
+            bListaClientesVenta.TabIndex = 38;
+            bListaClientesVenta.Text = "Clientes";
+            bListaClientesVenta.UseVisualStyleBackColor = true;
+            // 
+            // cbVentaProductoVendidos
+            // 
+            cbVentaProductoVendidos.AutoSize = true;
+            cbVentaProductoVendidos.Cursor = Cursors.Hand;
+            cbVentaProductoVendidos.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            cbVentaProductoVendidos.ForeColor = SystemColors.ButtonFace;
+            cbVentaProductoVendidos.Location = new Point(14, 505);
+            cbVentaProductoVendidos.Name = "cbVentaProductoVendidos";
+            cbVentaProductoVendidos.Size = new Size(101, 33);
+            cbVentaProductoVendidos.TabIndex = 39;
+            cbVentaProductoVendidos.Text = "Vendidos";
+            cbVentaProductoVendidos.UseVisualStyleBackColor = true;
+            // 
+            // cbVentaProductoCancelados
+            // 
+            cbVentaProductoCancelados.AutoSize = true;
+            cbVentaProductoCancelados.Cursor = Cursors.Hand;
+            cbVentaProductoCancelados.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            cbVentaProductoCancelados.ForeColor = SystemColors.ButtonFace;
+            cbVentaProductoCancelados.Location = new Point(131, 505);
+            cbVentaProductoCancelados.Name = "cbVentaProductoCancelados";
+            cbVentaProductoCancelados.Size = new Size(115, 33);
+            cbVentaProductoCancelados.TabIndex = 40;
+            cbVentaProductoCancelados.Text = "Cancelados";
+            cbVentaProductoCancelados.UseVisualStyleBackColor = true;
+            // 
+            // cbVentaProductoPendientes
+            // 
+            cbVentaProductoPendientes.AutoSize = true;
+            cbVentaProductoPendientes.Checked = true;
+            cbVentaProductoPendientes.CheckState = CheckState.Checked;
+            cbVentaProductoPendientes.Cursor = Cursors.Hand;
+            cbVentaProductoPendientes.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            cbVentaProductoPendientes.ForeColor = SystemColors.ButtonFace;
+            cbVentaProductoPendientes.Location = new Point(260, 505);
+            cbVentaProductoPendientes.Name = "cbVentaProductoPendientes";
+            cbVentaProductoPendientes.Size = new Size(113, 33);
+            cbVentaProductoPendientes.TabIndex = 41;
+            cbVentaProductoPendientes.Text = "Pendientes";
+            cbVentaProductoPendientes.UseVisualStyleBackColor = true;
             // 
             // ventas
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 64);
-            ClientSize = new Size(1200, 800);
+            ClientSize = new Size(1200, 840);
+            Controls.Add(cbVentaProductoPendientes);
+            Controls.Add(cbVentaProductoCancelados);
+            Controls.Add(cbVentaProductoVendidos);
+            Controls.Add(bListaClientesVenta);
+            Controls.Add(bListaProductosVenta);
             Controls.Add(lbTotalVendidoVenta);
             Controls.Add(label15);
-            Controls.Add(cbVentasCanceladas);
-            Controls.Add(cbVentasPendientes);
-            Controls.Add(cbVentasFinalizadas);
             Controls.Add(dgvVentas);
             Controls.Add(groupBox6);
             Controls.Add(groupBox5);
@@ -813,20 +803,16 @@
         private TextBox tbCategoriaProductoVenta;
         private Label label14;
         private TextBox tbEmailClienteVenta;
-        private CheckBox cbVentasFinalizadas;
-        private CheckBox cbVentasPendientes;
-        private CheckBox cbVentasCanceladas;
-        private DataGridViewTextBoxColumn Nro_Venta;
-        private DataGridViewTextBoxColumn codIdProducto;
-        private DataGridViewTextBoxColumn colDescripcion;
-        private DataGridViewTextBoxColumn fechaVenta;
-        private DataGridViewTextBoxColumn colCantidad;
-        private DataGridViewTextBoxColumn colSubtotal;
-        private DataGridViewTextBoxColumn totalVenta;
         private GroupBox gbEstadoVenta;
         private RadioButton rbPendienteVenta;
-        private RadioButton rbCanceladoVenta;
         private Label label15;
         private Label lbTotalVendidoVenta;
+        private TextBox tbIdVendedorVenta;
+        private TextBox tbIdClienteVenta;
+        private Button bListaProductosVenta;
+        private Button bListaClientesVenta;
+        private CheckBox cbVentaProductoVendidos;
+        private CheckBox cbVentaProductoCancelados;
+        private CheckBox cbVentaProductoPendientes;
     }
 }

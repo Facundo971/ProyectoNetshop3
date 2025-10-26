@@ -1,6 +1,7 @@
 ﻿using FontAwesome.Sharp;
 using Microsoft.Data.SqlClient;
 using ProyectoNetshop.BD;
+using ProyectoNetshop.Cruds;
 using ProyectoNetshop.Properties;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,18 @@ namespace vistaDeProyectoC
 {
     public partial class FInicioSesion : Form
     {
+        //Perfil
         public int IdPerfil { get; private set; }
+
+        //Vendedor
+        public int VendedorId { get; private set; }
         public int VendedorDni { get; private set; }
         public string VendedorNombre { get; private set; }
 
+        ////Cliente
+        //public int ClienteId { get; private set; }
+        //public int ClienteDni { get; private set; }
+        //public string ClienteNombre { get; private set; }
 
         public FInicioSesion()
         {
@@ -94,14 +103,27 @@ namespace vistaDeProyectoC
                     TBContraseniaLogin.Focus();
                     return;
                 }
+                //Vendedor
                 int dni = reader.GetInt32(reader.GetOrdinal("dni"));
                 string nombre = reader.GetString(reader.GetOrdinal("nombre"));
                 string apellido = reader.GetString(reader.GetOrdinal("apellido"));
 
+                this.VendedorId = Usuario_controller.ObtenerIdUsuarioPorNombre(TBUsuarioLogin.Text);
                 this.VendedorDni = dni;
                 this.VendedorNombre = $"{nombre} {apellido}";
 
+                ////Cliente
+                //int dni_cliente = reader.GetInt32(reader.GetOrdinal("dni"));
+                //string nombre_cliente = reader.GetString(reader.GetOrdinal("nombre"));
+                //string apellido_cliente = reader.GetString(reader.GetOrdinal("apellido"));
+
+                //this.ClienteId = Usuario_controller.ObtenerIdUsuarioPorNombre(TBUsuarioLogin.Text);
+                //this.ClienteDni = dni_cliente;
+                //this.ClienteNombre = $"{nombre_cliente} {apellido_cliente}";
+
+                //Perfil
                 this.IdPerfil = idPerfil;
+
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

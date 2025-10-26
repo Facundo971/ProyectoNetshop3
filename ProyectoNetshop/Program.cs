@@ -21,7 +21,8 @@ internal static class Program
             Application.Run(new principal(
                 login.IdPerfil,
                 login.VendedorDni,
-                login.VendedorNombre));
+                login.VendedorNombre,
+                login.VendedorId));
         }
 
         //Application.Run(new principal(1, 30123457, "Juan"));

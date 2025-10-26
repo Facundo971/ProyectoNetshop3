@@ -47,7 +47,12 @@ namespace vistaDeProyectoC
 
         private void FBackUp_Load(object sender, EventArgs e)
         {
+            TBBaseDeDatos.Text = "proyectoT";
+            TBBaseDeDatos.ReadOnly = true; // 🔒 Bloquea edición manual
+            Campos_TextChanged(this, EventArgs.Empty); // Actualiza botones
 
+            TBGuardarRuta.ReadOnly = true;     // Evita escritura manual
+            TBGuardarRuta.Enabled = true;      // Permite que se vea y se actualice desde código
         }
 
         private void TBBaseDeDatos_TextChanged(object sender, EventArgs e)
@@ -64,7 +69,7 @@ namespace vistaDeProyectoC
             BGuardarRuta.Enabled = _conectado;
 
             // Permitir editar/pegar la ruta sólo si _conectado (opcional)
-            TBGuardarRuta.ReadOnly = !_conectado;
+            TBGuardarRuta.ReadOnly = true;
             TBGuardarRuta.Enabled = _conectado;
 
             // Habilitar BackUp solo si hay conexión establecida y ya se seleccionó una ruta
@@ -94,7 +99,7 @@ namespace vistaDeProyectoC
                 _conectado = true;
                 // Habilitar selección/edición de ruta
                 TBGuardarRuta.Enabled = true;
-                TBGuardarRuta.ReadOnly = false;
+                TBGuardarRuta.ReadOnly = true;
                 MessageBox.Show($"Conexión exitosa a la base '{nombreBD}'.", "Conectado", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -168,7 +173,8 @@ namespace vistaDeProyectoC
                 MessageBox.Show("Backup completado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Limpiar campos
-                TBBaseDeDatos.Clear();
+                //TBBaseDeDatos.Clear();
+                TBBaseDeDatos.Text = "proyectoT";
                 TBGuardarRuta.Clear();
 
                 // Resetear estado interno

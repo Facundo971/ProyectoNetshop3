@@ -6,12 +6,24 @@ namespace ProyectoNetshop
     public partial class principal : Form
     {
         // Datos del usuario autenticado
+        //Perfil
         private int idPerfil;
+
+        //Vendedor
         private int vendedorDni;
         private string vendedorNombre;
+        private int vendedorId;
+
+        ////Cliente
+        //private int clienteDni;
+        //private string clienteNombre;
+        //private int clienteId;
 
         // Constructor
-        public principal(int p_idPerfil, int p_dni, string p_nombre)
+        public principal(int p_idPerfil, //Perfil
+                         int p_dni, string p_nombre, int p_id_vendedor //Vendedor
+                         //int p_dni_cliente, string p_nombre_cliente, int p_id_cliente //Cliente
+                         )
         {
             InitializeComponent();
 
@@ -19,9 +31,18 @@ namespace ProyectoNetshop
             this.Load += principal_Load;
 
             // Guardamos internamente los parámetros pasados desde el login
+            //Perfil
             idPerfil = p_idPerfil;
+            
+            //Vendedor
             vendedorDni = p_dni;
             vendedorNombre = p_nombre;
+            vendedorId = p_id_vendedor;
+
+            ////Cliente
+            //clienteDni = p_dni_cliente;
+            //clienteNombre = p_nombre_cliente;
+            //clienteId = p_id_cliente;
 
             // Validamos el acceso según el perfil del usuario
             AplicarPermisos();
@@ -100,7 +121,7 @@ namespace ProyectoNetshop
         // Al hacer clic en “Ventas”, abre la vista de ventas
         private void btnVentas_Click_1(object sender, EventArgs e)
         {
-            AbrirFormularioEnPanel(new formularios.ventas(vendedorDni, vendedorNombre));
+            AbrirFormularioEnPanel(new formularios.ventas(vendedorDni, vendedorNombre, vendedorId));
         }
 
         // Al hacer clic en “Backup”, muestra el formulario de respaldo de la base de datos

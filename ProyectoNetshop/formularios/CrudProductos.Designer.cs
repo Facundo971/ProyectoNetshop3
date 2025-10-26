@@ -357,6 +357,7 @@
             pbImagenProducto.SizeMode = PictureBoxSizeMode.StretchImage;
             pbImagenProducto.TabIndex = 27;
             pbImagenProducto.TabStop = false;
+            pbImagenProducto.Click += pbImagenProducto_Click;
             // 
             // lbEliminar
             // 

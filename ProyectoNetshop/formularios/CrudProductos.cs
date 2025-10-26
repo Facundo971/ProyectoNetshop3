@@ -24,8 +24,10 @@ namespace ProyectoNetshop.formularios
         private int _productoSeleccionadoId = -1;
 
         private int _productoSeleccionadoEliminado = 1; // 1 = no eliminado, 0 = eliminado
-        
+
         private bool _suppressPrecioTextChanged = false;
+
+        private const string ImagenPorDefectoPath = @"Resources\producto_defecto.jpg";
 
         public CrudProductos()
         {
@@ -155,7 +157,8 @@ namespace ProyectoNetshop.formularios
             {
                 nombre = tbNombreProducto.Text.Trim(),
                 descripcion = string.IsNullOrWhiteSpace(tbDescripcionProducto.Text) ? null : tbDescripcionProducto.Text.Trim(),
-                imagen = string.IsNullOrWhiteSpace(_imagenSeleccionadaPath) ? null : _imagenSeleccionadaPath,
+                //imagen = string.IsNullOrWhiteSpace(_imagenSeleccionadaPath) ? null : _imagenSeleccionadaPath,
+                imagen = string.IsNullOrWhiteSpace(_imagenSeleccionadaPath) ? ImagenPorDefectoPath : _imagenSeleccionadaPath,
                 // Parseo sencillo de numéricos (si falla, quedará 0; la validación debe ocurrir en otra capa)
                 precio = decimal.TryParse(tbPrecioProducto.Text.Trim(), out decimal p) ? p : 0m,
                 precio_vta = decimal.TryParse(tbPrecioVentaProducto.Text.Trim(), out decimal pv) ? pv : 0m,
@@ -1197,6 +1200,11 @@ namespace ProyectoNetshop.formularios
         }
 
         private void tbBusquedaPrecioMaxProducto_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pbImagenProducto_Click(object sender, EventArgs e)
         {
 
         }
