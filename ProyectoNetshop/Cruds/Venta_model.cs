@@ -17,6 +17,7 @@ namespace ProyectoNetshop.Cruds
         public string nombre_cliente { get; set; }
         public string nombre_vendedor { get; set; }
         public int id_estado { get; set; }
+        public string nro_factura { get; set; }
 
         public Venta_model() { }
 

@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(principal));
             panelIzquierdo = new Panel();
+            btnIconDetalleFacturas = new FontAwesome.Sharp.IconButton();
             btnSalir = new FontAwesome.Sharp.IconButton();
             btnIconReportes = new FontAwesome.Sharp.IconButton();
             btnIconProductos = new FontAwesome.Sharp.IconButton();
@@ -48,6 +49,7 @@
             // panelIzquierdo
             // 
             panelIzquierdo.BackColor = Color.FromArgb(0, 0, 64);
+            panelIzquierdo.Controls.Add(btnIconDetalleFacturas);
             panelIzquierdo.Controls.Add(btnSalir);
             panelIzquierdo.Controls.Add(btnIconReportes);
             panelIzquierdo.Controls.Add(btnIconProductos);
@@ -62,6 +64,30 @@
             panelIzquierdo.Name = "panelIzquierdo";
             panelIzquierdo.Size = new Size(229, 953);
             panelIzquierdo.TabIndex = 0;
+            panelIzquierdo.Paint += panelIzquierdo_Paint;
+            // 
+            // btnIconDetalleFacturas
+            // 
+            btnIconDetalleFacturas.Cursor = Cursors.Hand;
+            btnIconDetalleFacturas.Dock = DockStyle.Top;
+            btnIconDetalleFacturas.FlatStyle = FlatStyle.Flat;
+            btnIconDetalleFacturas.Font = new Font("Dubai", 14.2499981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            btnIconDetalleFacturas.ForeColor = SystemColors.ButtonFace;
+            btnIconDetalleFacturas.IconChar = FontAwesome.Sharp.IconChar.ListAlt;
+            btnIconDetalleFacturas.IconColor = Color.White;
+            btnIconDetalleFacturas.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnIconDetalleFacturas.IconSize = 40;
+            btnIconDetalleFacturas.ImageAlign = ContentAlignment.MiddleLeft;
+            btnIconDetalleFacturas.Location = new Point(0, 613);
+            btnIconDetalleFacturas.Margin = new Padding(3, 4, 3, 4);
+            btnIconDetalleFacturas.Name = "btnIconDetalleFacturas";
+            btnIconDetalleFacturas.Padding = new Padding(11, 0, 23, 0);
+            btnIconDetalleFacturas.Size = new Size(229, 80);
+            btnIconDetalleFacturas.TabIndex = 8;
+            btnIconDetalleFacturas.Text = "Facturas";
+            btnIconDetalleFacturas.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnIconDetalleFacturas.UseVisualStyleBackColor = true;
+            btnIconDetalleFacturas.Click += btnIconDetalleFacturas_Click;
             // 
             // btnSalir
             // 
@@ -299,5 +325,6 @@
         private Panel panelSuperior;
         private Panel panel1;
         private Panel panelContenedor;
+        private FontAwesome.Sharp.IconButton btnIconDetalleFacturas;
     }
 }

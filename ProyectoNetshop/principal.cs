@@ -22,7 +22,7 @@ namespace ProyectoNetshop
         // Constructor
         public principal(int p_idPerfil, //Perfil
                          int p_dni, string p_nombre, int p_id_vendedor //Vendedor
-                         //int p_dni_cliente, string p_nombre_cliente, int p_id_cliente //Cliente
+                                                                       //int p_dni_cliente, string p_nombre_cliente, int p_id_cliente //Cliente
                          )
         {
             InitializeComponent();
@@ -33,7 +33,7 @@ namespace ProyectoNetshop
             // Guardamos internamente los parámetros pasados desde el login
             //Perfil
             idPerfil = p_idPerfil;
-            
+
             //Vendedor
             vendedorDni = p_dni;
             vendedorNombre = p_nombre;
@@ -149,7 +149,7 @@ namespace ProyectoNetshop
 
         private void principal_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         // Este metodo determina que secciones el usuario puede acceder dependiendo el rol del usuario
@@ -158,7 +158,7 @@ namespace ProyectoNetshop
             // Se lista de todos los botones
             var botones = new[]
             {
-                btnIconUsuarios, btnIconBackup, btnIconVentas, btnIconClientes, btnIconProductos, btnIconReportes
+                btnIconUsuarios, btnIconBackup, btnIconVentas, btnIconClientes, btnIconProductos, btnIconReportes, btnIconDetalleFacturas
             };
 
             // Se deshabilita todo al inicio
@@ -176,8 +176,9 @@ namespace ProyectoNetshop
 
                 case 2: // Vendedor
                     btnIconVentas.Enabled = true;
-                    btnIconClientes.Enabled = true;
+                    //btnIconClientes.Enabled = true;
                     btnIconReportes.Enabled = true;
+                    btnIconDetalleFacturas.Enabled = true;
                     break;
 
                 case 3: // Gerente
@@ -189,6 +190,16 @@ namespace ProyectoNetshop
                 default:
                     break;
             }
+        }
+
+        private void panelIzquierdo_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnIconDetalleFacturas_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioEnPanel(new formularios.DetalleFactura(vendedorDni, vendedorNombre));
         }
     }
 }

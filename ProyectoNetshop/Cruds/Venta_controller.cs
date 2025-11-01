@@ -48,15 +48,16 @@ namespace ProyectoNetshop.Cruds
             using var conexion = BD.BaseDeDatos.obtenerConexion();
             using var cmd = conexion.CreateCommand();
             cmd.CommandText = @"
-                INSERT INTO venta_cabecera (id_cliente, id_usuario, fecha, tipo_factura, total_venta, id_estado)
-                OUTPUT INSERTED.id_venta
-                VALUES (@id_cliente, @id_usuario, @fecha, @tipo_factura, @total_venta, @id_estado);";
+                    INSERT INTO venta_cabecera (id_cliente, id_usuario, fecha, tipo_factura, total_venta, id_estado, nro_factura)
+                    OUTPUT INSERTED.id_venta
+                    VALUES (@id_cliente, @id_usuario, @fecha, @tipo_factura, @total_venta, @id_estado, @nro_factura);";
             cmd.Parameters.Add("@id_cliente", SqlDbType.Int).Value = venta.id_cliente;
             cmd.Parameters.Add("@id_usuario", SqlDbType.Int).Value = venta.id_vendedor;
             cmd.Parameters.Add("@fecha", SqlDbType.Date).Value = venta.fecha;
             cmd.Parameters.Add("@tipo_factura", SqlDbType.Char, 1).Value = venta.tipo_factura;
             cmd.Parameters.Add("@total_venta", SqlDbType.Decimal).Value = venta.total_venta;
             cmd.Parameters.Add("@id_estado", SqlDbType.Int).Value = venta.id_estado;
+            cmd.Parameters.Add("@nro_factura", SqlDbType.VarChar, 20).Value = venta.nro_factura ?? (object)DBNull.Value;
 
             return (int)cmd.ExecuteScalar();
         }
@@ -155,9 +156,10 @@ namespace ProyectoNetshop.Cruds
             using var conexion = BD.BaseDeDatos.obtenerConexion();
             using var cmd = conexion.CreateCommand();
             cmd.CommandText = @"
-SELECT v.id_venta, v.fecha, v.tipo_factura, v.total_venta, v.id_estado,
+SELECT v.id_venta, v.nro_factura, v.fecha, v.tipo_factura, v.total_venta, v.id_estado,
        c.nombre + ' ' + c.apellido AS nombre_cliente,
        u.nombre + ' ' + u.apellido AS nombre_vendedor
+
 FROM venta_cabecera v
 JOIN cliente c ON v.id_cliente = c.id_cliente
 JOIN usuario u ON v.id_usuario = u.id_usuario
@@ -172,17 +174,45 @@ ORDER BY v.fecha DESC;";
                 var venta = new Venta_model
                 {
                     id_venta = reader.GetInt32(0),
-                    fecha = reader.GetDateTime(1),
-                    tipo_factura = reader.GetString(2),
-                    total_venta = reader.GetDecimal(3),
-                    id_estado = reader.GetInt32(4),
-                    nombre_cliente = reader.GetString(5),
-                    nombre_vendedor = reader.GetString(6)
+                    //nro_factura = reader.GetString(1),
+                    nro_factura = reader.IsDBNull(1) ? null : reader.GetString(1),
+                    fecha = reader.GetDateTime(2),
+                    tipo_factura = reader.GetString(3),
+                    total_venta = reader.GetDecimal(4),
+                    id_estado = reader.GetInt32(5),
+                    nombre_cliente = reader.GetString(6),
+                    nombre_vendedor = reader.GetString(7)
                 };
                 lista.Add(venta);
             }
 
             return lista;
+        }
+
+        public static string GenerarNroFactura(string tipoFactura)
+        {
+            using var conexion = BD.BaseDeDatos.obtenerConexion();
+            using var cmd = conexion.CreateCommand();
+
+            cmd.CommandText = @"
+        SELECT MAX(nro_factura)
+        FROM venta_cabecera
+        WHERE tipo_factura = @tipo AND nro_factura IS NOT NULL";
+
+            cmd.Parameters.AddWithValue("@tipo", tipoFactura);
+
+            var resultado = cmd.ExecuteScalar()?.ToString();
+
+            int nuevoNumero = 1;
+
+            if (!string.IsNullOrEmpty(resultado) && resultado.Contains("-"))
+            {
+                var partes = resultado.Split('-');
+                if (partes.Length == 2 && int.TryParse(partes[1], out int ultimo))
+                    nuevoNumero = ultimo + 1;
+            }
+
+            return $"{tipoFactura}-{nuevoNumero.ToString("D6")}";
         }
 
         public static decimal ObtenerTotalVentasPorEstado(int estado)
@@ -204,13 +234,15 @@ ORDER BY v.fecha DESC;";
                 // 1. Obtener cabecera original
                 var cmdCab = conexion.CreateCommand();
                 cmdCab.Transaction = transaccion;
-                cmdCab.CommandText = @"SELECT id_cliente, id_usuario, fecha, tipo_factura, total_venta FROM venta_cabecera WHERE id_venta = @id";
+                //cmdCab.CommandText = @"SELECT id_cliente, id_usuario, fecha, tipo_factura, total_venta FROM venta_cabecera WHERE id_venta = @id";
+                cmdCab.CommandText = @"SELECT id_cliente, id_usuario, fecha, tipo_factura, total_venta, nro_factura FROM venta_cabecera WHERE id_venta = @id";
                 cmdCab.Parameters.AddWithValue("@id", idVentaOriginal);
 
                 int idCliente = 0, idUsuario = 0;
                 DateTime fecha = DateTime.Today;
                 string tipoFactura = "";
                 decimal total = 0;
+                string nroFacturaOriginal = null;
 
                 using (var reader = cmdCab.ExecuteReader())
                 {
@@ -225,6 +257,7 @@ ORDER BY v.fecha DESC;";
                     fecha = reader.GetDateTime(2);
                     tipoFactura = reader.GetString(3);
                     total = reader.GetDecimal(4);
+                    nroFacturaOriginal = reader.IsDBNull(5) ? null : reader.GetString(5);
                 }
 
                 MessageBox.Show("Cabecera original leída correctamente.");
@@ -233,13 +266,14 @@ ORDER BY v.fecha DESC;";
                 var cmdNuevaCab = conexion.CreateCommand();
                 cmdNuevaCab.Transaction = transaccion;
                 cmdNuevaCab.CommandText = @"
-            INSERT INTO venta_cabecera (id_cliente, id_usuario, fecha, tipo_factura, total_venta, id_estado)
-            OUTPUT INSERTED.id_venta
-            VALUES (@cliente, @usuario, GETDATE(), @tipo, @total, 3)";
+                    INSERT INTO venta_cabecera (id_cliente, id_usuario, fecha, tipo_factura, total_venta, id_estado, nro_factura)
+                    OUTPUT INSERTED.id_venta
+                    VALUES (@cliente, @usuario, GETDATE(), @tipo, @total, 3, @nro_factura)";
                 cmdNuevaCab.Parameters.AddWithValue("@cliente", idCliente);
                 cmdNuevaCab.Parameters.AddWithValue("@usuario", idUsuario);
                 cmdNuevaCab.Parameters.AddWithValue("@tipo", tipoFactura);
                 cmdNuevaCab.Parameters.AddWithValue("@total", -total); // monto negativo
+                cmdNuevaCab.Parameters.AddWithValue("@nro_factura", nroFacturaOriginal ?? (object)DBNull.Value);
 
                 int idVentaNueva = (int)cmdNuevaCab.ExecuteScalar();
 
@@ -272,19 +306,19 @@ ORDER BY v.fecha DESC;";
                     return false;
                 }
 
-                // 4. Insertar detalles y devolver stock
+                // 4. Devolver stock
                 foreach (var d in detalles)
                 {
-                    var cmdIns = conexion.CreateCommand();
-                    cmdIns.Transaction = transaccion;
-                    cmdIns.CommandText = @"
-                INSERT INTO venta_detalle (id_venta, id_producto, cantidad, precio_unitario)
-                VALUES (@venta, @producto, @cantidad, @precio)";
-                    cmdIns.Parameters.AddWithValue("@venta", idVentaNueva);
-                    cmdIns.Parameters.AddWithValue("@producto", d.id_producto);
-                    cmdIns.Parameters.AddWithValue("@cantidad", d.cantidad);
-                    cmdIns.Parameters.AddWithValue("@precio", d.precio_unitario);
-                    cmdIns.ExecuteNonQuery();
+                //    var cmdIns = conexion.CreateCommand();
+                //    cmdIns.Transaction = transaccion;
+                //    cmdIns.CommandText = @"
+                //INSERT INTO venta_detalle (id_venta, id_producto, cantidad, precio_unitario)
+                //VALUES (@venta, @producto, @cantidad, @precio)";
+                //    cmdIns.Parameters.AddWithValue("@venta", idVentaNueva);
+                //    cmdIns.Parameters.AddWithValue("@producto", d.id_producto);
+                //    cmdIns.Parameters.AddWithValue("@cantidad", d.cantidad);
+                //    cmdIns.Parameters.AddWithValue("@precio", d.precio_unitario);
+                //    cmdIns.ExecuteNonQuery();
 
                     var cmdStock = conexion.CreateCommand();
                     cmdStock.Transaction = transaccion;
@@ -304,6 +338,24 @@ ORDER BY v.fecha DESC;";
                 MessageBox.Show("Error técnico: " + ex.Message);
                 return false;
             }
+        }
+
+        public static bool YaFueCancelada(int idVentaOriginal)
+        {
+            using var conexion = BD.BaseDeDatos.obtenerConexion();
+            using var cmd = conexion.CreateCommand();
+
+            cmd.CommandText = @"
+        SELECT COUNT(*) 
+        FROM venta_cabecera 
+        WHERE nro_factura = (
+            SELECT nro_factura FROM venta_cabecera WHERE id_venta = @idOriginal
+        ) AND id_estado = 3";
+
+            cmd.Parameters.AddWithValue("@idOriginal", idVentaOriginal);
+
+            int cantidad = Convert.ToInt32(cmd.ExecuteScalar());
+            return cantidad > 0;
         }
 
         //public static DataTable ObtenerVentasPorVendedor(List<int> vendedores, DateTime desde, DateTime hasta)
@@ -411,6 +463,41 @@ ORDER BY v.fecha DESC;";
 
         //    return tabla;
         //}
+
+        public static List<(string nroFactura, string nombreProducto, int cantidad, decimal precioUnitario, decimal total)> ObtenerDetallesPorVendedorNoCancelados(int dniVendedor)
+        {
+            var resultado = new List<(string, string, int, decimal, decimal)>();
+
+            using var conexion = BD.BaseDeDatos.obtenerConexion();
+            using var cmd = conexion.CreateCommand();
+
+            cmd.CommandText = @"
+        SELECT vc.nro_factura, p.nombre, vd.cantidad, vd.precio_unitario, (vd.cantidad * vd.precio_unitario) AS total
+        FROM venta_detalle vd
+        JOIN venta_cabecera vc ON vd.id_venta = vc.id_venta
+        JOIN producto p ON vd.id_producto = p.id_producto
+        JOIN usuario u ON vc.id_usuario = u.id_usuario
+        WHERE vc.nro_factura IS NOT NULL
+          AND vc.id_estado != 3
+          AND u.dni = @dni
+        ORDER BY vc.nro_factura";
+
+            cmd.Parameters.AddWithValue("@dni", dniVendedor);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                string nroFactura = reader.GetString(0);
+                string nombre = reader.GetString(1);
+                int cantidad = reader.GetInt32(2);
+                decimal precio = reader.GetDecimal(3);
+                decimal total = reader.GetDecimal(4);
+
+                resultado.Add((nroFactura, nombre, cantidad, precio, total));
+            }
+
+            return resultado;
+        }
 
         public static DataTable ObtenerVentasPorVendedorYEstado(List<int> vendedores, DateTime desde, DateTime hasta, List<int> estados)
         {

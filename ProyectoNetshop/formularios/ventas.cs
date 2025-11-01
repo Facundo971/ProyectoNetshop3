@@ -481,7 +481,17 @@ namespace ProyectoNetshop.formularios
             dgvVentas.AllowUserToAddRows = false;
             dgvVentas.ReadOnly = true;
 
-            dgvVentas.Columns.Add("colIdVenta", "ID Venta");
+            // ✅ Columna oculta para ID interno
+            var colIdOculta = new DataGridViewTextBoxColumn
+            {
+                Name = "colIdVenta",
+                HeaderText = "ID Venta",
+                Visible = false
+            };
+            dgvVentas.Columns.Add(colIdOculta);
+
+            // ✅ Columnas visibles
+            dgvVentas.Columns.Add("colNroFactura", "Nro Factura");
             dgvVentas.Columns.Add("colCliente", "Cliente");
             dgvVentas.Columns.Add("colVendedor", "Vendedor");
             dgvVentas.Columns.Add("colFecha", "Fecha");
@@ -489,7 +499,7 @@ namespace ProyectoNetshop.formularios
             dgvVentas.Columns.Add("colTotal", "Total");
             dgvVentas.Columns.Add("colEstado", "Estado");
 
-            // ✅ Solo agregar botón "Cancelar" si el estado es Finalizado
+            // ✅ Solo agregar botones si el estado es Finalizado
             if (estado == 2)
             {
                 var colCancelar = new DataGridViewButtonColumn
@@ -500,6 +510,15 @@ namespace ProyectoNetshop.formularios
                     UseColumnTextForButtonValue = true
                 };
                 dgvVentas.Columns.Add(colCancelar);
+
+                var colDescargarPDF = new DataGridViewButtonColumn
+                {
+                    Name = "colDescargarPDF",
+                    HeaderText = "PDF",
+                    Text = "Descargar",
+                    UseColumnTextForButtonValue = true
+                };
+                dgvVentas.Columns.Add(colDescargarPDF);
             }
 
             //var ventas = Venta_controller.ObtenerVentasPorEstado(estado);
@@ -507,7 +526,8 @@ namespace ProyectoNetshop.formularios
             foreach (var v in ventas)
             {
                 dgvVentas.Rows.Add(
-                    v.id_venta,
+                    v.id_venta, // ✅ columna oculta
+                    v.nro_factura,
                     v.nombre_cliente,
                     v.nombre_vendedor,
                     v.fecha.ToString("dd/MM/yyyy"),
@@ -763,7 +783,7 @@ namespace ProyectoNetshop.formularios
 
             string nombreColumna = dgvVentas.Columns[e.ColumnIndex].Name;
 
-            if (nombreColumna == "colBorrar" || nombreColumna == "colCancelar")
+            if (nombreColumna == "colBorrar" || nombreColumna == "colCancelar" || nombreColumna == "colDescargarPDF")
             {
                 e.PaintBackground(e.CellBounds, true);
 
@@ -784,13 +804,28 @@ namespace ProyectoNetshop.formularios
                     path.AddArc(rect.X, rect.Bottom - radio, radio, radio, 90, 90);
                     path.CloseFigure();
 
-                    using (Brush backColorBrush = new SolidBrush(Color.Red))
+                    // ✅ Color según tipo de botón
+                    Color colorFondo = nombreColumna switch
+                    {
+                        "colBorrar" => Color.Red,
+                        "colCancelar" => Color.Red,
+                        "colDescargarPDF" => Color.Blue,
+                    };
+
+                    using (Brush backColorBrush = new SolidBrush(colorFondo))
                     {
                         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
                         e.Graphics.FillPath(backColorBrush, path);
                     }
 
-                    string texto = nombreColumna == "colBorrar" ? "Borrar" : "Cancelar";
+                    // ✅ Texto según tipo de botón
+                    string texto = nombreColumna switch
+                    {
+                        "colBorrar" => "Borrar",
+                        "colCancelar" => "Cancelar",
+                        "colDescargarPDF" => "Descargar",
+                        _ => ""
+                    };
 
                     TextRenderer.DrawText(
                         e.Graphics,
@@ -812,7 +847,8 @@ namespace ProyectoNetshop.formularios
             {
                 string nombreColumna = dgvVentas.Columns[e.ColumnIndex].Name;
 
-                if (nombreColumna == "colBorrar" || nombreColumna == "colCancelar")
+                // ✅ Agregamos "colDescargarPDF" para que también muestre el cursor de mano
+                if (nombreColumna == "colBorrar" || nombreColumna == "colCancelar" || nombreColumna == "colDescargarPDF")
                 {
                     dgvVentas.Cursor = Cursors.Hand;
                 }
@@ -982,6 +1018,14 @@ namespace ProyectoNetshop.formularios
             if (nombreColumna == "colCancelar")
             {
                 int idVenta = Convert.ToInt32(dgvVentas.Rows[e.RowIndex].Cells["colIdVenta"].Value);
+
+                // ✅ Validación: evitar cancelación duplicada
+                if (Venta_controller.YaFueCancelada(idVenta))
+                {
+                    MessageBox.Show("Esta venta ya fue cancelada previamente.", "Cancelación duplicada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 DialogResult confirm = MessageBox.Show("¿Está seguro que desea cancelar esta venta?", "Confirmar cancelación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (confirm == DialogResult.Yes)
@@ -1484,7 +1528,11 @@ namespace ProyectoNetshop.formularios
                 id_estado = 2 // ✅ Estado "Finalizado"
             };
 
-            int idVentaGenerada = Venta_controller.GuardarVenta(venta); // ✅ Este método debe insertar y devolver el ID
+            // ✅ Generar número de factura automáticamente
+            string nroFacturaGenerado = Venta_controller.GenerarNroFactura(tipoFactura);
+            venta.nro_factura = nroFacturaGenerado;
+
+            int idVentaGenerada = Venta_controller.GuardarVenta(venta);
 
             if (idVentaGenerada <= 0)
             {
