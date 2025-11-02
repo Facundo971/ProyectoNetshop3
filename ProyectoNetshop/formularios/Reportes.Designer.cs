@@ -44,6 +44,13 @@
             lbTotalVendidoReporteGerente = new Label();
             cbVentasFinalizadasReporteGerentes = new CheckBox();
             cbVentasCanceladasReporteGerentes = new CheckBox();
+            tbBusquedaPrecioMaxReporteG = new TextBox();
+            tbBusquedaPrecioMinReporteG = new TextBox();
+            tbBusquedaNroFacturaReporteG = new TextBox();
+            tbBusquedaClienteReporteG = new TextBox();
+            tbBusquedaProductoReporteG = new TextBox();
+            lBuscarPorReporteGerente = new Label();
+            bGenerarPdfReporteGerente = new Button();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvReporteGerente).BeginInit();
@@ -184,6 +191,7 @@
             dgvReporteGerente.Size = new Size(862, 501);
             dgvReporteGerente.TabIndex = 26;
             dgvReporteGerente.Visible = false;
+            dgvReporteGerente.CellContentClick += dgvReporteGerente_CellContentClick;
             // 
             // lTotalInfoReporteGerente
             // 
@@ -217,7 +225,7 @@
             cbVentasFinalizadasReporteGerentes.Cursor = Cursors.Hand;
             cbVentasFinalizadasReporteGerentes.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             cbVentasFinalizadasReporteGerentes.ForeColor = SystemColors.ButtonFace;
-            cbVentasFinalizadasReporteGerentes.Location = new Point(314, 165);
+            cbVentasFinalizadasReporteGerentes.Location = new Point(314, 703);
             cbVentasFinalizadasReporteGerentes.Name = "cbVentasFinalizadasReporteGerentes";
             cbVentasFinalizadasReporteGerentes.Size = new Size(101, 33);
             cbVentasFinalizadasReporteGerentes.TabIndex = 29;
@@ -231,7 +239,7 @@
             cbVentasCanceladasReporteGerentes.Cursor = Cursors.Hand;
             cbVentasCanceladasReporteGerentes.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             cbVentasCanceladasReporteGerentes.ForeColor = SystemColors.ButtonFace;
-            cbVentasCanceladasReporteGerentes.Location = new Point(431, 165);
+            cbVentasCanceladasReporteGerentes.Location = new Point(431, 703);
             cbVentasCanceladasReporteGerentes.Name = "cbVentasCanceladasReporteGerentes";
             cbVentasCanceladasReporteGerentes.Size = new Size(115, 33);
             cbVentasCanceladasReporteGerentes.TabIndex = 30;
@@ -240,12 +248,89 @@
             cbVentasCanceladasReporteGerentes.Visible = false;
             cbVentasCanceladasReporteGerentes.CheckedChanged += checkBox2_CheckedChanged;
             // 
+            // tbBusquedaPrecioMaxReporteG
+            // 
+            tbBusquedaPrecioMaxReporteG.Location = new Point(1026, 167);
+            tbBusquedaPrecioMaxReporteG.Name = "tbBusquedaPrecioMaxReporteG";
+            tbBusquedaPrecioMaxReporteG.PlaceholderText = "Precio maximo";
+            tbBusquedaPrecioMaxReporteG.Size = new Size(150, 27);
+            tbBusquedaPrecioMaxReporteG.TabIndex = 31;
+            tbBusquedaPrecioMaxReporteG.Visible = false;
+            // 
+            // tbBusquedaPrecioMinReporteG
+            // 
+            tbBusquedaPrecioMinReporteG.Location = new Point(1026, 134);
+            tbBusquedaPrecioMinReporteG.Name = "tbBusquedaPrecioMinReporteG";
+            tbBusquedaPrecioMinReporteG.PlaceholderText = "Precio minimo";
+            tbBusquedaPrecioMinReporteG.Size = new Size(150, 27);
+            tbBusquedaPrecioMinReporteG.TabIndex = 32;
+            tbBusquedaPrecioMinReporteG.Visible = false;
+            // 
+            // tbBusquedaNroFacturaReporteG
+            // 
+            tbBusquedaNroFacturaReporteG.Location = new Point(858, 167);
+            tbBusquedaNroFacturaReporteG.Name = "tbBusquedaNroFacturaReporteG";
+            tbBusquedaNroFacturaReporteG.PlaceholderText = "Numero de factura";
+            tbBusquedaNroFacturaReporteG.Size = new Size(150, 27);
+            tbBusquedaNroFacturaReporteG.TabIndex = 33;
+            tbBusquedaNroFacturaReporteG.Visible = false;
+            // 
+            // tbBusquedaClienteReporteG
+            // 
+            tbBusquedaClienteReporteG.Location = new Point(858, 134);
+            tbBusquedaClienteReporteG.Name = "tbBusquedaClienteReporteG";
+            tbBusquedaClienteReporteG.PlaceholderText = "Nombre del cliente";
+            tbBusquedaClienteReporteG.Size = new Size(150, 27);
+            tbBusquedaClienteReporteG.TabIndex = 34;
+            tbBusquedaClienteReporteG.Visible = false;
+            // 
+            // tbBusquedaProductoReporteG
+            // 
+            tbBusquedaProductoReporteG.Location = new Point(679, 167);
+            tbBusquedaProductoReporteG.Name = "tbBusquedaProductoReporteG";
+            tbBusquedaProductoReporteG.PlaceholderText = "Nombre del producto";
+            tbBusquedaProductoReporteG.Size = new Size(160, 27);
+            tbBusquedaProductoReporteG.TabIndex = 35;
+            tbBusquedaProductoReporteG.Visible = false;
+            // 
+            // lBuscarPorReporteGerente
+            // 
+            lBuscarPorReporteGerente.AutoSize = true;
+            lBuscarPorReporteGerente.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
+            lBuscarPorReporteGerente.ForeColor = SystemColors.ButtonFace;
+            lBuscarPorReporteGerente.Location = new Point(679, 134);
+            lBuscarPorReporteGerente.Name = "lBuscarPorReporteGerente";
+            lBuscarPorReporteGerente.Size = new Size(95, 29);
+            lBuscarPorReporteGerente.TabIndex = 36;
+            lBuscarPorReporteGerente.Text = "Buscar por:";
+            lBuscarPorReporteGerente.Visible = false;
+            // 
+            // bGenerarPdfReporteGerente
+            // 
+            bGenerarPdfReporteGerente.Cursor = Cursors.Hand;
+            bGenerarPdfReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            bGenerarPdfReporteGerente.ForeColor = SystemColors.ActiveCaptionText;
+            bGenerarPdfReporteGerente.Location = new Point(314, 149);
+            bGenerarPdfReporteGerente.Name = "bGenerarPdfReporteGerente";
+            bGenerarPdfReporteGerente.Size = new Size(136, 45);
+            bGenerarPdfReporteGerente.TabIndex = 37;
+            bGenerarPdfReporteGerente.Text = "Generar PDF";
+            bGenerarPdfReporteGerente.UseVisualStyleBackColor = true;
+            bGenerarPdfReporteGerente.Visible = false;
+            // 
             // Reportes
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 64);
             ClientSize = new Size(1200, 800);
+            Controls.Add(bGenerarPdfReporteGerente);
+            Controls.Add(lBuscarPorReporteGerente);
+            Controls.Add(tbBusquedaProductoReporteG);
+            Controls.Add(tbBusquedaClienteReporteG);
+            Controls.Add(tbBusquedaNroFacturaReporteG);
+            Controls.Add(tbBusquedaPrecioMinReporteG);
+            Controls.Add(tbBusquedaPrecioMaxReporteG);
             Controls.Add(cbVentasCanceladasReporteGerentes);
             Controls.Add(cbVentasFinalizadasReporteGerentes);
             Controls.Add(lbTotalVendidoReporteGerente);
@@ -285,5 +370,12 @@
         private Label lbTotalVendidoReporteGerente;
         private CheckBox cbVentasFinalizadasReporteGerentes;
         private CheckBox cbVentasCanceladasReporteGerentes;
+        private TextBox tbBusquedaPrecioMaxReporteG;
+        private TextBox tbBusquedaPrecioMinReporteG;
+        private TextBox tbBusquedaNroFacturaReporteG;
+        private TextBox tbBusquedaClienteReporteG;
+        private TextBox tbBusquedaProductoReporteG;
+        private Label lBuscarPorReporteGerente;
+        private Button bGenerarPdfReporteGerente;
     }
 }

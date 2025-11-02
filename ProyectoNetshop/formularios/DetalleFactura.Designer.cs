@@ -142,7 +142,7 @@
             // 
             tbBusquedaNroFProductoDF.Location = new Point(603, 217);
             tbBusquedaNroFProductoDF.Name = "tbBusquedaNroFProductoDF";
-            tbBusquedaNroFProductoDF.PlaceholderText = "Numero de Factura";
+            tbBusquedaNroFProductoDF.PlaceholderText = "Numero de factura";
             tbBusquedaNroFProductoDF.Size = new Size(150, 27);
             tbBusquedaNroFProductoDF.TabIndex = 9;
             // 

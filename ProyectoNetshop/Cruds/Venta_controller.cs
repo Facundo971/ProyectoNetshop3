@@ -224,6 +224,21 @@ ORDER BY v.fecha DESC;";
             return (decimal)cmd.ExecuteScalar();
         }
 
+        public static decimal ObtenerTotalVentasPorEstadoYVendedor(int estado, int idUsuario)
+        {
+            using var conexion = BD.BaseDeDatos.obtenerConexion();
+            using var cmd = conexion.CreateCommand();
+            cmd.CommandText = @"
+        SELECT ISNULL(SUM(total_venta), 0)
+        FROM venta_cabecera
+        WHERE id_estado = @estado AND id_usuario = @idUsuario";
+
+            cmd.Parameters.AddWithValue("@estado", estado);
+            cmd.Parameters.AddWithValue("@idUsuario", idUsuario);
+
+            return (decimal)cmd.ExecuteScalar();
+        }
+
         public static bool CancelarVentaDuplicando(int idVentaOriginal)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -356,6 +371,61 @@ ORDER BY v.fecha DESC;";
 
             int cantidad = Convert.ToInt32(cmd.ExecuteScalar());
             return cantidad > 0;
+        }
+
+        public static Venta_model ObtenerCabeceraVenta(int idVenta)
+        {
+            using var conexion = BD.BaseDeDatos.obtenerConexion();
+            using var cmd = conexion.CreateCommand();
+            cmd.CommandText = @"
+        SELECT v.nro_factura, v.fecha, v.tipo_factura, v.total_venta, v.id_estado,
+               c.nombre + ' ' + c.apellido AS cliente,
+               u.nombre + ' ' + u.apellido AS vendedor
+        FROM venta_cabecera v
+        JOIN cliente c ON v.id_cliente = c.id_cliente
+        JOIN usuario u ON v.id_usuario = u.id_usuario
+        WHERE v.id_venta = @id";
+            cmd.Parameters.AddWithValue("@id", idVenta);
+
+            using var reader = cmd.ExecuteReader();
+            if (!reader.Read()) return null;
+
+            return new Venta_model
+            {
+                nro_factura = reader.IsDBNull(0) ? null : reader.GetString(0),
+                fecha = reader.GetDateTime(1),
+                tipo_factura = reader.GetString(2),
+                total_venta = reader.GetDecimal(3),
+                id_estado = reader.GetInt32(4),
+                nombre_cliente = reader.GetString(5),
+                nombre_vendedor = reader.GetString(6)
+            };
+        }
+
+        public static List<Venta_detalle_model> ObtenerDetalleVenta(int idVenta)
+        {
+            var lista = new List<Venta_detalle_model>();
+            using var conexion = BD.BaseDeDatos.obtenerConexion();
+            using var cmd = conexion.CreateCommand();
+            cmd.CommandText = @"
+        SELECT p.nombre, vd.cantidad, vd.precio_unitario
+        FROM venta_detalle vd
+        JOIN producto p ON vd.id_producto = p.id_producto
+        WHERE vd.id_venta = @id";
+            cmd.Parameters.AddWithValue("@id", idVenta);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                lista.Add(new Venta_detalle_model
+                {
+                    producto_nombre = reader.GetString(0),
+                    cantidad = reader.GetInt32(1),
+                    precio_unitario = reader.GetDecimal(2)
+                });
+            }
+
+            return lista;
         }
 
         //public static DataTable ObtenerVentasPorVendedor(List<int> vendedores, DateTime desde, DateTime hasta)
@@ -512,20 +582,22 @@ ORDER BY v.fecha DESC;";
             string estadosInClause = string.Join(",", estadoParams);
 
             cmd.CommandText = $@"
-        SELECT v.fecha,
-               u.nombre + ' ' + u.apellido AS vendedor,
-               c.nombre + ' ' + c.apellido AS cliente,
-               v.tipo_factura,
-               v.total_venta,
-               ev.descripcion AS estado
-        FROM venta_cabecera v
-        JOIN usuario u ON v.id_usuario = u.id_usuario
-        JOIN cliente c ON v.id_cliente = c.id_cliente
-        JOIN estado_venta ev ON v.id_estado = ev.id_estado
-        WHERE v.id_usuario IN ({ids})
-          AND v.id_estado IN ({estadosInClause})
-          AND v.fecha BETWEEN @desde AND @hasta
-        ORDER BY v.fecha DESC";
+                SELECT v.nro_factura,
+                       v.fecha,
+                       u.nombre + ' ' + u.apellido AS vendedor,
+                       c.nombre + ' ' + c.apellido AS cliente,
+                       v.tipo_factura,
+                       v.total_venta,
+                       ev.descripcion AS estado
+                FROM venta_cabecera v
+                JOIN usuario u ON v.id_usuario = u.id_usuario
+                JOIN cliente c ON v.id_cliente = c.id_cliente
+                JOIN estado_venta ev ON v.id_estado = ev.id_estado
+                WHERE v.id_usuario IN ({ids})
+                  AND v.id_estado IN ({estadosInClause})
+                  AND v.fecha BETWEEN @desde AND @hasta
+                ORDER BY v.fecha DESC";
+
 
             cmd.Parameters.AddWithValue("@desde", desde);
             cmd.Parameters.AddWithValue("@hasta", hasta);
@@ -549,20 +621,21 @@ ORDER BY v.fecha DESC;";
             using var cmd = conexion.CreateCommand();
 
             cmd.CommandText = $@"
-        SELECT v.fecha,
-               u.nombre + ' ' + u.apellido AS vendedor,
-               p.nombre AS producto,
-               dv.cantidad AS cantidad_vendida,
-               dv.precio_unitario,
-               (dv.cantidad * dv.precio_unitario) AS total_por_producto
-        FROM venta_cabecera v
-        JOIN venta_detalle dv ON v.id_venta = dv.id_venta
-        JOIN producto p ON dv.id_producto = p.id_producto
-        JOIN usuario u ON v.id_usuario = u.id_usuario
-        WHERE v.id_usuario IN ({ids})
-          AND v.id_estado IN ({estadosStr})
-          AND v.fecha BETWEEN @desde AND @hasta
-        ORDER BY v.fecha DESC";
+            SELECT v.nro_factura,
+                   v.fecha,
+                   u.nombre + ' ' + u.apellido AS vendedor,
+                   p.nombre AS producto,
+                   dv.cantidad AS cantidad_vendida,
+                   dv.precio_unitario,
+                   (dv.cantidad * dv.precio_unitario) AS total_por_producto
+                    FROM venta_cabecera v
+                    JOIN venta_detalle dv ON v.id_venta = dv.id_venta
+                    JOIN producto p ON dv.id_producto = p.id_producto
+                    JOIN usuario u ON v.id_usuario = u.id_usuario
+                    WHERE v.id_usuario IN ({ids})
+                      AND v.id_estado IN ({estadosStr})
+                      AND v.fecha BETWEEN @desde AND @hasta
+                    ORDER BY v.fecha DESC";
 
             cmd.Parameters.AddWithValue("@desde", desde);
             cmd.Parameters.AddWithValue("@hasta", hasta);

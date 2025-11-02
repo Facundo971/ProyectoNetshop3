@@ -1,4 +1,6 @@
-﻿using ProyectoNetshop.Cruds;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using ProyectoNetshop.Cruds;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,12 +8,12 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Globalization;
 
 namespace ProyectoNetshop.formularios
 {
@@ -330,7 +332,7 @@ namespace ProyectoNetshop.formularios
 
             if (!string.IsNullOrWhiteSpace(producto.imagen) && File.Exists(producto.imagen))
             {
-                pbImagenProductoVenta.Image = Image.FromFile(producto.imagen);
+                pbImagenProductoVenta.Image = System.Drawing.Image.FromFile(producto.imagen);
             }
             else
             {
@@ -443,7 +445,8 @@ namespace ProyectoNetshop.formularios
                 cbVentaProductoCancelados.Checked = false;
                 MostrarVentasPorEstadoEnGrid(2); // Finalizado
 
-                decimal total = Venta_controller.ObtenerTotalVentasPorEstado(2);
+                //decimal total = Venta_controller.ObtenerTotalVentasPorEstado(2);
+                decimal total = Venta_controller.ObtenerTotalVentasPorEstadoYVendedor(2, vendedorId);
                 CultureInfo culturaAR = new CultureInfo("es-AR");
                 lbTotalVendidoVenta.Text = total.ToString("C", culturaAR);
                 //lbTotalVendidoVenta.Text = $"${total:0.00}";
@@ -462,7 +465,8 @@ namespace ProyectoNetshop.formularios
                 cbVentaProductoVendidos.Checked = false;
                 MostrarVentasPorEstadoEnGrid(3); // Cancelado
 
-                decimal total = Venta_controller.ObtenerTotalVentasPorEstado(3);
+                //decimal total = Venta_controller.ObtenerTotalVentasPorEstado(3);
+                decimal total = Venta_controller.ObtenerTotalVentasPorEstadoYVendedor(3, vendedorId);
                 CultureInfo culturaAR = new CultureInfo("es-AR");
                 lbTotalVendidoVenta.Text = total.ToString("C", culturaAR);
             }
@@ -788,7 +792,7 @@ namespace ProyectoNetshop.formularios
                 e.PaintBackground(e.CellBounds, true);
 
                 int margen = 4;
-                Rectangle rect = new Rectangle(
+                System.Drawing.Rectangle rect = new System.Drawing.Rectangle(
                     e.CellBounds.X + margen,
                     e.CellBounds.Y + margen,
                     e.CellBounds.Width - 2 * margen,
@@ -1067,6 +1071,21 @@ namespace ProyectoNetshop.formularios
                     decimal totalCarrito = CarritoVentaSession.Carrito.Sum(p => p.precio_unitario * p.cantidad);
                     CultureInfo culturaAR = new CultureInfo("es-AR");
                     lbTotalVendidoVenta.Text = totalCarrito.ToString("C", culturaAR);
+                }
+            }
+
+            // ✅ Botón "Descargar" en ventas finalizadas
+            else if (nombreColumna == "colDescargarPDF")
+            {
+                int idVenta = Convert.ToInt32(dgvVentas.Rows[e.RowIndex].Cells["colIdVenta"].Value);
+
+                try
+                {
+                    GenerarPdfVenta(idVenta); // ✅ Este método lo definís en tu formulario
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al generar el PDF: " + ex.Message, "Error técnico", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1762,6 +1781,64 @@ namespace ProyectoNetshop.formularios
         private void lbTotalVendidoVenta_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void GenerarPdfVenta(int idVenta)
+        {
+            var venta = Venta_controller.ObtenerCabeceraVenta(idVenta);
+            var detalles = Venta_controller.ObtenerDetalleVenta(idVenta);
+            if (venta == null || detalles.Count == 0)
+            {
+                MessageBox.Show("No se pudo generar el PDF. La venta está vacía o no existe.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string ruta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"Venta_{venta.nro_factura ?? idVenta.ToString()}.pdf");
+            using (FileStream stream = new FileStream(ruta, FileMode.Create))
+            {
+                Document doc = new Document(PageSize.A4, 20, 20, 20, 20);
+                PdfWriter.GetInstance(doc, stream);
+                doc.Open();
+
+                var fuenteTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+                var fuenteNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+                var fuenteTabla = FontFactory.GetFont(FontFactory.HELVETICA, 9);
+                CultureInfo culturaAR = new CultureInfo("es-AR");
+
+                doc.Add(new Paragraph("Factura de Venta", fuenteTitulo));
+                doc.Add(new Paragraph($"Fecha: {venta.fecha:dd/MM/yyyy}", fuenteNormal));
+                doc.Add(new Paragraph($"Factura: {venta.nro_factura ?? "Sin número"}", fuenteNormal));
+                doc.Add(new Paragraph($"Cliente: {venta.nombre_cliente}", fuenteNormal));
+                doc.Add(new Paragraph($"Vendedor: {venta.nombre_vendedor}", fuenteNormal));
+                doc.Add(new Paragraph($"Tipo: {venta.tipo_factura}", fuenteNormal));
+                doc.Add(new Paragraph($"Estado: {(venta.id_estado == 2 ? "Finalizado" : "Cancelado")}", fuenteNormal));
+                doc.Add(new Paragraph(" "));
+
+                PdfPTable tabla = new PdfPTable(4);
+                tabla.WidthPercentage = 100;
+                tabla.AddCell("Producto");
+                tabla.AddCell("Cantidad");
+                tabla.AddCell("Precio Unitario");
+                tabla.AddCell("Subtotal");
+
+                foreach (var d in detalles)
+                {
+                    tabla.AddCell(new Phrase(d.producto_nombre, fuenteTabla));
+                    tabla.AddCell(new Phrase(d.cantidad.ToString(), fuenteTabla));
+                    tabla.AddCell(new Phrase(d.precio_unitario.ToString("C", culturaAR), fuenteTabla));
+                    tabla.AddCell(new Phrase((d.precio_unitario * d.cantidad).ToString("C", culturaAR), fuenteTabla));
+                }
+
+                doc.Add(tabla);
+                doc.Add(new Paragraph(" "));
+                //doc.Add(new Paragraph($"TOTAL: {venta.total_venta.ToString("C", culturaAR)}", fuenteNormal));
+                doc.Add(new Paragraph($"TOTAL: {venta.total_venta.ToString("C", culturaAR)}", fuenteTitulo));
+
+                doc.Close();
+                stream.Close();
+            }
+
+            MessageBox.Show("PDF generado correctamente en el escritorio.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
