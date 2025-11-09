@@ -25,6 +25,10 @@ namespace ProyectoNetshop.formularios
         {
             InitializeComponent();
 
+            tbBusquedaNombreProductoDF.KeyPress += txtFiltroNombreProducto_KeyPress;
+            tbBusquedaPrecioMinProductoDF.KeyPress += txtFiltroPrecio_KeyPress;
+            tbBusquedaPrecioMaxProductoDF.KeyPress += txtFiltroPrecio_KeyPress;
+
             //Vendedor
             vendedorDni = p_dni;
             vendedorNombreCompleto = p_nombre;
@@ -33,6 +37,24 @@ namespace ProyectoNetshop.formularios
             tbBusquedaNroFProductoDF.TextChanged += (s, e) => AplicarFiltrosDetalleFactura();
             tbBusquedaPrecioMinProductoDF.TextChanged += (s, e) => AplicarFiltrosDetalleFactura();
             tbBusquedaPrecioMaxProductoDF.TextChanged += (s, e) => AplicarFiltrosDetalleFactura();
+        }
+
+        private void txtFiltroNombreProducto_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) &&
+                !char.IsLetterOrDigit(e.KeyChar) &&
+                e.KeyChar != ' ')
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtFiltroPrecio_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
 
         private void lbTotalDetalleFactura_Click(object sender, EventArgs e)
@@ -71,7 +93,6 @@ namespace ProyectoNetshop.formularios
             dgvVentaCabeceraFactura.Columns.Add("colTotal", "Total");
             dgvVentaCabeceraFactura.Columns.Add("colCliente", "Cliente");
 
-            //var cabeceras = Venta_controller.ObtenerCabecerasPorVendedorNoCanceladas(vendedorDni);
             cabecerasOriginales = Venta_controller.ObtenerCabecerasPorVendedorNoCanceladas(vendedorDni);
 
             decimal totalCabeceras = 0;
@@ -90,7 +111,7 @@ namespace ProyectoNetshop.formularios
                 totalCabeceras += c.totalVenta;
             }
 
-            // ✅ Mostrar total acumulado en el label
+            // Mostrar total acumulado en el label
             lbTotalVendidoCabeceraFactura.Text = totalCabeceras.ToString("C", culturaAR);
         }
 
@@ -103,7 +124,7 @@ namespace ProyectoNetshop.formularios
             dgvDetalleFactura.AllowUserToAddRows = false;
             dgvDetalleFactura.ReadOnly = true;
 
-            // ✅ Encabezados en negrita
+            // Encabezados en negrita
             dgvDetalleFactura.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
 
             dgvDetalleFactura.Columns.Add("colFactura", "Nro Factura");
@@ -112,7 +133,7 @@ namespace ProyectoNetshop.formularios
             dgvDetalleFactura.Columns.Add("colPrecio", "Precio Unitario");
             dgvDetalleFactura.Columns.Add("colTotal", "Total");
 
-            // ✅ Guardar datos originales para aplicar filtros
+            // Guardar datos originales para aplicar filtros
             detallesOriginales = Venta_controller.ObtenerDetallesPorVendedorNoCancelados(vendedorDni);
 
             decimal totalVendido = 0;
@@ -131,7 +152,7 @@ namespace ProyectoNetshop.formularios
                 totalVendido += d.total;
             }
 
-            // ✅ Mostrar total acumulado en el label
+            // Mostrar total acumulado en el label
             lbTotalVendidoDetalleFactura.Text = totalVendido.ToString("C", culturaAR);
         }
 
@@ -172,7 +193,6 @@ namespace ProyectoNetshop.formularios
 
             lbTotalVendidoDetalleFactura.Text = totalFiltrado.ToString("C", culturaAR);
 
-            // 🔍 Aplicar el mismo filtro a la grilla de cabeceras
             var cabecerasFiltradas = cabecerasOriginales
                 .Where(c => c.nroFactura.ToLower().Contains(filtroFactura))
                 .ToList();
@@ -197,6 +217,11 @@ namespace ProyectoNetshop.formularios
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void tbBusquedaNombreProductoDF_TextChanged(object sender, EventArgs e)
         {
 
         }

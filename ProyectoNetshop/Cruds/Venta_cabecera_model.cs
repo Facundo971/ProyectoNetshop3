@@ -12,11 +12,10 @@ namespace ProyectoNetshop.Cruds
         public DateTime fecha { get; set; }
         public decimal total_venta { get; set; }
         public string tipo_factura { get; set; }
-        public int id_usuario { get; set; }   // Vendedor
+        public int id_usuario { get; set; }
         public int id_cliente { get; set; }
         public int id_estado { get; set; }
 
-        // Extras para mostrar en pantalla
         public string estado_descripcion { get; set; }
         public string cliente_nombre { get; set; }
         public string vendedor_nombre { get; set; }

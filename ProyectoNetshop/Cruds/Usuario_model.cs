@@ -19,11 +19,7 @@ namespace ProyectoNetshop.Cruds
         public long? telefono { get; set; }
         public int dni { get; set; }
         public int id_perfil { get; set; }
-
-        // Obtenemos la descripcion del perfil
         public string descripcion { get; set; }
-
-        // Obtenemos la descripcion del ususairo que esta activo
         public string ActivoTexto => activo == 1 ? "SI" : "NO";
 
         public Usuario_model() { }

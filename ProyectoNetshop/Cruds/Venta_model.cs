@@ -13,7 +13,7 @@ namespace ProyectoNetshop.Cruds
         public int id_vendedor { get; set; } // Este es el usuario que realiza la venta
         public DateTime fecha { get; set; }
         public string tipo_factura { get; set; } // A, B, C, etc.
-        public decimal total_venta { get; set; } // ✅ ESTA ES LA PROPIEDAD QUE FALTABA
+        public decimal total_venta { get; set; }
         public string nombre_cliente { get; set; }
         public string nombre_vendedor { get; set; }
         public int id_estado { get; set; }

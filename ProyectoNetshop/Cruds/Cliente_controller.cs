@@ -33,7 +33,6 @@ namespace ProyectoNetshop.Cruds
             cmd.CommandText = @"UPDATE cliente SET nombre = @nombre, apellido = @apellido, email = @email, sexo = @sexo, 
                                 fecha_nacimiento = @fecha_nacimiento, telefono = @telefono, dni = @dni, activo = @activo
                                 WHERE id_cliente = @id_cliente;";
-
             cmd.Parameters.Add("@nombre", SqlDbType.VarChar, 100).Value = p_cliente.nombre;
             cmd.Parameters.Add("@apellido", SqlDbType.VarChar, 100).Value = p_cliente.apellido;
             cmd.Parameters.Add("@email", SqlDbType.VarChar, 200).Value = p_cliente.email;
@@ -69,18 +68,6 @@ namespace ProyectoNetshop.Cruds
             return count > 0;
         }
 
-        //public static int ObtenerIdClientePorDni(int dni)
-        //{
-        //    using var conexion = BD.BaseDeDatos.obtenerConexion();
-        //    using var cmd = conexion.CreateCommand();
-
-        //    cmd.CommandText = "SELECT id_cliente FROM cliente WHERE dni = @dni";
-        //    cmd.Parameters.Add("@dni", SqlDbType.Int).Value = dni;
-
-        //    object resultado = cmd.ExecuteScalar();
-        //    return resultado != null ? Convert.ToInt32(resultado) : -1;
-        //}
-
         public static List<Cliente_model> BuscarClientes(string nombre, string dni, string email)
         {
             var lista = new List<Cliente_model>();
@@ -88,11 +75,10 @@ namespace ProyectoNetshop.Cruds
             using var cmd = conexion.CreateCommand();
 
             cmd.CommandText = @"SELECT id_cliente, nombre, apellido, dni, email FROM cliente
-                        WHERE activo = 1 AND
-                              (@nombre = '' OR nombre + ' ' + apellido LIKE '%' + @nombre + '%') AND
-                              (@dni = '' OR CAST(dni AS VARCHAR) LIKE '%' + @dni + '%') AND
-                              (@email = '' OR email LIKE '%' + @email + '%');";
-
+                                WHERE activo = 1 AND
+                                (@nombre = '' OR nombre + ' ' + apellido LIKE '%' + @nombre + '%') AND
+                                (@dni = '' OR CAST(dni AS VARCHAR) LIKE '%' + @dni + '%') AND
+                                (@email = '' OR email LIKE '%' + @email + '%');";
             cmd.Parameters.Add("@nombre", SqlDbType.VarChar, 200).Value = nombre ?? "";
             cmd.Parameters.Add("@dni", SqlDbType.VarChar, 20).Value = dni ?? "";
             cmd.Parameters.Add("@email", SqlDbType.VarChar, 200).Value = email ?? "";

@@ -15,23 +15,20 @@ namespace vistaDeProyectoC
 {
     public partial class FBackUp : Form
     {
-        // Estado interno
         private string? _cadenaConexion = null;
         private bool _conectado = false;
         public FBackUp()
         {
             InitializeComponent();
 
-            // Estado inicial de controles
             TBBaseDeDatos.Clear();
             TBGuardarRuta.Clear();
-            TBGuardarRuta.Enabled = false;    // no se puede editar hasta conectar
-            TBGuardarRuta.ReadOnly = true;    // evita escribir manualmente la ruta
+            TBGuardarRuta.Enabled = false;
+            TBGuardarRuta.ReadOnly = true;
             BConectar.Enabled = false;
             BGuardarRuta.Enabled = false;
             BBackUp.Enabled = false;
 
-            // Suscripciones: quitar antes de agregar para evitar duplicados si el diseñador ya las asignó
             TBBaseDeDatos.TextChanged -= Campos_TextChanged;
             TBGuardarRuta.TextChanged -= Campos_TextChanged;
             BConectar.Click -= BConectar_Click;
@@ -48,11 +45,11 @@ namespace vistaDeProyectoC
         private void FBackUp_Load(object sender, EventArgs e)
         {
             TBBaseDeDatos.Text = "proyectoT";
-            TBBaseDeDatos.ReadOnly = true; // 🔒 Bloquea edición manual
+            TBBaseDeDatos.ReadOnly = true; //  Bloquea edición manual
             Campos_TextChanged(this, EventArgs.Empty); // Actualiza botones
 
-            TBGuardarRuta.ReadOnly = true;     // Evita escritura manual
-            TBGuardarRuta.Enabled = true;      // Permite que se vea y se actualice desde código
+            TBGuardarRuta.ReadOnly = true; // Evita escritura manual
+            TBGuardarRuta.Enabled = true; // Permite que se vea y se actualice desde código
         }
 
         private void TBBaseDeDatos_TextChanged(object sender, EventArgs e)
@@ -68,7 +65,6 @@ namespace vistaDeProyectoC
             // BGuardarRuta habilitado únicamente cuando ya esté conectada la base
             BGuardarRuta.Enabled = _conectado;
 
-            // Permitir editar/pegar la ruta sólo si _conectado (opcional)
             TBGuardarRuta.ReadOnly = true;
             TBGuardarRuta.Enabled = _conectado;
 
@@ -153,7 +149,7 @@ namespace vistaDeProyectoC
             var nombreBD = TBBaseDeDatos.Text.Trim();
             var archivo = TBGuardarRuta.Text.Trim();
 
-            var dr = MessageBox.Show($"Se generará un BACKUP de la base '{nombreBD}' en:\n{archivo}\n¿Continuar?", "Confirmar Backup", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var dr = MessageBox.Show($"Se generará un BACKUP de la base '{nombreBD}' en:\n{archivo}\n¿Continuar?", "Confirmar Backup", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
             if (dr != DialogResult.Yes) return;
 
             var comandoBackup = $"BACKUP DATABASE [{nombreBD}] TO DISK = N'{archivo}' WITH INIT;";
@@ -164,7 +160,7 @@ namespace vistaDeProyectoC
                 using (var cmd = new SqlCommand(comandoBackup, conn))
                 {
                     conn.Open();
-                    cmd.CommandTimeout = 60 * 10; // 10 minutos
+                    cmd.CommandTimeout = 60 * 10;
                     await cmd.ExecuteNonQueryAsync();
                     conn.Close();
                 }
@@ -173,7 +169,6 @@ namespace vistaDeProyectoC
                 MessageBox.Show("Backup completado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Limpiar campos
-                //TBBaseDeDatos.Clear();
                 TBBaseDeDatos.Text = "proyectoT";
                 TBGuardarRuta.Clear();
 

@@ -136,6 +136,7 @@
             tbBusquedaNombreProductoDF.PlaceholderText = "Nombre del producto";
             tbBusquedaNombreProductoDF.Size = new Size(200, 27);
             tbBusquedaNombreProductoDF.TabIndex = 7;
+            tbBusquedaNombreProductoDF.TextChanged += tbBusquedaNombreProductoDF_TextChanged;
             // 
             // tbBusquedaPrecioMaxProductoDF
             // 

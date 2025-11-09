@@ -14,18 +14,12 @@ namespace ProyectoNetshop.Cruds
         public decimal precio { get; set; }
         public int stock { get; set; }
         public string? imagen { get; set; }
-        public int eliminado { get; set; }      // NO = 1, SI = 0
+        public int eliminado { get; set; } // NO = 1, SI = 0
         public decimal precio_vta { get; set; }
         public int id_marca { get; set; }
         public int id_categoria { get; set; }
-
-        // Obtenemos la descripcion de la marca 
         public string descripcionMarca { get; set; }
-
-        // Obtenemos la descripcion de la categoria
         public string descripcionCategoria { get; set; }
-
-        // Propiedad de solo lectura para mostrar texto legible del estado eliminado
         public string EliminadoTexto => eliminado == 1 ? "NO" : "SI";
 
         public Producto_model() { }

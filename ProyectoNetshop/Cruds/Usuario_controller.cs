@@ -41,8 +41,8 @@ namespace ProyectoNetshop.Cruds
             using var cmd = conexion.CreateCommand();
 
             cmd.CommandText = @"UPDATE usuario SET nombre = @nombre, apellido = @apellido, email = @email, pass = @pass, activo = @activo, sexo = @sexo, 
-                                                    fecha_nacimiento = @fecha_nacimiento, telefono = @telefono, dni = @dni, 
-                                                    id_perfil = @id_perfil WHERE id_usuario = @id_usuario;";
+                                fecha_nacimiento = @fecha_nacimiento, telefono = @telefono, dni = @dni, 
+                                id_perfil = @id_perfil WHERE id_usuario = @id_usuario;";
             cmd.Parameters.Add("@nombre", SqlDbType.VarChar, 100).Value = u.nombre;
             cmd.Parameters.Add("@apellido", SqlDbType.VarChar, 100).Value = u.apellido;
             cmd.Parameters.Add("@email", SqlDbType.VarChar, 200).Value = u.email;
@@ -78,10 +78,7 @@ namespace ProyectoNetshop.Cruds
             var lista = new List<Usuario_model>();
 
             using var conexion = BaseDeDatos.obtenerConexion();
-            using var cmd = new SqlCommand(@"
-        SELECT id_usuario, dni, nombre, apellido 
-        FROM usuario 
-        WHERE id_perfil = 2 AND activo = 1;", conexion);
+            using var cmd = new SqlCommand(@"SELECT id_usuario, dni, nombre, apellido FROM usuario WHERE id_perfil = 2 AND activo = 1;", conexion);
 
             using var reader = cmd.ExecuteReader();
             while (reader.Read())

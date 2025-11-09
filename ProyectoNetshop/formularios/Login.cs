@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using ProyectoNetshop;
 
 namespace vistaDeProyectoC
 {
@@ -25,11 +25,6 @@ namespace vistaDeProyectoC
         public int VendedorId { get; private set; }
         public int VendedorDni { get; private set; }
         public string VendedorNombre { get; private set; }
-
-        ////Cliente
-        //public int ClienteId { get; private set; }
-        //public int ClienteDni { get; private set; }
-        //public string ClienteNombre { get; private set; }
 
         public FInicioSesion()
         {
@@ -109,17 +104,9 @@ namespace vistaDeProyectoC
                 string apellido = reader.GetString(reader.GetOrdinal("apellido"));
 
                 this.VendedorId = Usuario_controller.ObtenerIdUsuarioPorNombre(TBUsuarioLogin.Text);
+                Sesion.UsuarioActualId = this.VendedorId;
                 this.VendedorDni = dni;
                 this.VendedorNombre = $"{nombre} {apellido}";
-
-                ////Cliente
-                //int dni_cliente = reader.GetInt32(reader.GetOrdinal("dni"));
-                //string nombre_cliente = reader.GetString(reader.GetOrdinal("nombre"));
-                //string apellido_cliente = reader.GetString(reader.GetOrdinal("apellido"));
-
-                //this.ClienteId = Usuario_controller.ObtenerIdUsuarioPorNombre(TBUsuarioLogin.Text);
-                //this.ClienteDni = dni_cliente;
-                //this.ClienteNombre = $"{nombre_cliente} {apellido_cliente}";
 
                 //Perfil
                 this.IdPerfil = idPerfil;
@@ -141,7 +128,7 @@ namespace vistaDeProyectoC
 
         private void BCancelar_Click(object sender, EventArgs e)
         {
-            var resp = MessageBox.Show("¿Seguro que deseas salir?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var resp = MessageBox.Show("¿Seguro que deseas salir?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (resp == DialogResult.Yes) this.DialogResult = DialogResult.Cancel;
         }

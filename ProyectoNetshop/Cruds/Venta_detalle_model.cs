@@ -13,15 +13,10 @@ namespace ProyectoNetshop.Cruds
         public decimal precio_unitario { get; set; }
         public int id_venta { get; set; }
         public int id_producto { get; set; }
-
-        // Extras para mostrar en pantalla
         public string producto_nombre { get; set; }
         public string producto_descripcion { get; set; }
-
-        // Nuevos campos para recuperar datos completos
         public string descripcionCategoria { get; set; }
         public string descripcionMarca { get; set; }
-
         public int id_cliente { get; set; }
         public string nombre_cliente { get; set; }
         public string dni_cliente { get; set; }

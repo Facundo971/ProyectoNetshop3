@@ -168,6 +168,10 @@ namespace ProyectoNetshop.formularios
             var tbMax = panelVistaProductosVenta.Controls["tbFiltroPrecioMax"] as TextBox;
             var lblTitulo = panelVistaProductosVenta.Controls["lblTituloProductos"] as Label;
 
+            tbNombre.KeyPress += txtFiltroNombre_KeyPress;
+            tbMin.KeyPress += txtFiltroPrecio_KeyPress;
+            tbMax.KeyPress += txtFiltroPrecio_KeyPress;
+
             lblTitulo.ForeColor = Color.White;
             tbNombre.Text = "";
             tbMin.Text = "";
@@ -221,6 +225,24 @@ namespace ProyectoNetshop.formularios
 
             dgvProductosVenta.Columns["colPrecio"].DefaultCellStyle.Format = "C";
             dgvProductosVenta.Columns["colPrecio"].DefaultCellStyle.FormatProvider = new CultureInfo("es-AR");
+        }
+
+        private void txtFiltroPrecio_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtFiltroNombre_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) &&
+                !char.IsLetterOrDigit(e.KeyChar) &&
+                e.KeyChar != ' ')
+            {
+                e.Handled = true;
+            }
         }
 
         private void AplicarFiltroProductos()
@@ -610,7 +632,7 @@ namespace ProyectoNetshop.formularios
             panelVistaProductosVenta.Name = "panelVistaProductosVenta";
 
             panelVistaProductosVenta.Size = new Size(this.ClientSize.Width, this.ClientSize.Height / 2);
-            panelVistaProductosVenta.Location = new Point(0, 60); // más arriba
+            panelVistaProductosVenta.Location = new Point(0, 60);
             panelVistaProductosVenta.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
             panelVistaProductosVenta.Visible = false;
@@ -878,7 +900,7 @@ namespace ProyectoNetshop.formularios
                     return;
                 }
 
-                DialogResult confirm = MessageBox.Show("¿Está seguro que desea cancelar esta venta?", "Confirmar cancelación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult confirm = MessageBox.Show("¿Está seguro que desea cancelar esta venta?", "Confirmar cancelación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
 
                 if (confirm == DialogResult.Yes)
                 {
@@ -904,7 +926,7 @@ namespace ProyectoNetshop.formularios
             // Botón "Borrar" en el carrito (ventas pendientes)
             else if (nombreColumna == "colBorrar")
             {
-                DialogResult confirm = MessageBox.Show("¿Deseás eliminar este producto del carrito?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult confirm = MessageBox.Show("¿Deseás eliminar este producto del carrito?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (confirm != DialogResult.Yes) return;
 
                 string nombreProducto = dgvVentas.Rows[e.RowIndex].Cells["colNombre"].Value?.ToString();
@@ -943,7 +965,7 @@ namespace ProyectoNetshop.formularios
                         return;
                     }
 
-                    DialogResult respuesta = MessageBox.Show("PDF generado correctamente.\n¿Deseás visualizarlo ahora?", "PDF generado", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    DialogResult respuesta = MessageBox.Show("PDF generado correctamente.\n¿Deseás visualizarlo ahora?", "PDF generado", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
                     if (respuesta == DialogResult.Yes)
                     {
@@ -1265,7 +1287,7 @@ namespace ProyectoNetshop.formularios
                 fecha = fechaVenta,
                 tipo_factura = tipoFactura,
                 total_venta = totalCalculado,
-                id_estado = 2 // ✅ Estado "Finalizado"
+                id_estado = 2
             };
 
             // Generar número de factura automáticamente

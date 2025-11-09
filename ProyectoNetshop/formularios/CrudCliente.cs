@@ -27,13 +27,13 @@ namespace vistaDeProyectoC
             cbInactivos.CheckedChanged += Filtro_CheckedChanged;
 
             this.Load += FRegistrarCliente_Load;
-  
+
             tbNombre.TextChanged += InputFields_Changed;
             tbApellido.TextChanged += InputFields_Changed;
             tbDNI.TextChanged += InputFields_Changed;
             tbEmail.TextChanged += InputFields_Changed;
             tbTelefono.TextChanged += InputFields_Changed;
-       
+
             rbMasculino.CheckedChanged += InputFields_Changed;
             rbFemenino.CheckedChanged += InputFields_Changed;
             rbOtros.CheckedChanged += InputFields_Changed;
@@ -164,12 +164,12 @@ namespace vistaDeProyectoC
             fechaNacimiento.Format = DateTimePickerFormat.Custom;
             fechaNacimiento.CustomFormat = "dd/MM/yyyy";
 
-            //dgvClientes.DataSource = ObtenerClientes();
-            //dgvClientes.ClearSelection();
-
             // Configurar columnas fijas para controlar nombres y formateo
             dgvClientes.AutoGenerateColumns = false;
             dgvClientes.Columns.Clear();
+
+            // Ajustar columnas al ancho del grid
+            dgvClientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
             {
@@ -222,11 +222,13 @@ namespace vistaDeProyectoC
             dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "activo",
-                DataPropertyName = "activo", // CellFormatting convertirá 1/0 a SI/NO
+                DataPropertyName = "activo",
                 HeaderText = "Activo"
             });
 
-            // por último bind
+            //Ocultar la columna id_usuario
+            dgvClientes.Columns["id_cliente"].Visible = false;
+
             dgvClientes.DataSource = ObtenerClientes();
             dgvClientes.ClearSelection();
 
@@ -294,7 +296,7 @@ namespace vistaDeProyectoC
 
             // Se confirmar cual acción de se va a ejecutar (crear o actualizar)
             string accion = _clienteSeleccionadoId < 0 ? "crear" : "actualizar";
-            var dr = MessageBox.Show($"¿Seguro que deseas {accion} este cliente?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var dr = MessageBox.Show($"¿Seguro que deseas {accion} este cliente?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;
@@ -341,7 +343,7 @@ namespace vistaDeProyectoC
                 return;
             }
 
-            var dr = MessageBox.Show("¿Seguro que deseas desactivar este cliente?", "Confirmar baja", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var dr = MessageBox.Show("¿Seguro que deseas desactivar este cliente?", "Confirmar baja", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;
@@ -380,7 +382,9 @@ namespace vistaDeProyectoC
             {
                 fechaNacimiento.Checked = false;
 
-            } else{
+            }
+            else
+            {
                 fechaNacimiento.Checked = true;
                 fechaNacimiento.Value = (DateTime)cliente.fecha_nacimiento;
             }
@@ -468,7 +472,7 @@ namespace vistaDeProyectoC
             rbFemenino.Checked = false;
             rbOtros.Checked = true;
             fechaNacimiento.Value = DateTime.Today;
-            fechaNacimiento.Checked = false;          
+            fechaNacimiento.Checked = false;
             btnGuardar.Enabled = false;
 
             // Ocultar el GroupBox cuando no hay selección o al limpiar
@@ -650,11 +654,15 @@ namespace vistaDeProyectoC
             {
                 var cb = (CheckBox)sender;
                 cb.Checked = true;
-                //MessageBox.Show("Debe haber al menos una opción seleccionada (Activos o Inactivos).", "Filtro obligatorio", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             FiltrarYRefrescar();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

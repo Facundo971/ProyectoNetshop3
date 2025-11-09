@@ -12,7 +12,7 @@ internal static class Program
         // Ajusta estilos y configuración visual antes de crear formularios
         ApplicationConfiguration.Initialize();
 
-        //// Crea el formulario de inicio de sesión
+        // Crea el formulario de inicio de sesión
         using var login = new FInicioSesion();
 
         // Pregunta si es usuario validó
@@ -24,7 +24,5 @@ internal static class Program
                 login.VendedorNombre,
                 login.VendedorId));
         }
-
-        //Application.Run(new principal(1, 30123457, "Juan"));
     }
 }

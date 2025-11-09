@@ -14,16 +14,8 @@ namespace ProyectoNetshop
         private string vendedorNombre;
         private int vendedorId;
 
-        ////Cliente
-        //private int clienteDni;
-        //private string clienteNombre;
-        //private int clienteId;
-
         // Constructor
-        public principal(int p_idPerfil, //Perfil
-                         int p_dni, string p_nombre, int p_id_vendedor //Vendedor
-                                                                       //int p_dni_cliente, string p_nombre_cliente, int p_id_cliente //Cliente
-                         )
+        public principal(int p_idPerfil, int p_dni, string p_nombre, int p_id_vendedor)
         {
             InitializeComponent();
 
@@ -39,11 +31,6 @@ namespace ProyectoNetshop
             vendedorNombre = p_nombre;
             vendedorId = p_id_vendedor;
 
-            ////Cliente
-            //clienteDni = p_dni_cliente;
-            //clienteNombre = p_nombre_cliente;
-            //clienteId = p_id_cliente;
-
             // Validamos el acceso según el perfil del usuario
             AplicarPermisos();
         }
@@ -52,7 +39,7 @@ namespace ProyectoNetshop
         private void iconButton6_Click(object sender, EventArgs e)
         {
             // Se muestra un mensaje
-            var respuesta = MessageBox.Show("¿Estás seguro que deseas cerrar sesión y volver al login?", "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var respuesta = MessageBox.Show("¿Estás seguro que deseas cerrar sesión y volver al login?", "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             // Si el usuario dice Sí, reinicio la app
             if (respuesta == DialogResult.Yes)
@@ -171,18 +158,18 @@ namespace ProyectoNetshop
                 case 1: // Administrador
                     btnIconUsuarios.Enabled = true;
                     btnIconBackup.Enabled = true;
-                    btnIconReportes.Enabled = true;
+                    btnIconReportes.Enabled = false;
                     break;
 
                 case 2: // Vendedor
                     btnIconVentas.Enabled = true;
-                    //btnIconClientes.Enabled = true;
+                    btnIconClientes.Enabled = true;
                     btnIconReportes.Enabled = true;
                     btnIconDetalleFacturas.Enabled = true;
                     break;
 
                 case 3: // Gerente
-                    btnIconVentas.Enabled = true;
+                    //btnIconVentas.Enabled = true;
                     btnIconProductos.Enabled = true;
                     btnIconReportes.Enabled = true;
                     break;
@@ -197,6 +184,7 @@ namespace ProyectoNetshop
 
         }
 
+        // Al hacer clic en “Facturas”, abre el formulario para ver las ventas cabeceras y detalles
         private void btnIconDetalleFacturas_Click(object sender, EventArgs e)
         {
             AbrirFormularioEnPanel(new formularios.DetalleFactura(vendedorDni, vendedorNombre));

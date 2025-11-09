@@ -124,6 +124,9 @@ namespace ProyectoNetshop.formularios
             dgvUsuarios.AutoGenerateColumns = false;
             dgvUsuarios.Columns.Clear();
 
+            // Ajustar columnas al ancho del grid
+            dgvUsuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
             dgvUsuarios.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "id_usuario",
@@ -191,6 +194,9 @@ namespace ProyectoNetshop.formularios
                 DataPropertyName = "ActivoTexto"
             });
 
+            //Ocultar la columna id_usuario
+            dgvUsuarios.Columns["id_usuario"].Visible = false;
+
             // Asigno la lista ya procesada
             dgvUsuarios.DataSource = usuarios;
         }
@@ -206,12 +212,11 @@ namespace ProyectoNetshop.formularios
             }
         }
 
-        // Nuevo manejador: clic del mouse sobre el DataGridView
+        // Manejador de clic del mouse sobre el DataGridView
         private void DgvUsuarios_MouseDown(object? sender, MouseEventArgs e)
         {
             var hit = dgvUsuarios.HitTest(e.X, e.Y);
 
-            // Si el clic no fue sobre una fila válida (hit.RowIndex < 0) limpiamos selección
             if (hit.RowIndex < 0)
             {
                 dgvUsuarios.ClearSelection();
@@ -220,18 +225,11 @@ namespace ProyectoNetshop.formularios
             }
             else
             {
-                // Si clic sobre una fila, seleccionamos esa fila (comportamiento visual)
                 dgvUsuarios.ClearSelection();
                 dgvUsuarios.Rows[hit.RowIndex].Selected = true;
-
-                // También podemos forzar que se dispare el mismo flujo que CellClick
-                // para cargar controles si no se usa CellClick por Key/Mouse:
-                // var args = new DataGridViewCellEventArgs(hit.ColumnIndex, hit.RowIndex);
-                // DgvUsuarios_CellClick(this, args);
             }
         }
 
-        // Manejar clics fuera del DataGridView — ejemplo en el formulario o contenedores principales
         private void Form_Or_Container_Click(object? sender, EventArgs e)
         {
             dgvUsuarios.ClearSelection();
@@ -264,7 +262,7 @@ namespace ProyectoNetshop.formularios
 
             // Se confirmar cual acción de se va a ejecutar (crear o actualizar)
             string accion = _usuarioSeleccionadoId < 0 ? "crear" : "actualizar";
-            var dr = MessageBox.Show($"¿Seguro que deseas {accion} este usuario?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var dr = MessageBox.Show($"¿Seguro que deseas {accion} este usuario?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;
@@ -286,9 +284,6 @@ namespace ProyectoNetshop.formularios
                 sexo = rbMasculinoUsuario.Checked ? "Masculino"
                                   : rbFemeninoUsuario.Checked ? "Femenino"
                                                                   : "Otros",
-                //fecha_nacimiento = fechaNacimientoUsuario.Checked ? fechaNacimientoUsuario.Value.Date : (DateTime?)null,
-                // Si el DateTimePicker está chequeado uso su valor, si no estoy en actualización uso null,
-                // si estoy actualizando y no lo tocaron, conservo el valor del usuario seleccionado.
                 fecha_nacimiento = fechaNacimientoUsuario.Checked ? fechaNacimientoUsuario.Value.Date
                                                                   : (_usuarioSeleccionadoId >= 0 ? usuarioSeleccionado?.fecha_nacimiento : (DateTime?)null),
                 telefono = long.TryParse(tbTelefonoUsuario.Text.Trim(), out long tel) ? (long?)tel : (long?)null,
@@ -359,12 +354,9 @@ namespace ProyectoNetshop.formularios
             using var rd = cmd.ExecuteReader();
             while (rd.Read())
             {
-                // fecha_nacimiento ya la tienes bien:
                 DateTime? fn = rd.IsDBNull(7)
                     ? (DateTime?)null
                     : rd.GetDateTime(7);
-                //long? tel = rd.IsDBNull(8) ? (long?)null : rd.GetInt64(8);
-                // telefono: manejar bigint o varchar en la DB
                 long? tel = null;
                 if (!rd.IsDBNull(8))
                 {
@@ -423,11 +415,6 @@ namespace ProyectoNetshop.formularios
             rbMasculinoUsuario.Checked = u.sexo == "Masculino";
             rbFemeninoUsuario.Checked = u.sexo == "Femenino";
             rbOtrosUsuario.Checked = u.sexo == "Otros";
-
-            //if (!u.fecha_nacimiento.HasValue)
-            //    fechaNacimientoUsuario.CustomFormat = " ";
-            //else
-            //    fechaNacimientoUsuario.CustomFormat = "dd/MM/yyyy";
 
             if (!u.fecha_nacimiento.HasValue)
             {
@@ -510,7 +497,7 @@ namespace ProyectoNetshop.formularios
             // Indica que ya no hay un usuario seleccionado
             _usuarioSeleccionadoId = -1;
 
-            // Ocultar el groupbox en modo "nuevo usuario"
+            // Ocultar el groupbox
             gbActivoUsuario.Visible = false;
         }
         private void btnEliminar_Click(object sender, EventArgs e)
@@ -522,7 +509,14 @@ namespace ProyectoNetshop.formularios
                 return;
             }
 
-            var dr = MessageBox.Show("¿Seguro que deseas desactivar este usuario?", "Confirmar baja", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (_usuarioSeleccionadoId == Sesion.UsuarioActualId)
+            {
+                MessageBox.Show("No puedes desactivar tu propio usuario.", "Acción no permitida",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var dr = MessageBox.Show("¿Seguro que deseas desactivar este usuario?", "Confirmar baja", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;

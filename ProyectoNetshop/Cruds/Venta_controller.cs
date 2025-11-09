@@ -16,9 +16,8 @@ namespace ProyectoNetshop.Cruds
             using var cmd = conexion.CreateCommand();
 
             cmd.CommandText = @"INSERT INTO venta_cabecera (fecha, total_venta, tipo_factura, id_usuario, id_cliente, id_estado)
-                        VALUES (@fecha, 0, @tipo, @usuario, @cliente, 1);
-                        SELECT SCOPE_IDENTITY();";
-
+                                VALUES (@fecha, 0, @tipo, @usuario, @cliente, 1);
+                                SELECT SCOPE_IDENTITY();";
             cmd.Parameters.AddWithValue("@fecha", fecha);
             cmd.Parameters.AddWithValue("@tipo", tipoFactura);
             cmd.Parameters.AddWithValue("@usuario", idUsuario);
@@ -33,8 +32,7 @@ namespace ProyectoNetshop.Cruds
             using var cmd = conexion.CreateCommand();
 
             cmd.CommandText = @"INSERT INTO venta_detalle (cantidad, precio_unitario, id_venta, id_producto)
-                        VALUES (@cantidad, @precio, @venta, @producto);";
-
+                                VALUES (@cantidad, @precio, @venta, @producto);";
             cmd.Parameters.AddWithValue("@cantidad", cantidad);
             cmd.Parameters.AddWithValue("@precio", precioUnitario);
             cmd.Parameters.AddWithValue("@venta", idVenta);
@@ -47,10 +45,9 @@ namespace ProyectoNetshop.Cruds
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
             using var cmd = conexion.CreateCommand();
-            cmd.CommandText = @"
-                    INSERT INTO venta_cabecera (id_cliente, id_usuario, fecha, tipo_factura, total_venta, id_estado, nro_factura)
-                    OUTPUT INSERTED.id_venta
-                    VALUES (@id_cliente, @id_usuario, @fecha, @tipo_factura, @total_venta, @id_estado, @nro_factura);";
+            cmd.CommandText = @"INSERT INTO venta_cabecera (id_cliente, id_usuario, fecha, tipo_factura, total_venta, id_estado, nro_factura)
+                                OUTPUT INSERTED.id_venta
+                                VALUES (@id_cliente, @id_usuario, @fecha, @tipo_factura, @total_venta, @id_estado, @nro_factura);";
             cmd.Parameters.Add("@id_cliente", SqlDbType.Int).Value = venta.id_cliente;
             cmd.Parameters.Add("@id_usuario", SqlDbType.Int).Value = venta.id_vendedor;
             cmd.Parameters.Add("@fecha", SqlDbType.Date).Value = venta.fecha;
@@ -66,10 +63,8 @@ namespace ProyectoNetshop.Cruds
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
             using var cmd = conexion.CreateCommand();
-            cmd.CommandText = @"
-        INSERT INTO venta_detalle (id_venta, id_producto, cantidad, precio_unitario)
-        VALUES (@id_venta, @id_producto, @cantidad, @precio_unitario);";
-
+            cmd.CommandText = @"INSERT INTO venta_detalle (id_venta, id_producto, cantidad, precio_unitario)
+                                VALUES (@id_venta, @id_producto, @cantidad, @precio_unitario);";
             cmd.Parameters.Add("@id_venta", SqlDbType.Int).Value = detalle.id_venta;
             cmd.Parameters.Add("@id_producto", SqlDbType.Int).Value = detalle.id_producto;
             cmd.Parameters.Add("@cantidad", SqlDbType.Int).Value = detalle.cantidad;
@@ -85,13 +80,13 @@ namespace ProyectoNetshop.Cruds
             using var conexion = BD.BaseDeDatos.obtenerConexion();
             using var cmd = conexion.CreateCommand();
             cmd.CommandText = @"SELECT v.id_venta, v.nro_factura, v.fecha, v.tipo_factura, v.total_venta, v.id_estado,
-                                    c.nombre + ' ' + c.apellido AS nombre_cliente,
-                                    u.nombre + ' ' + u.apellido AS nombre_vendedor
-                                    FROM venta_cabecera v
-                                    JOIN cliente c ON v.id_cliente = c.id_cliente
-                                    JOIN usuario u ON v.id_usuario = u.id_usuario
-                                    WHERE v.id_estado = @estado AND v.id_usuario = @idUsuario
-                                    ORDER BY v.fecha DESC;";
+                                c.nombre + ' ' + c.apellido AS nombre_cliente,
+                                u.nombre + ' ' + u.apellido AS nombre_vendedor
+                                FROM venta_cabecera v
+                                JOIN cliente c ON v.id_cliente = c.id_cliente
+                                JOIN usuario u ON v.id_usuario = u.id_usuario
+                                WHERE v.id_estado = @estado AND v.id_usuario = @idUsuario
+                                ORDER BY v.fecha DESC;";
             cmd.Parameters.AddWithValue("@estado", estado);
             cmd.Parameters.AddWithValue("@idUsuario", idUsuario);
 
@@ -101,7 +96,6 @@ namespace ProyectoNetshop.Cruds
                 var venta = new Venta_model
                 {
                     id_venta = reader.GetInt32(0),
-                    //nro_factura = reader.GetString(1),
                     nro_factura = reader.IsDBNull(1) ? null : reader.GetString(1),
                     fecha = reader.GetDateTime(2),
                     tipo_factura = reader.GetString(3),
@@ -167,10 +161,9 @@ namespace ProyectoNetshop.Cruds
 
             try
             {
-                // 1. Obtener cabecera original
+                // Se obtiene la cabecera original
                 var cmdCab = conexion.CreateCommand();
                 cmdCab.Transaction = transaccion;
-                //cmdCab.CommandText = @"SELECT id_cliente, id_usuario, fecha, tipo_factura, total_venta FROM venta_cabecera WHERE id_venta = @id";
                 cmdCab.CommandText = @"SELECT id_cliente, id_usuario, fecha, tipo_factura, total_venta, nro_factura FROM venta_cabecera WHERE id_venta = @id";
                 cmdCab.Parameters.AddWithValue("@id", idVentaOriginal);
 
@@ -196,15 +189,12 @@ namespace ProyectoNetshop.Cruds
                     nroFacturaOriginal = reader.IsDBNull(5) ? null : reader.GetString(5);
                 }
 
-                //MessageBox.Show("Cabecera original leída correctamente.");
-
-                // 2. Insertar nueva cabecera con total negativo y estado Cancelado (3)
+                // Se inserta la nueva cabecera con total negativo y estado Cancelado (3)
                 var cmdNuevaCab = conexion.CreateCommand();
                 cmdNuevaCab.Transaction = transaccion;
-                cmdNuevaCab.CommandText = @"
-                    INSERT INTO venta_cabecera (id_cliente, id_usuario, fecha, tipo_factura, total_venta, id_estado, nro_factura)
-                    OUTPUT INSERTED.id_venta
-                    VALUES (@cliente, @usuario, @fecha, @tipo, @total, 3, @nro_factura)";
+                cmdNuevaCab.CommandText = @"INSERT INTO venta_cabecera (id_cliente, id_usuario, fecha, tipo_factura, total_venta, id_estado, nro_factura)
+                                            OUTPUT INSERTED.id_venta
+                                            VALUES (@cliente, @usuario, @fecha, @tipo, @total, 3, @nro_factura)";
                 cmdNuevaCab.Parameters.AddWithValue("@cliente", idCliente);
                 cmdNuevaCab.Parameters.AddWithValue("@usuario", idUsuario);
                 cmdNuevaCab.Parameters.AddWithValue("@fecha", fecha);
@@ -212,12 +202,9 @@ namespace ProyectoNetshop.Cruds
                 cmdNuevaCab.Parameters.AddWithValue("@total", -total); // monto negativo
                 cmdNuevaCab.Parameters.AddWithValue("@nro_factura", nroFacturaOriginal ?? (object)DBNull.Value);
 
-                //int idVentaNueva = (int)cmdNuevaCab.ExecuteScalar();
-                //int nroVentaNueva = nroFacturaOriginal.ExecuteScalar();
+                int idVentaNueva = (int)cmdNuevaCab.ExecuteScalar();
 
-                //MessageBox.Show("Nueva cabecera insertada con Nro de Factura: " + nroVentaNueva);
-
-                // 3. Obtener detalles originales
+                // Se obtenie el detalle original
                 var cmdDet = conexion.CreateCommand();
                 cmdDet.Transaction = transaccion;
                 cmdDet.CommandText = @"SELECT id_producto, cantidad, precio_unitario FROM venta_detalle WHERE id_venta = @id";
@@ -236,8 +223,6 @@ namespace ProyectoNetshop.Cruds
                     }
                 }
 
-                //MessageBox.Show("Cantidad de detalles encontrados: " + detalles.Count);
-
                 if (detalles.Count == 0)
                 {
                     MessageBox.Show("La venta no tiene productos asociados.");
@@ -246,20 +231,9 @@ namespace ProyectoNetshop.Cruds
 
                 int cantidadTotalDevuelta = 0;
 
-                // 4. Devolver stock
+                // Se devuelve el stock
                 foreach (var d in detalles)
                 {
-                    //    var cmdIns = conexion.CreateCommand();
-                    //    cmdIns.Transaction = transaccion;
-                    //    cmdIns.CommandText = @"
-                    //INSERT INTO venta_detalle (id_venta, id_producto, cantidad, precio_unitario)
-                    //VALUES (@venta, @producto, @cantidad, @precio)";
-                    //    cmdIns.Parameters.AddWithValue("@venta", idVentaNueva);
-                    //    cmdIns.Parameters.AddWithValue("@producto", d.id_producto);
-                    //    cmdIns.Parameters.AddWithValue("@cantidad", d.cantidad);
-                    //    cmdIns.Parameters.AddWithValue("@precio", d.precio_unitario);
-                    //    cmdIns.ExecuteNonQuery();
-
                     cantidadTotalDevuelta += d.cantidad;
 
                     var cmdStock = conexion.CreateCommand();
@@ -271,8 +245,6 @@ namespace ProyectoNetshop.Cruds
                 }
 
                 transaccion.Commit();
-                //MessageBox.Show("Venta cancelada correctamente.");
-                //MessageBox.Show("Venta cancelada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 MessageBox.Show(
                     $"✅ Venta cancelada correctamente.\n" +
                     $"📦 Stock devuelto: {cantidadTotalDevuelta} unidades\n" +
@@ -297,12 +269,10 @@ namespace ProyectoNetshop.Cruds
             using var conexion = BD.BaseDeDatos.obtenerConexion();
             using var cmd = conexion.CreateCommand();
 
-            cmd.CommandText = @"
-        SELECT COUNT(*) 
-        FROM venta_cabecera 
-        WHERE nro_factura = (
-            SELECT nro_factura FROM venta_cabecera WHERE id_venta = @idOriginal
-        ) AND id_estado = 3";
+            cmd.CommandText = @"SELECT COUNT(*) FROM venta_cabecera 
+                                WHERE nro_factura = (
+                                    SELECT nro_factura FROM venta_cabecera WHERE id_venta = @idOriginal
+                                ) AND id_estado = 3";
 
             cmd.Parameters.AddWithValue("@idOriginal", idVentaOriginal);
 
@@ -315,10 +285,7 @@ namespace ProyectoNetshop.Cruds
             using var conexion = BD.BaseDeDatos.obtenerConexion();
             using var cmd = conexion.CreateCommand();
 
-            cmd.CommandText = @"
-        SELECT COUNT(*) 
-        FROM venta_cabecera 
-        WHERE nro_factura = @nroFactura AND id_estado = 3";
+            cmd.CommandText = @"SELECT COUNT(*) FROM venta_cabecera WHERE nro_factura = @nroFactura AND id_estado = 3";
 
             cmd.Parameters.AddWithValue("@nroFactura", nroFactura);
 
@@ -330,14 +297,13 @@ namespace ProyectoNetshop.Cruds
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
             using var cmd = conexion.CreateCommand();
-            cmd.CommandText = @"
-        SELECT v.nro_factura, v.fecha, v.tipo_factura, v.total_venta, v.id_estado,
-               c.nombre + ' ' + c.apellido AS cliente,
-               u.nombre + ' ' + u.apellido AS vendedor
-        FROM venta_cabecera v
-        JOIN cliente c ON v.id_cliente = c.id_cliente
-        JOIN usuario u ON v.id_usuario = u.id_usuario
-        WHERE v.id_venta = @id";
+            cmd.CommandText = @"SELECT v.nro_factura, v.fecha, v.tipo_factura, v.total_venta, v.id_estado,
+                               c.nombre + ' ' + c.apellido AS cliente,
+                               u.nombre + ' ' + u.apellido AS vendedor
+                               FROM venta_cabecera v
+                               JOIN cliente c ON v.id_cliente = c.id_cliente
+                               JOIN usuario u ON v.id_usuario = u.id_usuario
+                               WHERE v.id_venta = @id";
             cmd.Parameters.AddWithValue("@id", idVenta);
 
             using var reader = cmd.ExecuteReader();
@@ -360,11 +326,9 @@ namespace ProyectoNetshop.Cruds
             var lista = new List<Venta_detalle_model>();
             using var conexion = BD.BaseDeDatos.obtenerConexion();
             using var cmd = conexion.CreateCommand();
-            cmd.CommandText = @"
-        SELECT p.nombre, vd.cantidad, vd.precio_unitario
-        FROM venta_detalle vd
-        JOIN producto p ON vd.id_producto = p.id_producto
-        WHERE vd.id_venta = @id";
+            cmd.CommandText = @"SELECT p.nombre, vd.cantidad, vd.precio_unitario FROM venta_detalle vd
+                                JOIN producto p ON vd.id_producto = p.id_producto
+                                WHERE vd.id_venta = @id";
             cmd.Parameters.AddWithValue("@id", idVenta);
 
             using var reader = cmd.ExecuteReader();

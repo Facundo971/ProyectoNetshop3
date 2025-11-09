@@ -47,12 +47,11 @@ namespace ProyectoNetshop.Cruds
             using var cmd = conexion.CreateCommand();
 
             cmd.CommandText = @"UPDATE producto SET nombre = @nombre, descripcion = @descripcion, precio = @precio, stock = @stock, imagen = @imagen, 
-                                                    eliminado = @eliminado, precio_vta = @precio_vta, id_marca = @id_marca, 
-                                                    id_categoria = @id_categoria WHERE id_producto = @id_producto;";
+                                eliminado = @eliminado, precio_vta = @precio_vta, id_marca = @id_marca, 
+                                id_categoria = @id_categoria WHERE id_producto = @id_producto;";
 
             cmd.Parameters.Add("@nombre", SqlDbType.VarChar, 100).Value = p_producto.nombre;
 
-            // descripcion e imagen opcionales: si son null o vacías, guardamos DBNull
             cmd.Parameters.Add("@descripcion", SqlDbType.VarChar, 200).Value = string.IsNullOrWhiteSpace(p_producto.descripcion) ? (object)DBNull.Value : p_producto.descripcion;
             cmd.Parameters.Add("@imagen", SqlDbType.VarChar, 200).Value = string.IsNullOrWhiteSpace(p_producto.imagen) ? (object)DBNull.Value : p_producto.imagen;
 
@@ -71,7 +70,6 @@ namespace ProyectoNetshop.Cruds
             cmd.Parameters.Add("@id_marca", SqlDbType.Int).Value = p_producto.id_marca;
             cmd.Parameters.Add("@id_categoria", SqlDbType.Int).Value = p_producto.id_categoria;
 
-            // id_producto para el WHERE
             cmd.Parameters.Add("@id_producto", SqlDbType.Int).Value = p_producto.id_producto;
 
             return cmd.ExecuteNonQuery();
@@ -92,11 +90,9 @@ namespace ProyectoNetshop.Cruds
             using var conexion = BD.BaseDeDatos.obtenerConexion();
             using var cmd = conexion.CreateCommand();
 
-            cmd.CommandText = @"
-    SELECT * FROM producto 
-    WHERE eliminado = 1 AND 
-          (@nombre = '' OR nombre LIKE '%' + @nombre + '%') AND 
-          (@id IS NULL OR id_producto = @id);";
+            cmd.CommandText = @"SELECT * FROM producto WHERE eliminado = 1 AND 
+                              (@nombre = '' OR nombre LIKE '%' + @nombre + '%') AND 
+                              (@id IS NULL OR id_producto = @id);";
 
             cmd.Parameters.Add("@nombre", SqlDbType.VarChar, 100).Value = nombre;
 
@@ -126,7 +122,6 @@ namespace ProyectoNetshop.Cruds
                     id_categoria = reader.GetInt32(reader.GetOrdinal("id_categoria"))
                 };
 
-                // ✅ Agregar descripciones legibles de categoría y marca
                 p.descripcionCategoria = Categoria_controller.ObtenerDescripcion(p.id_categoria);
                 p.descripcionMarca = Marca_controller.ObtenerDescripcion(p.id_marca);
 
@@ -187,7 +182,6 @@ namespace ProyectoNetshop.Cruds
                     id_categoria = reader.GetInt32(reader.GetOrdinal("id_categoria"))
                 };
 
-                // ✅ Agregar descripciones legibles de categoría y marca
                 p.descripcionCategoria = Categoria_controller.ObtenerDescripcion(p.id_categoria);
                 p.descripcionMarca = Marca_controller.ObtenerDescripcion(p.id_marca);
 

@@ -95,20 +95,19 @@ namespace ProyectoNetshop.formularios
             chartVentas = new System.Windows.Forms.DataVisualization.Charting.Chart();
             chartVentas.Size = new Size(300, 200);
             chartVentas.Location = new Point(10, 430);
-            chartVentas.BackColor = Color.FromArgb(0, 0, 64); // fondo del control Chart
+            chartVentas.BackColor = Color.FromArgb(0, 0, 64);
             chartVentas.BorderlineDashStyle = ChartDashStyle.NotSet;
             chartVentas.BorderlineWidth = 0;
             chartVentas.BorderlineColor = Color.Transparent;
             chartVentas.Visible = false;
 
             ChartArea area = new ChartArea("MainArea");
-            area.BackColor = Color.FromArgb(0, 0, 64); // fondo del área de gráfico
+            area.BackColor = Color.FromArgb(0, 0, 64);
             area.BorderColor = Color.Transparent;
             area.BorderDashStyle = ChartDashStyle.NotSet;
             area.BorderWidth = 0;
             chartVentas.ChartAreas.Add(area);
 
-            // Leyenda con fondo azul y texto blanco
             Legend leyenda = new Legend("Vendedores");
             leyenda.BackColor = Color.FromArgb(0, 0, 64);
             leyenda.ForeColor = Color.White;
@@ -150,6 +149,11 @@ namespace ProyectoNetshop.formularios
             clbVendedoresReporteGerente.MouseClick += clbVendedoresReporteGerente_MouseClick;
             clbVendedoresReporteGerente.Leave += clbVendedoresReporteGerente_Leave;
 
+            tbBusquedaClienteReporteG.KeyPress += txtFiltroNombreCliente_KeyPress;
+            tbBusquedaProductoReporteG.KeyPress += txtFiltroNombreProducto_KeyPress;
+            tbBusquedaPrecioMinReporteG.KeyPress += txtFiltroPrecio_KeyPress;
+            tbBusquedaPrecioMaxReporteG.KeyPress += txtFiltroPrecio_KeyPress;
+
             this.Load += Reportes_Load;
 
             BGenerarVentasPorVendedorGerente.Click += OnGenerarGerente_Click;
@@ -160,6 +164,34 @@ namespace ProyectoNetshop.formularios
             BGenerarTotalVentasGerente.Click += OnGenerarGerente_Click;
 
             bGenerarPdfReporteGerente.Click += bGenerarPdfReporteGerente_Click;
+        }
+
+        private void txtFiltroNombreCliente_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) &&
+                !char.IsLetter(e.KeyChar) &&
+                e.KeyChar != ' ')
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtFiltroNombreProducto_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) &&
+                !char.IsLetter(e.KeyChar) &&
+                e.KeyChar != ' ')
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtFiltroPrecio_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
 
         private void Reportes_Load(object sender, EventArgs e)
@@ -271,7 +303,7 @@ namespace ProyectoNetshop.formularios
 
             if (vendedoresSeleccionados.Count == 0)
             {
-                MessageBox.Show("Debés seleccionar al menos un vendedor.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debés seleccionar al menos un vendedor.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
                 return;
             }
 
@@ -385,7 +417,6 @@ namespace ProyectoNetshop.formularios
 
             if (tablaFiltrada.Count == 0)
             {
-                //MessageBox.Show("No se encontraron resultados con los filtros aplicados.", "Sin coincidencias", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -441,14 +472,14 @@ namespace ProyectoNetshop.formularios
                 .First();
 
             lbCantidadVentasReporteGerente.Text = $"Cantidad de ventas: {cantidadVentas}";
-            lbCantidadClientesReporteGerente.Text = $"Clientes de clientes: {cantidadClientes}";
+            lbCantidadClientesReporteGerente.Text = $"Cantidad de clientes: {cantidadClientes}";
             lbClienteFrecuenteReporteGerente.Text = $"Cliente más frecuente: {clienteFrecuente}";
             lbPromedioFacturasReporteGerente.Text = $"Promedio por factura: {promedioFactura.ToString("C", culturaAR)}";
             lbMayorVentaReporteGerente.Text = $"Venta más alta: {mayorVenta.ToString("C", culturaAR)}";
             lbMenorVentaReporteGerente.Text = $"Venta más baja: {menorVenta.ToString("C", culturaAR)}";
             lbMayorFacturacionReporteGerente.Text = $"Día con mayor facturación: {diaMayorFacturacion.Fecha:dd/MM/yyyy} ({diaMayorFacturacion.Total.ToString("C", culturaAR)})";
 
-            // ✅ Mostrar los labels
+            // Mostrar los labels
             lbCantidadVentasReporteGerente.Visible = true;
             lbCantidadClientesReporteGerente.Visible = true;
             lbClienteFrecuenteReporteGerente.Visible = true;
@@ -457,7 +488,7 @@ namespace ProyectoNetshop.formularios
             lbMenorVentaReporteGerente.Visible = true;
             lbMayorFacturacionReporteGerente.Visible = true;
 
-            //  Diagrama de torta: distribución de ventas por vendedor
+            // Diagrama de torta: distribución de ventas por vendedor
             chartVentas.Series.Clear();
             chartVentas.ChartAreas.Clear();
             chartVentas.Legends.Clear();
@@ -540,7 +571,6 @@ namespace ProyectoNetshop.formularios
 
             if (tablaFiltrada.Count == 0)
             {
-                //MessageBox.Show("No se encontraron resultados con los filtros aplicados.", "Sin coincidencias", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -582,7 +612,7 @@ namespace ProyectoNetshop.formularios
 
             string productoMasVendido = tablaEstadistica
                 .GroupBy(r => r.Field<string>("producto"))
-                .OrderByDescending(g => g.Sum(r => r.Field<decimal>("total_por_producto")))
+                .OrderByDescending(g => g.Sum(r => r.Field<int>("cantidad_vendida")))
                 .First().Key;
 
             decimal promedioProducto = cantidadVentas > 0 ? total / cantidadVentas : 0;
@@ -611,24 +641,6 @@ namespace ProyectoNetshop.formularios
             lbMenorVentaReporteGerente.Visible = true;
             lbMayorFacturacionReporteGerente.Visible = true;
 
-            //// Calcular el producto más vendido
-            //var resumenProductoMasVendido = tablaEstadistica
-            //    .GroupBy(r => r.Field<string>("producto"))
-            //    .Select(g => new
-            //    {
-            //        Producto = g.Key,
-            //        Total = g.Sum(r => r.Field<decimal>("total_por_producto"))
-            //    })
-            //    .OrderByDescending(g => g.Total)
-            //    .FirstOrDefault();
-
-            //if (resumenProductoMasVendido != null)
-            //{
-            //    lbClienteFrecuenteReporteGerente.Text = $"Producto más vendido: {resumenProductoMasVendido.Producto} ({resumenProductoMasVendido.Total.ToString("C", culturaAR)})";
-            //    lbClienteFrecuenteReporteGerente.Visible = true;
-            //    lbClienteFrecuenteReporteGerente.BringToFront();
-            //}
-
             // Diagrama de torta: distribución de ventas por vendedor
             chartVentas.Series.Clear();
             chartVentas.ChartAreas.Clear();
@@ -640,9 +652,9 @@ namespace ProyectoNetshop.formularios
             Series serie = new Series
             {
                 ChartType = SeriesChartType.Pie,
-                IsValueShownAsLabel = false,
-                //Label = "#PERCENT{P0}",
-                //LegendText = "#VALX (#PERCENT{P0})",
+                IsValueShownAsLabel = true,
+                Label = "#PERCENT{P0}",
+                LegendText = "#VALX (#PERCENT{P0})",
                 Font = new System.Drawing.Font("Segoe UI", 9, FontStyle.Regular)
             };
 
@@ -731,13 +743,6 @@ namespace ProyectoNetshop.formularios
             decimal mayorVenta = tablaEstadistica.Max(r => r.Field<decimal>("total"));
             decimal menorVenta = tablaEstadistica.Min(r => r.Field<decimal>("total"));
 
-            //var diaMayorFacturacion = tablaEstadistica
-            //    .GroupBy(r => r.Field<DateTime>("fecha"))
-            //    .Select(g => new { Fecha = g.Key, Total = g.Sum(r => r.Field<decimal>("total")) })
-            //    .OrderByDescending(g => g.Total)
-            //    .First();
-
-            //lbCantidadVentasReporteGerente.Text = $"Cantidad de ventas: {cantidadVentas}";
             int totalCantidadVentas = tablaEstadistica.Sum(r => r.Field<int>("cantidad_ventas"));
             lbCantidadVentasReporteGerente.Text = $"Cantidad de ventas: {totalCantidadVentas}";
             lbCantidadClientesReporteGerente.Text = $"Cantidad de vendedores: {cantidadVendedores}";
@@ -745,7 +750,6 @@ namespace ProyectoNetshop.formularios
             lbPromedioFacturasReporteGerente.Text = $"Promedio por venta: {promedioFactura.ToString("C", culturaAR)}";
             lbMayorVentaReporteGerente.Text = $"Venta más alta: {mayorVenta.ToString("C", culturaAR)}";
             lbMenorVentaReporteGerente.Text = $"Venta más baja: {menorVenta.ToString("C", culturaAR)}";
-            //lbMayorFacturacionReporteGerente.Text = $"Día con mayor facturación: {diaMayorFacturacion.Fecha:dd/MM/yyyy} ({diaMayorFacturacion.Total.ToString("C", culturaAR)})";
 
             lbCantidadVentasReporteGerente.Visible = true;
             lbCantidadClientesReporteGerente.Visible = true;
@@ -974,7 +978,7 @@ namespace ProyectoNetshop.formularios
 
                     doc.Add(tablaPdf);
 
-                    // 🔢 Agregar resumen de total si corresponde
+                    // Agregar resumen de total
                     var columnaExiste = dgvReporteGerente.Columns
                         .Cast<DataGridViewColumn>()
                         .Any(c => c.Name.Trim().ToLower() == columnaTotal.Trim().ToLower());
@@ -1011,7 +1015,8 @@ namespace ProyectoNetshop.formularios
                         "El PDF fue generado correctamente en el escritorio.\n¿Deseás abrirlo ahora?",
                         "PDF generado",
                         MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Information
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button2
                     );
 
                     if (resultado == DialogResult.Yes)
