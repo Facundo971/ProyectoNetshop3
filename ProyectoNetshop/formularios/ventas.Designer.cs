@@ -117,6 +117,7 @@
             tbIdVendedorVenta.Name = "tbIdVendedorVenta";
             tbIdVendedorVenta.Size = new Size(51, 27);
             tbIdVendedorVenta.TabIndex = 29;
+            tbIdVendedorVenta.Visible = false;
             // 
             // label4
             // 
@@ -192,6 +193,7 @@
             tbIdClienteVenta.Name = "tbIdClienteVenta";
             tbIdClienteVenta.Size = new Size(51, 26);
             tbIdClienteVenta.TabIndex = 33;
+            tbIdClienteVenta.Visible = false;
             // 
             // tbEmailClienteVenta
             // 
@@ -406,6 +408,7 @@
             label1.Size = new Size(30, 29);
             label1.TabIndex = 39;
             label1.Text = "ID";
+            label1.Visible = false;
             // 
             // tbIdProductoVenta
             // 
@@ -415,6 +418,7 @@
             tbIdProductoVenta.Name = "tbIdProductoVenta";
             tbIdProductoVenta.Size = new Size(42, 27);
             tbIdProductoVenta.TabIndex = 38;
+            tbIdProductoVenta.Visible = false;
             // 
             // pbImagenProductoVenta
             // 
@@ -677,6 +681,7 @@
             bListaClientesVenta.TabIndex = 38;
             bListaClientesVenta.Text = "Clientes";
             bListaClientesVenta.UseVisualStyleBackColor = true;
+            bListaClientesVenta.Visible = false;
             // 
             // cbVentaProductoVendidos
             // 

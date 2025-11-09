@@ -19,11 +19,12 @@ namespace ProyectoNetshop.formularios
         private readonly string vendedorNombreCompleto;
 
         private List<(string nroFactura, string nombreProducto, int cantidad, decimal precioUnitario, decimal total)> detallesOriginales;
+        private List<(string nroFactura, DateTime fecha, string tipoFactura, decimal totalVenta, string nombreCliente)> cabecerasOriginales;
 
         public DetalleFactura(int p_dni, string p_nombre)
         {
             InitializeComponent();
-            
+
             //Vendedor
             vendedorDni = p_dni;
             vendedorNombreCompleto = p_nombre;
@@ -50,43 +51,48 @@ namespace ProyectoNetshop.formularios
             tbNombreVendedorDetalleFactura.ReadOnly = true;
 
             MostrarDetallesDelVendedor();
+            MostrarCabecerasDelVendedor();
         }
 
-        //public void MostrarDetallesDelVendedor()
-        //{
-        //    dgvDetalleFactura.Columns.Clear();
-        //    dgvDetalleFactura.Rows.Clear();
+        private void MostrarCabecerasDelVendedor()
+        {
+            dgvVentaCabeceraFactura.Columns.Clear();
+            dgvVentaCabeceraFactura.Rows.Clear();
 
-        //    dgvDetalleFactura.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        //    dgvDetalleFactura.AllowUserToAddRows = false;
-        //    dgvDetalleFactura.ReadOnly = true;
+            dgvVentaCabeceraFactura.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvVentaCabeceraFactura.AllowUserToAddRows = false;
+            dgvVentaCabeceraFactura.ReadOnly = true;
 
-        //    dgvDetalleFactura.Columns.Add("colFactura", "Nro Factura");
-        //    dgvDetalleFactura.Columns.Add("colProducto", "Producto");
-        //    dgvDetalleFactura.Columns.Add("colCantidad", "Cantidad");
-        //    dgvDetalleFactura.Columns.Add("colPrecio", "Precio Unitario");
-        //    dgvDetalleFactura.Columns.Add("colTotal", "Total");
+            dgvVentaCabeceraFactura.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
 
-        //    var detalles = Venta_controller.ObtenerDetallesPorVendedorNoCancelados(vendedorDni);
-        //    decimal totalVendido = 0;
-        //    CultureInfo culturaAR = new CultureInfo("es-AR");
+            dgvVentaCabeceraFactura.Columns.Add("colNroFactura", "Nro Factura");
+            dgvVentaCabeceraFactura.Columns.Add("colFecha", "Fecha");
+            dgvVentaCabeceraFactura.Columns.Add("colTipo", "Tipo Factura");
+            dgvVentaCabeceraFactura.Columns.Add("colTotal", "Total");
+            dgvVentaCabeceraFactura.Columns.Add("colCliente", "Cliente");
 
-        //    foreach (var d in detalles)
-        //    {
-        //        dgvDetalleFactura.Rows.Add(
-        //            d.nroFactura,
-        //            d.nombreProducto,
-        //            d.cantidad,
-        //            d.precioUnitario.ToString("C", culturaAR),
-        //            d.total.ToString("C", culturaAR)
-        //        );
+            //var cabeceras = Venta_controller.ObtenerCabecerasPorVendedorNoCanceladas(vendedorDni);
+            cabecerasOriginales = Venta_controller.ObtenerCabecerasPorVendedorNoCanceladas(vendedorDni);
 
-        //        totalVendido += d.total;
-        //    }
+            decimal totalCabeceras = 0;
+            var culturaAR = new CultureInfo("es-AR");
 
-        //    // ✅ Mostrar total acumulado en el label
-        //    lbTotalVendidoDetalleFactura.Text = totalVendido.ToString("C", culturaAR);
-        //}
+            foreach (var c in cabecerasOriginales)
+            {
+                dgvVentaCabeceraFactura.Rows.Add(
+                    c.nroFactura,
+                    c.fecha.ToString("dd/MM/yyyy"),
+                    c.tipoFactura,
+                    c.totalVenta.ToString("C", culturaAR),
+                    c.nombreCliente
+                );
+
+                totalCabeceras += c.totalVenta;
+            }
+
+            // ✅ Mostrar total acumulado en el label
+            lbTotalVendidoCabeceraFactura.Text = totalCabeceras.ToString("C", culturaAR);
+        }
 
         public void MostrarDetallesDelVendedor()
         {
@@ -165,6 +171,34 @@ namespace ProyectoNetshop.formularios
             }
 
             lbTotalVendidoDetalleFactura.Text = totalFiltrado.ToString("C", culturaAR);
+
+            // 🔍 Aplicar el mismo filtro a la grilla de cabeceras
+            var cabecerasFiltradas = cabecerasOriginales
+                .Where(c => c.nroFactura.ToLower().Contains(filtroFactura))
+                .ToList();
+
+            dgvVentaCabeceraFactura.Rows.Clear();
+            decimal totalCabecerasFiltradas = 0;
+
+            foreach (var c in cabecerasFiltradas)
+            {
+                dgvVentaCabeceraFactura.Rows.Add(
+                    c.nroFactura,
+                    c.fecha.ToString("dd/MM/yyyy"),
+                    c.tipoFactura,
+                    c.totalVenta.ToString("C", culturaAR),
+                    c.nombreCliente
+                );
+
+                totalCabecerasFiltradas += c.totalVenta;
+            }
+
+            lbTotalVendidoCabeceraFactura.Text = totalCabecerasFiltradas.ToString("C", culturaAR);
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

@@ -51,6 +51,13 @@
             tbBusquedaProductoReporteG = new TextBox();
             lBuscarPorReporteGerente = new Label();
             bGenerarPdfReporteGerente = new Button();
+            lbCantidadVentasReporteGerente = new Label();
+            lbPromedioFacturasReporteGerente = new Label();
+            lbCantidadClientesReporteGerente = new Label();
+            lbClienteFrecuenteReporteGerente = new Label();
+            lbMayorVentaReporteGerente = new Label();
+            lbMenorVentaReporteGerente = new Label();
+            lbMayorFacturacionReporteGerente = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvReporteGerente).BeginInit();
@@ -103,7 +110,7 @@
             label7.BackColor = Color.Transparent;
             label7.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label7.ForeColor = SystemColors.ButtonFace;
-            label7.Location = new Point(118, 301);
+            label7.Location = new Point(118, 271);
             label7.Name = "label7";
             label7.Size = new Size(54, 29);
             label7.TabIndex = 19;
@@ -111,7 +118,7 @@
             // 
             // fechaHastaGerente
             // 
-            fechaHastaGerente.Location = new Point(40, 335);
+            fechaHastaGerente.Location = new Point(40, 305);
             fechaHastaGerente.Margin = new Padding(3, 4, 3, 4);
             fechaHastaGerente.Name = "fechaHastaGerente";
             fechaHastaGerente.Size = new Size(209, 27);
@@ -188,7 +195,7 @@
             dgvReporteGerente.Location = new Point(314, 200);
             dgvReporteGerente.Name = "dgvReporteGerente";
             dgvReporteGerente.RowHeadersWidth = 51;
-            dgvReporteGerente.Size = new Size(862, 501);
+            dgvReporteGerente.Size = new Size(862, 336);
             dgvReporteGerente.TabIndex = 26;
             dgvReporteGerente.Visible = false;
             dgvReporteGerente.CellContentClick += dgvReporteGerente_CellContentClick;
@@ -198,7 +205,7 @@
             lTotalInfoReporteGerente.AutoSize = true;
             lTotalInfoReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lTotalInfoReporteGerente.ForeColor = SystemColors.ButtonFace;
-            lTotalInfoReporteGerente.Location = new Point(927, 704);
+            lTotalInfoReporteGerente.Location = new Point(938, 539);
             lTotalInfoReporteGerente.Name = "lTotalInfoReporteGerente";
             lTotalInfoReporteGerente.Size = new Size(81, 34);
             lTotalInfoReporteGerente.TabIndex = 27;
@@ -210,7 +217,7 @@
             lbTotalVendidoReporteGerente.AutoSize = true;
             lbTotalVendidoReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lbTotalVendidoReporteGerente.ForeColor = SystemColors.ButtonFace;
-            lbTotalVendidoReporteGerente.Location = new Point(1014, 704);
+            lbTotalVendidoReporteGerente.Location = new Point(1025, 539);
             lbTotalVendidoReporteGerente.Name = "lbTotalVendidoReporteGerente";
             lbTotalVendidoReporteGerente.Size = new Size(63, 34);
             lbTotalVendidoReporteGerente.TabIndex = 28;
@@ -225,7 +232,7 @@
             cbVentasFinalizadasReporteGerentes.Cursor = Cursors.Hand;
             cbVentasFinalizadasReporteGerentes.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             cbVentasFinalizadasReporteGerentes.ForeColor = SystemColors.ButtonFace;
-            cbVentasFinalizadasReporteGerentes.Location = new Point(314, 703);
+            cbVentasFinalizadasReporteGerentes.Location = new Point(1075, 747);
             cbVentasFinalizadasReporteGerentes.Name = "cbVentasFinalizadasReporteGerentes";
             cbVentasFinalizadasReporteGerentes.Size = new Size(101, 33);
             cbVentasFinalizadasReporteGerentes.TabIndex = 29;
@@ -239,7 +246,7 @@
             cbVentasCanceladasReporteGerentes.Cursor = Cursors.Hand;
             cbVentasCanceladasReporteGerentes.Font = new Font("Dubai", 9.749999F, FontStyle.Bold | FontStyle.Italic);
             cbVentasCanceladasReporteGerentes.ForeColor = SystemColors.ButtonFace;
-            cbVentasCanceladasReporteGerentes.Location = new Point(431, 703);
+            cbVentasCanceladasReporteGerentes.Location = new Point(1075, 767);
             cbVentasCanceladasReporteGerentes.Name = "cbVentasCanceladasReporteGerentes";
             cbVentasCanceladasReporteGerentes.Size = new Size(115, 33);
             cbVentasCanceladasReporteGerentes.TabIndex = 30;
@@ -318,12 +325,101 @@
             bGenerarPdfReporteGerente.UseVisualStyleBackColor = true;
             bGenerarPdfReporteGerente.Visible = false;
             // 
+            // lbCantidadVentasReporteGerente
+            // 
+            lbCantidadVentasReporteGerente.AutoSize = true;
+            lbCantidadVentasReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbCantidadVentasReporteGerente.ForeColor = SystemColors.ButtonFace;
+            lbCantidadVentasReporteGerente.Location = new Point(313, 538);
+            lbCantidadVentasReporteGerente.Name = "lbCantidadVentasReporteGerente";
+            lbCantidadVentasReporteGerente.Size = new Size(26, 34);
+            lbCantidadVentasReporteGerente.TabIndex = 39;
+            lbCantidadVentasReporteGerente.Text = "0";
+            lbCantidadVentasReporteGerente.Visible = false;
+            // 
+            // lbPromedioFacturasReporteGerente
+            // 
+            lbPromedioFacturasReporteGerente.AutoSize = true;
+            lbPromedioFacturasReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbPromedioFacturasReporteGerente.ForeColor = SystemColors.ButtonFace;
+            lbPromedioFacturasReporteGerente.Location = new Point(313, 676);
+            lbPromedioFacturasReporteGerente.Name = "lbPromedioFacturasReporteGerente";
+            lbPromedioFacturasReporteGerente.Size = new Size(63, 34);
+            lbPromedioFacturasReporteGerente.TabIndex = 41;
+            lbPromedioFacturasReporteGerente.Text = "$0,00";
+            lbPromedioFacturasReporteGerente.Visible = false;
+            // 
+            // lbCantidadClientesReporteGerente
+            // 
+            lbCantidadClientesReporteGerente.AutoSize = true;
+            lbCantidadClientesReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbCantidadClientesReporteGerente.ForeColor = SystemColors.ButtonFace;
+            lbCantidadClientesReporteGerente.Location = new Point(313, 573);
+            lbCantidadClientesReporteGerente.Name = "lbCantidadClientesReporteGerente";
+            lbCantidadClientesReporteGerente.Size = new Size(26, 34);
+            lbCantidadClientesReporteGerente.TabIndex = 47;
+            lbCantidadClientesReporteGerente.Text = "0";
+            lbCantidadClientesReporteGerente.Visible = false;
+            // 
+            // lbClienteFrecuenteReporteGerente
+            // 
+            lbClienteFrecuenteReporteGerente.AutoSize = true;
+            lbClienteFrecuenteReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbClienteFrecuenteReporteGerente.ForeColor = SystemColors.ButtonFace;
+            lbClienteFrecuenteReporteGerente.Location = new Point(314, 712);
+            lbClienteFrecuenteReporteGerente.Name = "lbClienteFrecuenteReporteGerente";
+            lbClienteFrecuenteReporteGerente.Size = new Size(0, 34);
+            lbClienteFrecuenteReporteGerente.TabIndex = 48;
+            lbClienteFrecuenteReporteGerente.Visible = false;
+            // 
+            // lbMayorVentaReporteGerente
+            // 
+            lbMayorVentaReporteGerente.AutoSize = true;
+            lbMayorVentaReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbMayorVentaReporteGerente.ForeColor = SystemColors.ButtonFace;
+            lbMayorVentaReporteGerente.Location = new Point(313, 607);
+            lbMayorVentaReporteGerente.Name = "lbMayorVentaReporteGerente";
+            lbMayorVentaReporteGerente.Size = new Size(63, 34);
+            lbMayorVentaReporteGerente.TabIndex = 49;
+            lbMayorVentaReporteGerente.Text = "$0,00";
+            lbMayorVentaReporteGerente.Visible = false;
+            // 
+            // lbMenorVentaReporteGerente
+            // 
+            lbMenorVentaReporteGerente.AutoSize = true;
+            lbMenorVentaReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbMenorVentaReporteGerente.ForeColor = SystemColors.ButtonFace;
+            lbMenorVentaReporteGerente.Location = new Point(313, 641);
+            lbMenorVentaReporteGerente.Name = "lbMenorVentaReporteGerente";
+            lbMenorVentaReporteGerente.Size = new Size(63, 34);
+            lbMenorVentaReporteGerente.TabIndex = 50;
+            lbMenorVentaReporteGerente.Text = "$0,00";
+            lbMenorVentaReporteGerente.Visible = false;
+            // 
+            // lbMayorFacturacionReporteGerente
+            // 
+            lbMayorFacturacionReporteGerente.AutoSize = true;
+            lbMayorFacturacionReporteGerente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbMayorFacturacionReporteGerente.ForeColor = SystemColors.ButtonFace;
+            lbMayorFacturacionReporteGerente.Location = new Point(314, 747);
+            lbMayorFacturacionReporteGerente.Name = "lbMayorFacturacionReporteGerente";
+            lbMayorFacturacionReporteGerente.Size = new Size(0, 34);
+            lbMayorFacturacionReporteGerente.TabIndex = 51;
+            lbMayorFacturacionReporteGerente.Visible = false;
+            // 
             // Reportes
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 64);
             ClientSize = new Size(1200, 800);
+            Controls.Add(lbMayorFacturacionReporteGerente);
+            Controls.Add(lbMenorVentaReporteGerente);
+            Controls.Add(lbMayorVentaReporteGerente);
+            Controls.Add(lbClienteFrecuenteReporteGerente);
+            Controls.Add(lbCantidadClientesReporteGerente);
+            Controls.Add(lbPromedioFacturasReporteGerente);
+            Controls.Add(lbCantidadVentasReporteGerente);
             Controls.Add(bGenerarPdfReporteGerente);
             Controls.Add(lBuscarPorReporteGerente);
             Controls.Add(tbBusquedaProductoReporteG);
@@ -377,5 +473,12 @@
         private TextBox tbBusquedaProductoReporteG;
         private Label lBuscarPorReporteGerente;
         private Button bGenerarPdfReporteGerente;
+        private Label lbCantidadVentasReporteGerente;
+        private Label lbPromedioFacturasReporteGerente;
+        private Label lbCantidadClientesReporteGerente;
+        private Label lbClienteFrecuenteReporteGerente;
+        private Label lbMayorVentaReporteGerente;
+        private Label lbMenorVentaReporteGerente;
+        private Label lbMayorFacturacionReporteGerente;
     }
 }

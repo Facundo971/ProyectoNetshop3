@@ -106,6 +106,7 @@
             panel1.RightToLeft = RightToLeft.No;
             panel1.Size = new Size(1200, 800);
             panel1.TabIndex = 20;
+            panel1.Paint += panel1_Paint;
             // 
             // label1
             // 

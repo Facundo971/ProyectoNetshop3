@@ -164,6 +164,37 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        public static List<Producto_model> ObtenerProductos()
+        {
+            var lista = new List<Producto_model>();
+            using var conexion = BD.BaseDeDatos.obtenerConexion();
+            using var cmd = conexion.CreateCommand();
 
+            cmd.CommandText = @"SELECT * FROM producto WHERE eliminado = 1";
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var p = new Producto_model
+                {
+                    id_producto = reader.GetInt32(reader.GetOrdinal("id_producto")),
+                    nombre = reader.GetString(reader.GetOrdinal("nombre")),
+                    descripcion = reader.IsDBNull(reader.GetOrdinal("descripcion")) ? null : reader.GetString(reader.GetOrdinal("descripcion")),
+                    precio_vta = reader.GetDecimal(reader.GetOrdinal("precio_vta")),
+                    stock = reader.GetInt32(reader.GetOrdinal("stock")),
+                    imagen = reader.IsDBNull(reader.GetOrdinal("imagen")) ? null : reader.GetString(reader.GetOrdinal("imagen")),
+                    id_marca = reader.GetInt32(reader.GetOrdinal("id_marca")),
+                    id_categoria = reader.GetInt32(reader.GetOrdinal("id_categoria"))
+                };
+
+                // ✅ Agregar descripciones legibles de categoría y marca
+                p.descripcionCategoria = Categoria_controller.ObtenerDescripcion(p.id_categoria);
+                p.descripcionMarca = Marca_controller.ObtenerDescripcion(p.id_marca);
+
+                lista.Add(p);
+            }
+
+            return lista;
+        }
     }
 }

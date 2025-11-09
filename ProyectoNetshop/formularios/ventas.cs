@@ -1,5 +1,6 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
+using PdfiumViewer;
 using ProyectoNetshop.Cruds;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 
 namespace ProyectoNetshop.formularios
 {
-    //ibBotonBuscarClienteVenta
-    //ibBotonBuscarProductoVenta
     public partial class ventas : Form
     {
         //Vendedor
@@ -26,10 +26,6 @@ namespace ProyectoNetshop.formularios
         private readonly string vendedorNombreCompleto;
         private readonly int vendedorId;
 
-
-        //private readonly int clienteDni;
-        //private readonly string clienteNombreCompleto;
-        //private readonly int clienteId;
         //Cliente
         private ListBox lbClientesSugeridos = new ListBox();
         private Dictionary<string, Cliente_model> clientesMap = new Dictionary<string, Cliente_model>();
@@ -39,24 +35,81 @@ namespace ProyectoNetshop.formularios
         private Dictionary<string, Producto_model> productosMap = new Dictionary<string, Producto_model>();
         private bool bloqueandoFiltroProducto = false;
 
-        //Carrito
-        //private int? indiceSeleccionadoCarrito = null;
+        //Boton lista de productos
+        private DataGridView dgvProductosVenta;
+        private Panel panelVistaProductosVenta;
 
-        public ventas(int p_dni, string p_nombre, int p_vendedor_id //Vendedor
-                                                                    //int p_dni_cliente, string p_nombre_cliente, int p_id_cliente //Cliente
-                     )
+        //Vista del PDF
+        private Panel panelVisorPdf;
+        private PdfViewer visorPdf;
+
+        public ventas(int p_dni, string p_nombre, int p_vendedor_id)
         {
             InitializeComponent();
+
+            string dllOrigen = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "runtimes", "win-x64", "native", "pdfium.dll");
+            string dllDestino = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pdfium.dll");
+
+            // Color de fondo
+            Color fondoAzul = Color.FromArgb(0, 0, 64);
+
+            // Crear visor PDF
+            visorPdf = new PdfViewer
+            {
+                Dock = DockStyle.Fill
+            };
+
+            // Crear panel visor PDF
+            panelVisorPdf = new Panel
+            {
+                Name = "panelVisorPdf",
+                Dock = DockStyle.Fill,
+                Visible = false,
+                BackColor = fondoAzul,
+                BorderStyle = BorderStyle.None
+            };
+
+            // Crear barra superior
+            Panel panelBarraPdf = new Panel
+            {
+                Size = new Size(panelVisorPdf.Width, 60),
+                Dock = DockStyle.Top,
+                BackColor = fondoAzul
+            };
+
+            // Botón cerrar visor
+            Button btnCerrarVisor = new Button
+            {
+                Text = "Cerrar",
+                Size = new Size(120, 40),
+                Location = new Point(10, 10),
+                BackColor = Color.LightGray,
+                Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold),
+                Cursor = Cursors.Hand,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnCerrarVisor.FlatAppearance.BorderSize = 0;
+            btnCerrarVisor.Click += (s, e) =>
+            {
+                visorPdf.Document?.Dispose();
+                panelVisorPdf.Visible = false;
+            };
+
+            // Agregar botón a barra
+            panelBarraPdf.Controls.Add(btnCerrarVisor);
+
+            // Agregar barra y visor al panel principal
+            panelVisorPdf.Controls.Add(panelBarraPdf);
+            panelVisorPdf.Controls.Add(visorPdf);
+
+            // Agregar panel al formulario
+            this.Controls.Add(panelVisorPdf);
+            panelVisorPdf.BringToFront();
 
             //Vendedor
             vendedorDni = p_dni;
             vendedorNombreCompleto = p_nombre;
             vendedorId = p_vendedor_id;
-
-            ////Cliente
-            //clienteDni = p_dni_cliente;
-            //clienteNombreCompleto = p_nombre_cliente;
-            //clienteId = p_id_cliente;
 
             // Eventos para autocompletar cliente y ocultar lista
             tbNombreClienteVenta.TextChanged += tbClienteFiltro_TextChanged;
@@ -69,7 +122,6 @@ namespace ProyectoNetshop.formularios
             //Ocular lista del filtro
             this.MouseDown += OcultarListaClientesPorClickGlobal;
 
-            //NUEVO ESTO LO AGREGUE
             cbVentaProductoVendidos.CheckedChanged += cbVentaProductoVendidos_CheckedChanged;
             cbVentaProductoCancelados.CheckedChanged += cbVentaProductoCancelados_CheckedChanged;
             cbVentaProductoPendientes.CheckedChanged += cbVentaProductoPendientes_CheckedChanged;
@@ -82,20 +134,19 @@ namespace ProyectoNetshop.formularios
             tbNombreProductoVenta.Leave += OcultarListaProductos;
             lbProductosSugeridos.Click += LbProductosSugeridos_Click;
 
+            bListaProductosVenta.Click += bListaProductosVenta_Click;
+
             this.Load += ventas_Load;
 
             tbDniClienteVenta.KeyPress += TextBox_OnlyDigits_KeyPress;
             tbNombreClienteVenta.KeyPress += TextBox_OnlyLetters_KeyPress;
-            //ibBotonBuscarClienteVenta.Click += IbBotonBuscarClienteVenta_Click;
 
             tbNombreProductoVenta.KeyPress += TextBox_OnlyLetters_KeyPress;
-            //tbDescripcionProductoVenta.KeyPress += TextBox_OnlyLetters_KeyPress;
             tbStockProductoVenta.KeyPress += TextBox_OnlyDigits_KeyPress;
             tbPrecioVtaProductoVenta.KeyPress += TextBox_OnlyDigits_KeyPress;
             tbCantidadProductoVenta.KeyPress += TextBox_OnlyDigits_KeyPress;
             tbCantidadProductoVenta.TextChanged += ValidarCantidadVsStock;
 
-            //ibBotonBuscarProductoVenta.Click += IbBotonBuscarProductoVenta_Click;
             ibBotonAgregarProductoVenta.Click += IbBotonAgregarProductoVenta_Click;
 
             ibBotonAgregarProductoVenta.Enabled = false;
@@ -110,108 +161,101 @@ namespace ProyectoNetshop.formularios
             dgvVentas.CellMouseMove += dgvVentas_CellMouseMove;
         }
 
-        //private void tbClienteFiltro_TextChanged(object sender, EventArgs e)
-        //{
-        //    TextBox campo = sender as TextBox;
-        //    if (campo == null) return;
+        private void bListaProductosVenta_Click(object sender, EventArgs e)
+        {
+            var tbNombre = panelVistaProductosVenta.Controls["tbFiltroNombre"] as TextBox;
+            var tbMin = panelVistaProductosVenta.Controls["tbFiltroPrecioMin"] as TextBox;
+            var tbMax = panelVistaProductosVenta.Controls["tbFiltroPrecioMax"] as TextBox;
+            var lblTitulo = panelVistaProductosVenta.Controls["lblTituloProductos"] as Label;
 
-        //    string nombre = tbNombreClienteVenta.Text.Trim();
-        //    string dni = tbDniClienteVenta.Text.Trim();
-        //    string email = tbEmailClienteVenta.Text.Trim();
+            lblTitulo.ForeColor = Color.White;
+            tbNombre.Text = "";
+            tbMin.Text = "";
+            tbMax.Text = "";
 
-        //    var clientes = Cliente_controller.BuscarClientes(
-        //        string.IsNullOrWhiteSpace(nombre) ? "" : nombre,
-        //        string.IsNullOrWhiteSpace(dni) ? "" : dni,
-        //        string.IsNullOrWhiteSpace(email) ? "" : email
-        //    );
+            MostrarProductosEnGrid();
+            panelVistaProductosVenta.Visible = true;
+        }
 
-        //    lbClientesSugeridos.Items.Clear();
+        private void MostrarProductosEnGrid()
+        {
+            dgvProductosVenta.Columns.Clear();
+            dgvProductosVenta.Rows.Clear();
 
-        //    if (campo == tbNombreClienteVenta)
-        //    {
-        //        foreach (var c in clientes)
-        //            lbClientesSugeridos.Items.Add($"{c.nombre} {c.apellido}");
-        //    }
-        //    else if (campo == tbDniClienteVenta)
-        //    {
-        //        foreach (var c in clientes)
-        //            lbClientesSugeridos.Items.Add(c.dni.ToString());
-        //    }
-        //    else if (campo == tbEmailClienteVenta)
-        //    {
-        //        foreach (var c in clientes)
-        //            lbClientesSugeridos.Items.Add(c.email);
-        //    }
+            dgvProductosVenta.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvProductosVenta.RowTemplate.Height = 80;
+            dgvProductosVenta.AllowUserToAddRows = false;
+            dgvProductosVenta.ReadOnly = true;
 
-        //    lbClientesSugeridos.Location = new Point(campo.Left, campo.Bottom);
-        //    lbClientesSugeridos.Width = campo.Width;
-        //    lbClientesSugeridos.BringToFront();
-        //    lbClientesSugeridos.Visible = lbClientesSugeridos.Items.Count > 0;
-        //}
+            dgvProductosVenta.Columns.Add(new DataGridViewImageColumn
+            {
+                Name = "colImagen",
+                HeaderText = "Imagen",
+                ImageLayout = DataGridViewImageCellLayout.Zoom
+            });
 
-        //private void tbClienteFiltro_TextChanged(object sender, EventArgs e)
-        //{
-        //    TextBox campo = sender as TextBox;
-        //    if (campo == null) return;
+            dgvProductosVenta.Columns.Add("colNombre", "Nombre");
+            dgvProductosVenta.Columns.Add("colDescripcion", "Descripción");
+            dgvProductosVenta.Columns.Add("colPrecio", "Precio");
+            dgvProductosVenta.Columns.Add("colStock", "Stock");
+            dgvProductosVenta.Columns.Add("colMarca", "Marca");
+            dgvProductosVenta.Columns.Add("colCategoria", "Categoría");
 
-        //    string nombre = "";
-        //    string dni = "";
-        //    string email = "";
+            var productos = Producto_controller.ObtenerProductos();
 
-        //    if (campo == tbNombreClienteVenta)
-        //        nombre = tbNombreClienteVenta.Text.Trim();
-        //    else if (campo == tbDniClienteVenta)
-        //        dni = tbDniClienteVenta.Text.Trim();
-        //    else if (campo == tbEmailClienteVenta)
-        //        email = tbEmailClienteVenta.Text.Trim();
+            foreach (var p in productos)
+            {
+                System.Drawing.Image img;
 
-        //    var clientes = Cliente_controller.BuscarClientes(nombre, dni, email);
+                if (!string.IsNullOrWhiteSpace(p.imagen) && File.Exists(p.imagen))
+                {
+                    img = System.Drawing.Image.FromFile(p.imagen);
+                }
+                else
+                {
+                    img = (Bitmap)Properties.Resources.producto_defecto.Clone();
+                }
 
-        //    lbClientesSugeridos.Items.Clear();
-        //    clientesMap.Clear();
+                dgvProductosVenta.Rows.Add(img, p.nombre, p.descripcion, p.precio_vta, p.stock, p.descripcionMarca, p.descripcionCategoria);
+            }
 
-        //    if (campo == tbNombreClienteVenta)
-        //    {
-        //        foreach (var c in clientes)
-        //        {
-        //            string clave = $"{c.nombre} {c.apellido}";
-        //            lbClientesSugeridos.Items.Add(clave);
-        //            clientesMap[clave] = c;
-        //        }
-        //    }
-        //    else if (campo == tbDniClienteVenta)
-        //    {
-        //        foreach (var c in clientes)
-        //        {
-        //            string clave = c.dni.ToString();
-        //            lbClientesSugeridos.Items.Add(clave);
-        //            clientesMap[clave] = c;
-        //        }
-        //    }
-        //    else if (campo == tbEmailClienteVenta)
-        //    {
-        //        foreach (var c in clientes)
-        //        {
-        //            string clave = c.email;
-        //            lbClientesSugeridos.Items.Add(clave);
-        //            clientesMap[clave] = c;
-        //        }
-        //    }
+            dgvProductosVenta.Columns["colPrecio"].DefaultCellStyle.Format = "C";
+            dgvProductosVenta.Columns["colPrecio"].DefaultCellStyle.FormatProvider = new CultureInfo("es-AR");
+        }
 
-        //    lbClientesSugeridos.Location = new Point(campo.Left, campo.Bottom);
-        //    lbClientesSugeridos.Width = campo.Width;
-        //    lbClientesSugeridos.BringToFront();
+        private void AplicarFiltroProductos()
+        {
+            var nombre = panelVistaProductosVenta.Controls["tbFiltroNombre"] as TextBox;
+            var precioMin = panelVistaProductosVenta.Controls["tbFiltroPrecioMin"] as TextBox;
+            var precioMax = panelVistaProductosVenta.Controls["tbFiltroPrecioMax"] as TextBox;
 
-        //    // Ocultar si el campo está vacío o no hay resultados
-        //    if (string.IsNullOrWhiteSpace(campo.Text) || lbClientesSugeridos.Items.Count == 0)
-        //    {
-        //        lbClientesSugeridos.Visible = false;
-        //    }
-        //    else
-        //    {
-        //        lbClientesSugeridos.Visible = true;
-        //    }
-        //}
+            string nombreFiltro = nombre?.Text.Trim() ?? "";
+            int min = int.TryParse(precioMin?.Text, out int pMin) ? pMin : 0;
+            int max = int.TryParse(precioMax?.Text, out int pMax) ? pMax : int.MaxValue;
+
+            var productosFiltrados = Producto_controller.ObtenerProductos()
+                .Where(p => p.nombre.Contains(nombreFiltro, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.precio_vta >= min && p.precio_vta <= max)
+                .ToList();
+
+            dgvProductosVenta.Rows.Clear();
+
+            foreach (var p in productosFiltrados)
+            {
+                System.Drawing.Image img;
+
+                if (!string.IsNullOrWhiteSpace(p.imagen) && File.Exists(p.imagen))
+                {
+                    img = System.Drawing.Image.FromFile(p.imagen);
+                }
+                else
+                {
+                    img = (Bitmap)Properties.Resources.producto_defecto.Clone();
+                }
+
+                dgvProductosVenta.Rows.Add(img, p.nombre, p.descripcion, p.precio_vta, p.stock, p.descripcionMarca, p.descripcionCategoria);
+            }
+        }
 
         private void tbClienteFiltro_TextChanged(object sender, EventArgs e)
         {
@@ -247,7 +291,6 @@ namespace ProyectoNetshop.formularios
             if (lbClientesSugeridos.Parent != this)
                 this.Controls.Add(lbClientesSugeridos);
 
-            // ✅ Ocultar, posicionar y mostrar dentro de BeginInvoke
             this.BeginInvoke(new Action(() =>
             {
                 lbClientesSugeridos.Visible = false;
@@ -265,7 +308,7 @@ namespace ProyectoNetshop.formularios
 
         private void tbProductoFiltro_TextChanged(object sender, EventArgs e)
         {
-            if (bloqueandoFiltroProducto) return; // ✅ Evitar ejecución durante autocompletado
+            if (bloqueandoFiltroProducto) return;
 
             TextBox campo = sender as TextBox;
             if (campo == null) return;
@@ -319,12 +362,12 @@ namespace ProyectoNetshop.formularios
 
             var producto = productosMap[clave];
 
-            bloqueandoFiltroProducto = true; // ✅ Bloquear eventos de filtro
+            bloqueandoFiltroProducto = true;
 
             tbIdProductoVenta.Text = producto.id_producto.ToString();
             tbNombreProductoVenta.Text = producto.nombre;
-            tbCategoriaProductoVenta.Text = producto.id_categoria.ToString();
-            tbMarcaProductoVenta.Text = producto.id_marca.ToString();
+            tbCategoriaProductoVenta.Text = producto.descripcionCategoria;
+            tbMarcaProductoVenta.Text = producto.descripcionMarca;
             tbPrecioVtaProductoVenta.Text = producto.precio_vta.ToString("0.00");
             tbStockProductoVenta.Text = producto.stock.ToString();
 
@@ -340,14 +383,13 @@ namespace ProyectoNetshop.formularios
             }
             pbImagenProductoVenta.SizeMode = PictureBoxSizeMode.StretchImage;
 
-            bloqueandoFiltroProducto = false; // ✅ Reactivar eventos
+            bloqueandoFiltroProducto = false;
 
-            lbProductosSugeridos.Visible = false; // ✅ Ocultar inmediatamente
+            lbProductosSugeridos.Visible = false;
         }
 
         private void OcultarListaClientes(object sender, EventArgs e)
         {
-            // Esperamos un breve momento para permitir que el usuario haga clic en el ListBox
             Task.Delay(100).ContinueWith(_ =>
             {
                 this.Invoke(new Action(() =>
@@ -370,7 +412,6 @@ namespace ProyectoNetshop.formularios
 
         private void OcultarListaClientesPorClickGlobal(object sender, MouseEventArgs e)
         {
-            // Ocultamos si el clic no fue sobre el ListBox ni sobre los campos de cliente
             if (!tbNombreClienteVenta.Focused &&
                 !tbDniClienteVenta.Focused &&
                 !tbEmailClienteVenta.Focused &&
@@ -408,16 +449,6 @@ namespace ProyectoNetshop.formularios
             }
         }
 
-        //private void cbVentaProductoPendientes_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (cbVentaProductoPendientes.Checked)
-        //    {
-        //        cbVentaProductoVendidos.Checked = false;
-        //        cbVentaProductoCancelados.Checked = false;
-        //        MostrarVentasPorEstadoEnGrid(1); // Pendiente
-        //    }
-        //}
-
         private void cbVentaProductoPendientes_CheckedChanged(object sender, EventArgs e)
         {
             if (cbVentaProductoPendientes.Checked)
@@ -426,14 +457,13 @@ namespace ProyectoNetshop.formularios
                 cbVentaProductoCancelados.Checked = false;
                 MostrarCarritoEnGrid();
 
-                // ✅ Recalcular total del carrito y mostrar en formato argentino
                 decimal totalCarrito = ObtenerTotalCarrito();
                 CultureInfo culturaAR = new CultureInfo("es-AR");
                 lbTotalVendidoVenta.Text = totalCarrito.ToString("C", culturaAR);
             }
             else if (!cbVentaProductoVendidos.Checked && !cbVentaProductoCancelados.Checked)
             {
-                cbVentaProductoPendientes.Checked = true; // No permitir que todos estén desmarcados
+                cbVentaProductoPendientes.Checked = true;
             }
         }
 
@@ -445,11 +475,9 @@ namespace ProyectoNetshop.formularios
                 cbVentaProductoCancelados.Checked = false;
                 MostrarVentasPorEstadoEnGrid(2); // Finalizado
 
-                //decimal total = Venta_controller.ObtenerTotalVentasPorEstado(2);
                 decimal total = Venta_controller.ObtenerTotalVentasPorEstadoYVendedor(2, vendedorId);
                 CultureInfo culturaAR = new CultureInfo("es-AR");
                 lbTotalVendidoVenta.Text = total.ToString("C", culturaAR);
-                //lbTotalVendidoVenta.Text = $"${total:0.00}";
             }
             else if (!cbVentaProductoPendientes.Checked && !cbVentaProductoCancelados.Checked)
             {
@@ -463,9 +491,8 @@ namespace ProyectoNetshop.formularios
             {
                 cbVentaProductoPendientes.Checked = false;
                 cbVentaProductoVendidos.Checked = false;
-                MostrarVentasPorEstadoEnGrid(3); // Cancelado
+                MostrarVentasPorEstadoEnGrid(3);
 
-                //decimal total = Venta_controller.ObtenerTotalVentasPorEstado(3);
                 decimal total = Venta_controller.ObtenerTotalVentasPorEstadoYVendedor(3, vendedorId);
                 CultureInfo culturaAR = new CultureInfo("es-AR");
                 lbTotalVendidoVenta.Text = total.ToString("C", culturaAR);
@@ -485,7 +512,6 @@ namespace ProyectoNetshop.formularios
             dgvVentas.AllowUserToAddRows = false;
             dgvVentas.ReadOnly = true;
 
-            // ✅ Columna oculta para ID interno
             var colIdOculta = new DataGridViewTextBoxColumn
             {
                 Name = "colIdVenta",
@@ -494,7 +520,6 @@ namespace ProyectoNetshop.formularios
             };
             dgvVentas.Columns.Add(colIdOculta);
 
-            // ✅ Columnas visibles
             dgvVentas.Columns.Add("colNroFactura", "Nro Factura");
             dgvVentas.Columns.Add("colCliente", "Cliente");
             dgvVentas.Columns.Add("colVendedor", "Vendedor");
@@ -503,7 +528,6 @@ namespace ProyectoNetshop.formularios
             dgvVentas.Columns.Add("colTotal", "Total");
             dgvVentas.Columns.Add("colEstado", "Estado");
 
-            // ✅ Solo agregar botones si el estado es Finalizado
             if (estado == 2)
             {
                 var colCancelar = new DataGridViewButtonColumn
@@ -525,102 +549,21 @@ namespace ProyectoNetshop.formularios
                 dgvVentas.Columns.Add(colDescargarPDF);
             }
 
-            //var ventas = Venta_controller.ObtenerVentasPorEstado(estado);
-            var ventas = Venta_controller.ObtenerVentasPorEstadoYVendedor(estado, vendedorId); // ✅ filtrado por vendedor
+            var ventas = Venta_controller.ObtenerVentasPorEstadoYVendedor(estado, vendedorId);
             foreach (var v in ventas)
             {
                 dgvVentas.Rows.Add(
-                    v.id_venta, // ✅ columna oculta
+                    v.id_venta,
                     v.nro_factura,
                     v.nombre_cliente,
                     v.nombre_vendedor,
                     v.fecha.ToString("dd/MM/yyyy"),
                     v.tipo_factura,
-                    //$"${v.total_venta:0.00}",
                     v.total_venta.ToString("C", new CultureInfo("es-AR")),
                     estado == 2 ? "Finalizado" : "Cancelado"
                 );
             }
         }
-
-        //private void MostrarVentasRealizadasEnGrid()
-        //{
-        //    dgvVentas.Columns.Clear();
-        //    dgvVentas.Rows.Clear();
-
-        //    dgvVentas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        //    dgvVentas.AllowUserToAddRows = false;
-        //    dgvVentas.ReadOnly = true;
-
-        //    dgvVentas.Columns.Add("colIdVenta", "ID Venta");
-        //    dgvVentas.Columns.Add("colCliente", "Cliente");
-        //    dgvVentas.Columns.Add("colVendedor", "Vendedor");
-        //    dgvVentas.Columns.Add("colFecha", "Fecha");
-        //    dgvVentas.Columns.Add("colTipoFactura", "Tipo Factura");
-        //    dgvVentas.Columns.Add("colTotal", "Total");
-        //    dgvVentas.Columns.Add("colEstado", "Estado");
-        //    var colCancelar = new DataGridViewButtonColumn
-        //    {
-        //        Name = "colCancelar",
-        //        HeaderText = "Cancelar",
-        //        Text = "Cancelar",
-        //        UseColumnTextForButtonValue = true
-        //    };
-        //    dgvVentas.Columns.Add(colCancelar);
-
-        //    var ventas = Venta_controller.ObtenerVentasFinalizadas(); // Debés tener este método en tu controlador
-
-        //    foreach (var v in ventas)
-        //    {
-        //        dgvVentas.Rows.Add(
-        //            v.id_venta,
-        //            v.nombre_cliente,
-        //            v.nombre_vendedor,
-        //            v.fecha.ToString("dd/MM/yyyy"),
-        //            v.tipo_factura,
-        //            $"${v.total_venta:0.00}",
-        //            v.id_estado == 2 ? "Finalizado" : v.id_estado == 3 ? "Cancelado" : "Pendiente"
-        //        );
-        //    }
-        //}
-
-
-
-
-        //private void IbBotonBuscarClienteVenta_Click(object sender, EventArgs e)
-        //{
-        //    string dniText = tbDniClienteVenta.Text.Trim();
-        //    string nombreTxt = tbNombreClienteVenta.Text.Trim();
-
-        //    if (string.IsNullOrWhiteSpace(dniText) || string.IsNullOrWhiteSpace(nombreTxt))
-        //    {
-        //        MessageBox.Show("Debe ingresar el DNI y el nombre del cliente para buscar.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-        //        if (string.IsNullOrWhiteSpace(dniText))
-        //            tbDniClienteVenta.Focus();
-        //        else
-        //            tbNombreClienteVenta.Focus();
-
-        //        return;
-        //    }
-
-        //    if (!Regex.IsMatch(dniText, @"^\d{8}$"))
-        //    {
-        //        MessageBox.Show("El DNI debe contener exactamente 8 dígitos numéricos.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        tbDniClienteVenta.Focus();
-        //        return;
-        //    }
-
-        //    if (Regex.IsMatch(nombreTxt, @"\d"))
-        //    {
-        //        MessageBox.Show("El nombre no puede contener dígitos.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        tbNombreClienteVenta.Focus();
-        //        return;
-        //    }
-
-        //    MessageBox.Show("Datos válidos. Iniciando búsqueda del cliente…", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //}
-
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -643,28 +586,15 @@ namespace ProyectoNetshop.formularios
             tbNombreVendedorVenta.Text = vendedorNombreCompleto;
             tbIdVendedorVenta.Text = vendedorId.ToString();
 
-            // Marcar como solo lectura para evitar edición (Vendedor)
+            //Marcar como solo lectura para evitar edición (Vendedor)
             tbDniVendedorVenta.ReadOnly = true;
             tbNombreVendedorVenta.ReadOnly = true;
             tbIdVendedorVenta.ReadOnly = true;
 
-            ////Cliente
-            //tbDniClienteVenta.Text = clienteDni.ToString();
-            //tbNombreClienteVenta.Text = clienteNombreCompleto;
-            //tbIdClienteVenta.Text = clienteId.ToString();
-
-            //// Marcar como solo lectura para evitar edición (Cliente)
-            //tbDniClienteVenta.ReadOnly = true;
-            //tbNombreClienteVenta.ReadOnly = true;
-            //tbIdClienteVenta.ReadOnly = true;
-            // Configuración del ListBox
+            //Cliente
             lbClientesSugeridos.Visible = false;
             lbClientesSugeridos.Width = 300;
             lbClientesSugeridos.Height = 300;
-
-            // Si tbNombreClienteVenta está dentro de un GroupBox llamado groupBoxCliente:
-            //groupBoxCliente.Controls.Add(lbClientesSugeridos);
-            //this.Controls.Add(lbClientesSugeridos);
             lbClientesSugeridos.BringToFront();
 
             lbClientesSugeridos.Click += LbClientesSugeridos_Click;
@@ -675,6 +605,80 @@ namespace ProyectoNetshop.formularios
             lbProductosSugeridos.Height = 300;
             this.Controls.Add(lbProductosSugeridos);
             lbProductosSugeridos.BringToFront();
+
+            panelVistaProductosVenta = new Panel();
+            panelVistaProductosVenta.Name = "panelVistaProductosVenta";
+
+            panelVistaProductosVenta.Size = new Size(this.ClientSize.Width, this.ClientSize.Height / 2);
+            panelVistaProductosVenta.Location = new Point(0, 60); // más arriba
+            panelVistaProductosVenta.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+            panelVistaProductosVenta.Visible = false;
+            panelVistaProductosVenta.BackColor = Color.FromArgb(0, 0, 64);
+            this.Controls.Add(panelVistaProductosVenta);
+            panelVistaProductosVenta.BringToFront();
+
+            Label lblTitulo = new Label();
+            lblTitulo.Name = "lblTituloProductos";
+            lblTitulo.Text = "Lista de Productos";
+            lblTitulo.ForeColor = Color.White;
+            lblTitulo.Font = new System.Drawing.Font("Segoe UI", 14, FontStyle.Bold);
+            lblTitulo.AutoSize = true;
+            lblTitulo.Location = new Point(35, 15);
+            lblTitulo.Visible = true;
+            panelVistaProductosVenta.Controls.Add(lblTitulo);
+
+            TextBox tbFiltroNombre = new TextBox();
+            tbFiltroNombre.Name = "tbFiltroNombre";
+            tbFiltroNombre.PlaceholderText = "Filtrar por nombre";
+            tbFiltroNombre.Width = 200;
+            tbFiltroNombre.Location = new Point(40, 50);
+
+            TextBox tbFiltroPrecioMin = new TextBox();
+            tbFiltroPrecioMin.Name = "tbFiltroPrecioMin";
+            tbFiltroPrecioMin.PlaceholderText = "Precio mínimo";
+            tbFiltroPrecioMin.Width = 120;
+            tbFiltroPrecioMin.Location = new Point(260, 50);
+
+            TextBox tbFiltroPrecioMax = new TextBox();
+            tbFiltroPrecioMax.Name = "tbFiltroPrecioMax";
+            tbFiltroPrecioMax.PlaceholderText = "Precio máximo";
+            tbFiltroPrecioMax.Width = 120;
+            tbFiltroPrecioMax.Location = new Point(400, 50);
+
+            panelVistaProductosVenta.Controls.Add(tbFiltroNombre);
+            panelVistaProductosVenta.Controls.Add(tbFiltroPrecioMin);
+            panelVistaProductosVenta.Controls.Add(tbFiltroPrecioMax);
+
+            tbFiltroNombre.TextChanged += (s, e) => AplicarFiltroProductos();
+            tbFiltroPrecioMin.TextChanged += (s, e) => AplicarFiltroProductos();
+            tbFiltroPrecioMax.TextChanged += (s, e) => AplicarFiltroProductos();
+
+            int margenInferior = 20;
+            int botonAltura = 40;
+
+            dgvProductosVenta = new DataGridView();
+            dgvProductosVenta.Name = "dgvProductosVenta";
+            dgvProductosVenta.Location = new Point(40, 80);
+            dgvProductosVenta.Size = new Size(panelVistaProductosVenta.Width - 80, panelVistaProductosVenta.Height - 120);
+            dgvProductosVenta.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+            dgvProductosVenta.ReadOnly = true;
+            dgvProductosVenta.AllowUserToAddRows = false;
+            dgvProductosVenta.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font(dgvProductosVenta.Font, FontStyle.Bold);
+            dgvProductosVenta.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            panelVistaProductosVenta.Controls.Add(dgvProductosVenta);
+
+            Button btnCerrarVista = new Button();
+            btnCerrarVista.Cursor = Cursors.Hand;
+            btnCerrarVista.Font = new System.Drawing.Font("Dubai", 12, FontStyle.Bold | FontStyle.Italic);
+            btnCerrarVista.BackColor = Color.White;
+            btnCerrarVista.ForeColor = SystemColors.ActiveCaptionText;
+            btnCerrarVista.Text = "Volver";
+            btnCerrarVista.Size = new Size(100, 40);
+            btnCerrarVista.Location = new Point(1060, 20);
+            btnCerrarVista.Click += (s, e) => panelVistaProductosVenta.Visible = false;
+
+            panelVistaProductosVenta.Controls.Add(btnCerrarVista);
 
             dtpFechaVenta.ShowCheckBox = true;
             dtpFechaVenta.Checked = true;
@@ -704,7 +708,6 @@ namespace ProyectoNetshop.formularios
             };
             dgvVentas.Columns.Add(colBorrar);
 
-            // ✅ Ajuste de ancho proporcional
             dgvVentas.Columns["colDescripcion"].FillWeight = 200;
             dgvVentas.Columns["colNombre"].FillWeight = 100;
             dgvVentas.Columns["colCantidad"].FillWeight = 80;
@@ -714,13 +717,11 @@ namespace ProyectoNetshop.formularios
             dgvVentas.Columns["colEstado"].FillWeight = 100;
             dgvVentas.Columns["colBorrar"].FillWeight = 30;
 
-            // ✅ BLOQUE NUEVO: desactivar edición en el grid excepto botón borrar
             dgvVentas.ReadOnly = true;
             dgvVentas.Columns["colBorrar"].ReadOnly = false;
 
             dgvVentas.AllowUserToAddRows = false;
 
-            // ✅ Estilo visual del botón "Borrar"
             dgvVentas.CellPainting += dgvVentas_CellPainting;
 
             MostrarCarritoEnGrid();
@@ -742,11 +743,11 @@ namespace ProyectoNetshop.formularios
 
             Application.AddMessageFilter(clickFilter);
 
-            // ✅ NUEVO BLOQUE: bloquear cliente si ya hay productos en el carrito
             if (CarritoVentaSession.Carrito.Count > 0)
             {
                 var primerDetalle = CarritoVentaSession.Carrito.First();
 
+                // Restaurar cliente
                 tbNombreClienteVenta.Text = primerDetalle.nombre_cliente;
                 tbDniClienteVenta.Text = primerDetalle.dni_cliente;
                 tbEmailClienteVenta.Text = primerDetalle.email_cliente;
@@ -761,20 +762,19 @@ namespace ProyectoNetshop.formularios
                 tbDniClienteVenta.Enabled = false;
                 tbEmailClienteVenta.Enabled = false;
                 tbIdClienteVenta.Enabled = false;
+
+                // Restaurar y bloquear tipo de factura
+                cbTipoFacturaVenta.SelectedItem = primerDetalle.tipo_factura;
+                cbTipoFacturaVenta.Enabled = false;
+
+                // Restaurar y bloquear fecha
+                dtpFechaVenta.Value = primerDetalle.fecha_venta;
+                dtpFechaVenta.Enabled = false;
             }
-
-            //cbVentasFinalizadas.Checked = true;
-            //cbVentasPendientes.Checked = false;
-
-            //cbVentasFinalizadas.CheckedChanged += cbVentasFinalizadas_CheckedChanged;
-            //cbVentasPendientes.CheckedChanged += cbVentasPendientes_CheckedChanged;
-
-            //MostrarVentasFinalizadasEnGrid();
         }
 
         private void dtpFechaVenta_ValueChanged(object sender, EventArgs e)
         {
-            // Si el usuario intenta desmarcar, lo volvemos a marcar
             if (!dtpFechaVenta.Checked)
             {
                 dtpFechaVenta.Checked = true;
@@ -808,7 +808,6 @@ namespace ProyectoNetshop.formularios
                     path.AddArc(rect.X, rect.Bottom - radio, radio, radio, 90, 90);
                     path.CloseFigure();
 
-                    // ✅ Color según tipo de botón
                     Color colorFondo = nombreColumna switch
                     {
                         "colBorrar" => Color.Red,
@@ -822,7 +821,6 @@ namespace ProyectoNetshop.formularios
                         e.Graphics.FillPath(backColorBrush, path);
                     }
 
-                    // ✅ Texto según tipo de botón
                     string texto = nombreColumna switch
                     {
                         "colBorrar" => "Borrar",
@@ -851,7 +849,6 @@ namespace ProyectoNetshop.formularios
             {
                 string nombreColumna = dgvVentas.Columns[e.ColumnIndex].Name;
 
-                // ✅ Agregamos "colDescargarPDF" para que también muestre el cursor de mano
                 if (nombreColumna == "colBorrar" || nombreColumna == "colCancelar" || nombreColumna == "colDescargarPDF")
                 {
                     dgvVentas.Cursor = Cursors.Hand;
@@ -863,167 +860,18 @@ namespace ProyectoNetshop.formularios
             }
         }
 
-        //private void dgvVentas_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        //{
-        //    if (e.ColumnIndex >= 0 && dgvVentas.Columns[e.ColumnIndex].Name == "colBorrar" && e.RowIndex >= 0)
-        //    {
-        //        e.PaintBackground(e.CellBounds, true);
-
-        //        // ✅ Margen interno
-        //        int margen = 4;
-        //        Rectangle rect = new Rectangle(
-        //            e.CellBounds.X + margen,
-        //            e.CellBounds.Y + margen,
-        //            e.CellBounds.Width - 2 * margen,
-        //            e.CellBounds.Height - 2 * margen
-        //        );
-
-        //        // ✅ Crear botón con esquinas redondeadas
-        //        int radio = 8; // radio de las esquinas
-        //        using (GraphicsPath path = new GraphicsPath())
-        //        {
-        //            path.AddArc(rect.X, rect.Y, radio, radio, 180, 90);
-        //            path.AddArc(rect.Right - radio, rect.Y, radio, radio, 270, 90);
-        //            path.AddArc(rect.Right - radio, rect.Bottom - radio, radio, radio, 0, 90);
-        //            path.AddArc(rect.X, rect.Bottom - radio, radio, radio, 90, 90);
-        //            path.CloseFigure();
-
-        //            using (Brush backColorBrush = new SolidBrush(Color.Red))
-        //            {
-        //                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-        //                e.Graphics.FillPath(backColorBrush, path);
-        //            }
-
-        //            // ✅ Dibujar texto centrado
-        //            TextRenderer.DrawText(
-        //                e.Graphics,
-        //                "Borrar",
-        //                dgvVentas.Font,
-        //                rect,
-        //                Color.White,
-        //                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter
-        //            );
-        //        }
-
-        //        e.Handled = true;
-        //    }
-        //}
-
-        //private void cbVentasFinalizadas_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (cbVentasFinalizadas.Checked)
-        //    {
-        //        cbVentasPendientes.Checked = false;
-        //        MostrarVentasFinalizadasEnGrid();
-        //    }
-        //}
-
-        //private void MostrarVentasFinalizadasEnGrid()
-        //{
-        //    dgvVentas.Columns.Clear();
-        //    dgvVentas.Rows.Clear();
-
-        //    dgvVentas.Columns.Add("colIdVenta", "ID Venta");
-        //    dgvVentas.Columns.Add("colCliente", "Cliente");
-        //    dgvVentas.Columns.Add("colVendedor", "Vendedor");
-        //    dgvVentas.Columns.Add("colFecha", "Fecha");
-        //    dgvVentas.Columns.Add("colTipoFactura", "Tipo Factura");
-        //    dgvVentas.Columns.Add("colTotal", "Total");
-
-        //    var ventas = Venta_controller.ObtenerVentasFinalizadas();
-
-        //    foreach (var v in ventas)
-        //    {
-        //        dgvVentas.Rows.Add(
-        //            v.id_venta,
-        //            v.nombre_cliente,
-        //            v.nombre_vendedor,
-        //            v.fecha.ToString("dd/MM/yyyy"),
-        //            v.tipo_factura,
-        //            v.total_venta.ToString("0.00")
-        //        );
-        //    }
-        //}
-
-        //private void cbVentasFinalizadas_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (cbVentasFinalizadas.Checked)
-        //    {
-        //        cbVentasPendientes.Checked = false;
-        //        MostrarVentasFinalizadasEnGrid();
-        //    }
-        //}
-
-        //private void cbVentasPendientes_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (cbVentasPendientes.Checked)
-        //    {
-        //        cbVentasFinalizadas.Checked = false;
-        //        MostrarCarritoEnGrid();
-        //    }
-        //}
-
-        //NUEVO ACAAAAAAAA
-        //private void dgvVentas_CellClick(object sender, DataGridViewCellEventArgs e)
-        //{
-        //    // Validar que el clic fue en una fila válida
-        //    if (e.RowIndex < 0) return;
-
-        //    // Validar que se hizo clic en la columna de borrar
-        //    if (e.ColumnIndex >= 0 && dgvVentas.Columns[e.ColumnIndex].Name == "colBorrar")
-        //    {
-        //        // Validar que el índice existe en el carrito
-        //        if (e.RowIndex < CarritoVentaSession.Carrito.Count)
-        //        {
-        //            CarritoVentaSession.Carrito.RemoveAt(e.RowIndex);
-        //            MostrarCarritoEnGrid();
-        //            ActualizarTotalVendido();
-        //        }
-        //    }
-        //}
-
-        //private void dgvVentas_CellClick(object sender, DataGridViewCellEventArgs e)
-        //{
-        //    if (e.RowIndex >= 0 && dgvVentas.Columns[e.ColumnIndex].Name == "colCancelar")
-        //    {
-        //        int idVenta = Convert.ToInt32(dgvVentas.Rows[e.RowIndex].Cells["colIdVenta"].Value);
-        //        DialogResult confirm = MessageBox.Show("¿Está seguro que desea cancelar esta venta?", "Confirmar cancelación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-        //        if (confirm == DialogResult.Yes)
-        //        {
-        //            try
-        //            {
-        //                bool exito = Venta_controller.CancelarVentaDuplicando(idVenta);
-        //                if (exito)
-        //                {
-        //                    MessageBox.Show("Venta cancelada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //                    MostrarVentasPorEstadoEnGrid(2); // Refresca solo ventas finalizadas
-        //                }
-        //                else
-        //                {
-        //                    MessageBox.Show("La operación no se completó. Verificá si la venta tiene detalles o si el ID es válido.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //                }
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                MessageBox.Show("Error técnico: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //            }
-        //        }
-        //    }
-        //}
-
         private void dgvVentas_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
             string nombreColumna = dgvVentas.Columns[e.ColumnIndex].Name;
 
-            // ✅ Botón "Cancelar" en ventas finalizadas
+            // Botón "Cancelar" en ventas finalizadas
             if (nombreColumna == "colCancelar")
             {
                 int idVenta = Convert.ToInt32(dgvVentas.Rows[e.RowIndex].Cells["colIdVenta"].Value);
 
-                // ✅ Validación: evitar cancelación duplicada
+                // Validación: evitar cancelación duplicada
                 if (Venta_controller.YaFueCancelada(idVenta))
                 {
                     MessageBox.Show("Esta venta ya fue cancelada previamente.", "Cancelación duplicada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1039,8 +887,7 @@ namespace ProyectoNetshop.formularios
                         bool exito = Venta_controller.CancelarVentaDuplicando(idVenta);
                         if (exito)
                         {
-                            MessageBox.Show("Venta cancelada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            MostrarVentasPorEstadoEnGrid(2); // Refresca solo ventas finalizadas
+                            MostrarVentasPorEstadoEnGrid(2);
                         }
                         else
                         {
@@ -1054,7 +901,7 @@ namespace ProyectoNetshop.formularios
                 }
             }
 
-            // ✅ Botón "Borrar" en el carrito (ventas pendientes)
+            // Botón "Borrar" en el carrito (ventas pendientes)
             else if (nombreColumna == "colBorrar")
             {
                 DialogResult confirm = MessageBox.Show("¿Deseás eliminar este producto del carrito?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -1073,15 +920,44 @@ namespace ProyectoNetshop.formularios
                     lbTotalVendidoVenta.Text = totalCarrito.ToString("C", culturaAR);
                 }
             }
-
-            // ✅ Botón "Descargar" en ventas finalizadas
             else if (nombreColumna == "colDescargarPDF")
             {
-                int idVenta = Convert.ToInt32(dgvVentas.Rows[e.RowIndex].Cells["colIdVenta"].Value);
+                var fila = dgvVentas.Rows[e.RowIndex];
+                string nroFactura = fila.Cells["colNroFactura"].Value?.ToString()?.Trim();
+
+                if (Venta_controller.ExisteVentaCanceladaPorFactura(nroFactura))
+                {
+                    MessageBox.Show("No se puede descargar el PDF de una venta cancelada.", "Acción no permitida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int idVenta = Convert.ToInt32(fila.Cells["colIdVenta"].Value);
 
                 try
                 {
-                    GenerarPdfVenta(idVenta); // ✅ Este método lo definís en tu formulario
+                    string rutaPdf = GenerarPdfVenta(idVenta);
+
+                    if (string.IsNullOrWhiteSpace(rutaPdf) || !File.Exists(rutaPdf))
+                    {
+                        MessageBox.Show("No se pudo generar o encontrar el PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    DialogResult respuesta = MessageBox.Show("PDF generado correctamente.\n¿Deseás visualizarlo ahora?", "PDF generado", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (respuesta == DialogResult.Yes)
+                    {
+                        visorPdf.Document?.Dispose();
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
+
+                        string rutaTemporal = Path.Combine(Path.GetTempPath(), $"temp_{Guid.NewGuid()}.pdf");
+                        File.Copy(rutaPdf, rutaTemporal, true);
+
+                        visorPdf.Document = PdfiumViewer.PdfDocument.Load(rutaTemporal);
+                        visorPdf.ZoomMode = PdfiumViewer.PdfViewerZoomMode.FitWidth;
+                        panelVisorPdf.Visible = true;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1097,48 +973,12 @@ namespace ProyectoNetshop.formularios
 
             CultureInfo culturaAR = new CultureInfo("es-AR");
             lbTotalVendidoVenta.Text = total.ToString("C", culturaAR);
-            //lbTotalVendidoVenta.Text = $"${total:0.00}";
         }
 
         private decimal ObtenerTotalCarrito()
         {
             return CarritoVentaSession.Carrito.Sum(p => p.precio_unitario * p.cantidad);
         }
-
-
-        //private void LbClientesSugeridos_Click(object sender, EventArgs e)
-        //{
-        //    if (lbClientesSugeridos.SelectedItem == null) return;
-
-        //    string seleccionado = lbClientesSugeridos.SelectedItem.ToString();
-        //    Cliente_model cliente = null;
-
-        //    if (tbNombreClienteVenta.Focused)
-        //    {
-        //        tbNombreClienteVenta.Text = seleccionado;
-        //        cliente = Cliente_controller.BuscarClientes(seleccionado, "", "").FirstOrDefault();
-        //    }
-        //    else if (tbDniClienteVenta.Focused)
-        //    {
-        //        tbDniClienteVenta.Text = seleccionado;
-        //        cliente = Cliente_controller.BuscarClientes("", seleccionado, "").FirstOrDefault();
-        //    }
-        //    else if (tbEmailClienteVenta.Focused)
-        //    {
-        //        tbEmailClienteVenta.Text = seleccionado;
-        //        cliente = Cliente_controller.BuscarClientes("", "", seleccionado).FirstOrDefault();
-        //    }
-
-        //    if (cliente != null)
-        //    {
-        //        tbNombreClienteVenta.Text = $"{cliente.nombre} {cliente.apellido}";
-        //        tbDniClienteVenta.Text = cliente.dni.ToString();
-        //        tbEmailClienteVenta.Text = cliente.email;
-        //        tbIdClienteVenta.Text = cliente.id_cliente.ToString();
-        //    }
-
-        //    lbClientesSugeridos.Visible = false;
-        //}
 
         private void LbClientesSugeridos_Click(object sender, EventArgs e)
         {
@@ -1157,81 +997,6 @@ namespace ProyectoNetshop.formularios
             lbClientesSugeridos.Visible = false;
         }
 
-
-        //private void IbBotonBuscarProductoVenta_Click(object sender, EventArgs e)
-        //{
-        //    string nombreProd = tbNombreProductoVenta.Text.Trim();
-        //    //string descripcion = tbDescripcionProductoVenta.Text.Trim();
-        //    string stockText = tbStockProductoVenta.Text.Trim();
-        //    string precioText = tbPrecioVtaProductoVenta.Text.Trim();
-        //    string cantidadText = tbCantidadProductoVenta.Text.Trim();
-
-        //    if (string.IsNullOrWhiteSpace(nombreProd))
-        //    {
-        //        MessageBox.Show("El nombre del producto no puede quedar vacío.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        tbNombreProductoVenta.Focus();
-        //        return;
-        //    }
-
-        //    //if (string.IsNullOrWhiteSpace(descripcion))
-        //    //{
-        //    //    MessageBox.Show("La descripción del producto no puede quedar vacía.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //    //    tbDescripcionProductoVenta.Focus();
-        //    //    return;
-        //    //}
-
-        //    if (string.IsNullOrWhiteSpace(stockText))
-        //    {
-        //        MessageBox.Show("Debe ingresar el stock del producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        tbStockProductoVenta.Focus();
-        //        return;
-        //    }
-
-        //    if (string.IsNullOrWhiteSpace(precioText))
-        //    {
-        //        MessageBox.Show("Debe ingresar el precio de venta del producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        tbPrecioVtaProductoVenta.Focus();
-        //        return;
-        //    }
-
-        //    if (string.IsNullOrWhiteSpace(cantidadText))
-        //    {
-        //        MessageBox.Show("Debe ingresar la cantidad a vender.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        tbCantidadProductoVenta.Focus();
-        //        return;
-        //    }
-
-        //    if (!int.TryParse(stockText, out int stock) || stock < 0)
-        //    {
-        //        MessageBox.Show("El stock debe ser un número entero no negativo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        tbStockProductoVenta.Focus();
-        //        return;
-        //    }
-        //    if (!decimal.TryParse(precioText, out decimal precio) || precio < 0)
-        //    {
-        //        MessageBox.Show("El precio debe ser un número no negativo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        tbPrecioVtaProductoVenta.Focus();
-        //        return;
-        //    }
-        //    if (!int.TryParse(cantidadText, out int cantidad) || cantidad < 0)
-        //    {
-        //        MessageBox.Show("La cantidad debe ser un número entero no negativo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        tbCantidadProductoVenta.Focus();
-        //        return;
-        //    }
-
-        //    if (cantidad > stock)
-        //    {
-        //        MessageBox.Show("La cantidad a vender no puede superar el stock disponible.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        tbCantidadProductoVenta.Focus();
-        //        return;
-        //    }
-
-        //    MessageBox.Show("Datos válidos. Ya puede agregar el producto.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-        //    ibBotonAgregarProductoVenta.Enabled = true;
-        //}
-
         private void IbBotonAgregarProductoVenta_Click(object sender, EventArgs e)
         {
             // Validaciones
@@ -1247,7 +1012,7 @@ namespace ProyectoNetshop.formularios
                 return;
             }
 
-            DateTime fechaVenta = dtpFechaVenta.Checked ? dtpFechaVenta.Value.Date : DateTime.Today;
+            DateTime fechaVenta = dtpFechaVenta.Value.Date;
             if (fechaVenta > DateTime.Today)
             {
                 MessageBox.Show("La fecha de venta no puede ser mayor al día de hoy.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1294,8 +1059,6 @@ namespace ProyectoNetshop.formularios
                 return;
             }
 
-            //var producto = productosMap[claveProducto];
-
             string descripcion = string.IsNullOrWhiteSpace(producto.descripcion) ? null : producto.descripcion;
             string categoria = string.IsNullOrWhiteSpace(producto.descripcionCategoria) ? null : producto.descripcionCategoria;
             string marca = string.IsNullOrWhiteSpace(producto.descripcionMarca) ? null : producto.descripcionMarca;
@@ -1305,7 +1068,6 @@ namespace ProyectoNetshop.formularios
             if (!string.IsNullOrWhiteSpace(descripcion))
                 partes.Add(descripcion);
 
-            // ✅ Formato mejorado: "Categoría: Educación - Marca: HP"
             if (!string.IsNullOrWhiteSpace(categoria) || !string.IsNullOrWhiteSpace(marca))
             {
                 string catMarca = $"Categoría: {categoria ?? "Sin categoría"} - Marca: {marca ?? "Sin marca"}";
@@ -1321,7 +1083,6 @@ namespace ProyectoNetshop.formularios
                 cantidad = cantidad,
                 precio_unitario = producto.precio_vta,
                 producto_nombre = producto.nombre,
-                //producto_descripcion = $"{producto.descripcion} ({producto.descripcionCategoria} - {producto.descripcionMarca})",
                 producto_descripcion = descripcionCompleta,
 
                 descripcionCategoria = producto.descripcionCategoria,
@@ -1336,7 +1097,6 @@ namespace ProyectoNetshop.formularios
                 fecha_venta = fechaVenta
             };
 
-            //CarritoVentaSession.Carrito.Add(detalle);
             var existente = CarritoVentaSession.Carrito.FirstOrDefault(p => p.id_producto == detalle.id_producto);
 
             if (existente != null)
@@ -1348,9 +1108,10 @@ namespace ProyectoNetshop.formularios
                 CarritoVentaSession.Carrito.Add(detalle);
             }
 
-            // ✅ Bloquear campos de cliente si es el primer producto agregado
+            // Bloquear campos de cliente si es el primer producto agregado
             if (CarritoVentaSession.Carrito.Count == 1)
             {
+                // Bloquear cliente
                 tbNombreClienteVenta.ReadOnly = true;
                 tbDniClienteVenta.ReadOnly = true;
                 tbEmailClienteVenta.ReadOnly = true;
@@ -1360,26 +1121,19 @@ namespace ProyectoNetshop.formularios
                 tbDniClienteVenta.Enabled = false;
                 tbEmailClienteVenta.Enabled = false;
                 tbIdClienteVenta.Enabled = false;
+
+                // Bloquear tipo de factura
+                cbTipoFacturaVenta.Enabled = false;
+
+                // Bloquear fecha
+                dtpFechaVenta.Enabled = false;
             }
 
             MostrarCarritoEnGrid();
 
-            //CultureInfo culturaAR = new CultureInfo("es-AR");
-            //decimal totalItem = detalle.cantidad * detalle.precio_unitario;
-
             decimal totalCarrito = CarritoVentaSession.Carrito.Sum(p => p.precio_unitario * p.cantidad);
             CultureInfo culturaAR = new CultureInfo("es-AR");
             lbTotalVendidoVenta.Text = totalCarrito.ToString("C", culturaAR);
-
-            //dgvVentas.Rows.Add(
-            //    detalle.producto_nombre,
-            //    detalle.producto_descripcion,
-            //    detalle.cantidad,
-            //    detalle.precio_unitario.ToString("C", culturaAR), // ✅ Precio unitario con formato argentino
-            //    totalItem.ToString("C", culturaAR),               // ✅ Total con formato argentino
-            //    fechaVenta.ToString("dd/MM/yyyy"),
-            //    "Pendiente"
-            //);
 
             // Limpiar campos
             tbIdProductoVenta.Clear();
@@ -1389,12 +1143,8 @@ namespace ProyectoNetshop.formularios
             tbPrecioVtaProductoVenta.Clear();
             tbStockProductoVenta.Clear();
             tbCantidadProductoVenta.Clear();
-            //pbImagenProductoVenta.Image = null;
             pbImagenProductoVenta.Image = (Bitmap)Properties.Resources.producto_defecto.Clone();
             ibBotonAgregarProductoVenta.Enabled = false;
-
-            // Permitir edición para agregar un nuevo producto
-            //DesbloquearCamposProducto();
 
             ActualizarTotalVendido();
         }
@@ -1431,59 +1181,30 @@ namespace ProyectoNetshop.formularios
                     item.cantidad,
                     item.precio_unitario.ToString("C", culturaAR),
                     totalItem.ToString("C", culturaAR),
-                    DateTime.Today.ToString("dd/MM/yyyy"),
+                    item.fecha_venta.ToString("dd/MM/yyyy"),
                     "Pendiente"
                 );
             }
-
-            //foreach (var detalle in CarritoVentaSession.Carrito)
-            //{
-            //    dgvVentas.Rows.Add(
-            //        detalle.producto_nombre,
-            //        detalle.producto_descripcion,
-            //        detalle.cantidad,
-            //        //detalle.precio_unitario.ToString("0.00"),
-            //        detalle.precio_unitario.ToString("C", culturaAR),
-            //        //(detalle.cantidad * detalle.precio_unitario).ToString("0.00"),
-            //        (detalle.cantidad * detalle.precio_unitario).ToString("C", culturaAR),
-            //        detalle.fecha_venta.ToString("dd/MM/yyyy"),
-            //        "Pendiente"
-            //    );
-            //}
         }
 
         private void ibBotonBuscarClienteVenta_Click(object sender, EventArgs e)
         {
-            //XXX
+
         }
-
-        //private void ibBotonGuardarVenta_Click(object sender, EventArgs e)
-        //{
-        //    if (cbTipoFacturaVenta.SelectedIndex < 0)
-        //    {
-        //        MessageBox.Show(
-        //            "Debe seleccionar un tipo de factura.",
-        //            "Validación",
-        //            MessageBoxButtons.OK,
-        //            MessageBoxIcon.Warning);
-        //        return;
-        //    }
-
-        //    if (dtpFechaVenta.ShowCheckBox && dtpFechaVenta.Checked)
-        //    {
-        //        DateTime fecha = dtpFechaVenta.Value.Date;
-        //        if (fecha > DateTime.Now.Date)
-        //        {
-        //            MessageBox.Show("La fecha de venta no puede ser mayor al día de hoy.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //            return;
-        //        }
-        //    }
-
-        //    MessageBox.Show("Tipo de factura y fecha válidos. Procediendo a guardar la venta…", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //}
 
         private void ibBotonGuardarVenta_Click(object sender, EventArgs e)
         {
+            DialogResult confirmar = MessageBox.Show(
+                "¿Deseás realizar la venta?",
+                "Confirmar venta",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2
+            );
+
+            if (confirmar != DialogResult.Yes)
+                return;
+
             // Validaciones
             if (CarritoVentaSession.Carrito.Count == 0)
             {
@@ -1512,7 +1233,7 @@ namespace ProyectoNetshop.formularios
 
             string tipoFactura = cbTipoFacturaVenta.SelectedItem.ToString();
 
-            // 🔍 Validar stock agrupado por producto
+            // Validar stock agrupado por producto
             var productosAgrupados = CarritoVentaSession.Carrito
                 .GroupBy(d => d.id_producto)
                 .Select(g => new
@@ -1532,11 +1253,11 @@ namespace ProyectoNetshop.formularios
                 }
             }
 
-            // ✅ Calcular total de la venta
+            // Calcular total de la venta
             decimal totalCalculado = CarritoVentaSession.Carrito
                 .Sum(d => d.cantidad * d.precio_unitario);
 
-            // ✅ Crear venta principal
+            // Crear venta principal
             var venta = new Venta_model
             {
                 id_cliente = idCliente,
@@ -1547,7 +1268,7 @@ namespace ProyectoNetshop.formularios
                 id_estado = 2 // ✅ Estado "Finalizado"
             };
 
-            // ✅ Generar número de factura automáticamente
+            // Generar número de factura automáticamente
             string nroFacturaGenerado = Venta_controller.GenerarNroFactura(tipoFactura);
             venta.nro_factura = nroFacturaGenerado;
 
@@ -1570,12 +1291,34 @@ namespace ProyectoNetshop.formularios
                     precio_unitario = detalle.precio_unitario
                 };
 
-                Venta_controller.GuardarDetalleVenta(detalleVenta); // ✅ Este método debe insertar el detalle
+                Venta_controller.GuardarDetalleVenta(detalleVenta);
 
-                Producto_controller.ActualizarStock(detalle.id_producto, -detalle.cantidad); // ✅ Este método debe restar stock
+                Producto_controller.ActualizarStock(detalle.id_producto, -detalle.cantidad);
             }
 
-            MessageBox.Show("Venta guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            DialogResult postVenta = MessageBox.Show(
+                $"Venta realizada correctamente.\nFactura #{venta.nro_factura}\n¿Deseás visualizar el PDF?",
+                "Venta finalizada",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Information,
+                MessageBoxDefaultButton.Button2
+            );
+
+            if (postVenta == DialogResult.Yes)
+            {
+                string rutaPdf = GenerarPdfVenta(idVentaGenerada);
+
+                visorPdf.Document?.Dispose();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                string rutaTemporal = Path.Combine(Path.GetTempPath(), $"temp_{Guid.NewGuid()}.pdf");
+                File.Copy(rutaPdf, rutaTemporal, true);
+
+                visorPdf.Document = PdfiumViewer.PdfDocument.Load(rutaTemporal);
+                visorPdf.ZoomMode = PdfiumViewer.PdfViewerZoomMode.FitWidth;
+                panelVisorPdf.Visible = true;
+            }
 
             // Limpiar todo
             CarritoVentaSession.Carrito.Clear();
@@ -1583,28 +1326,6 @@ namespace ProyectoNetshop.formularios
             ActualizarTotalVendido();
             LimpiarCamposVenta();
         }
-
-
-        //private void ibBotonBorrarVenta_Click(object sender, EventArgs e)
-        //{
-        //    //Cliente
-        //    tbDniClienteVenta.Clear();
-        //    tbNombreClienteVenta.Clear();
-        //    tbEmailClienteVenta.Clear();
-        //    tbIdClienteVenta.Clear();
-
-        //    //Producto
-        //    tbNombreProductoVenta.Clear();
-        //    //tbDescripcionProductoVenta.Clear();
-        //    tbStockProductoVenta.Clear();
-        //    tbPrecioVtaProductoVenta.Clear();
-        //    tbCantidadProductoVenta.Clear();
-
-        //    //Tipo de Factura y Fecha
-        //    cbTipoFacturaVenta.SelectedIndex = -1;
-        //    dtpFechaVenta.Value = DateTime.Today;
-        //    dtpFechaVenta.Checked = false;
-        //}
 
         private void ibBotonBorrarVenta_Click(object sender, EventArgs e)
         {
@@ -1625,7 +1346,7 @@ namespace ProyectoNetshop.formularios
             tbDniClienteVenta.Clear();
             tbEmailClienteVenta.Clear();
 
-            // ✅ Restaurar campos de cliente para permitir nueva selección
+            // Restaurar campos de cliente
             tbNombreClienteVenta.ReadOnly = false;
             tbDniClienteVenta.ReadOnly = false;
             tbEmailClienteVenta.ReadOnly = false;
@@ -1638,20 +1359,23 @@ namespace ProyectoNetshop.formularios
 
             // Limpiar campos de factura
             cbTipoFacturaVenta.SelectedIndex = 0;
+            cbTipoFacturaVenta.Enabled = true;
             dtpFechaVenta.Value = DateTime.Today;
             dtpFechaVenta.Checked = true;
+            dtpFechaVenta.Enabled = true;
 
-            // ✅ Borrar todos los productos del carrito si hay alguno
             if (CarritoVentaSession.Carrito.Count > 0)
             {
                 CarritoVentaSession.Carrito.Clear();
                 MostrarCarritoEnGrid();
-                ActualizarTotalVendido(); // ✅ Esta línea faltaba
+                ActualizarTotalVendido();
             }
         }
 
         private void LimpiarCamposVenta()
         {
+            CarritoVentaSession.Carrito.Clear();
+
             tbIdProductoVenta.Clear();
             tbNombreProductoVenta.Clear();
             tbCategoriaProductoVenta.Clear();
@@ -1659,7 +1383,6 @@ namespace ProyectoNetshop.formularios
             tbPrecioVtaProductoVenta.Clear();
             tbStockProductoVenta.Clear();
             tbCantidadProductoVenta.Clear();
-            //pbImagenProductoVenta.Image = null;
             pbImagenProductoVenta.Image = (Bitmap)Properties.Resources.producto_defecto.Clone();
 
             tbIdClienteVenta.Clear();
@@ -1677,10 +1400,11 @@ namespace ProyectoNetshop.formularios
             tbEmailClienteVenta.Enabled = true;
             tbIdClienteVenta.Enabled = true;
 
-
             cbTipoFacturaVenta.SelectedIndex = 0;
+            cbTipoFacturaVenta.Enabled = true;
             dtpFechaVenta.Value = DateTime.Today;
             dtpFechaVenta.Checked = true;
+            dtpFechaVenta.Enabled = true;
 
             ibBotonAgregarProductoVenta.Enabled = false;
         }
@@ -1750,29 +1474,6 @@ namespace ProyectoNetshop.formularios
             }
         }
 
-        //private void BloquearCamposProducto()
-        //{
-        //    tbIdProductoVenta.ReadOnly = true;
-        //    tbNombreProductoVenta.ReadOnly = true;
-        //    tbCategoriaProductoVenta.ReadOnly = true;
-        //    tbMarcaProductoVenta.ReadOnly = true;
-        //    tbPrecioVtaProductoVenta.ReadOnly = true;
-        //    tbStockProductoVenta.ReadOnly = true;
-        //    tbCantidadProductoVenta.ReadOnly = true;
-        //}
-
-        //private void DesbloquearCamposProducto()
-        //{
-        //    tbIdProductoVenta.ReadOnly = false;
-        //    tbNombreProductoVenta.ReadOnly = false;
-        //    tbCategoriaProductoVenta.ReadOnly = false;
-        //    tbMarcaProductoVenta.ReadOnly = false;
-        //    tbPrecioVtaProductoVenta.ReadOnly = false;
-        //    tbStockProductoVenta.ReadOnly = false;
-        //    tbCantidadProductoVenta.ReadOnly = false;
-        //}
-
-
         private void ibBotonAgregarProductoVenta_Click_1(object sender, EventArgs e)
         {
 
@@ -1783,17 +1484,20 @@ namespace ProyectoNetshop.formularios
 
         }
 
-        private void GenerarPdfVenta(int idVenta)
+        private string GenerarPdfVenta(int idVenta)
         {
             var venta = Venta_controller.ObtenerCabeceraVenta(idVenta);
             var detalles = Venta_controller.ObtenerDetalleVenta(idVenta);
             if (venta == null || detalles.Count == 0)
             {
                 MessageBox.Show("No se pudo generar el PDF. La venta está vacía o no existe.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return null;
             }
 
-            string ruta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"Venta_{venta.nro_factura ?? idVenta.ToString()}.pdf");
+            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string ruta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"Venta_{venta.nro_factura ?? idVenta.ToString()}_{timestamp}.pdf");
+
+            // Generar el PDF
             using (FileStream stream = new FileStream(ruta, FileMode.Create))
             {
                 Document doc = new Document(PageSize.A4, 20, 20, 20, 20);
@@ -1806,7 +1510,7 @@ namespace ProyectoNetshop.formularios
                 CultureInfo culturaAR = new CultureInfo("es-AR");
 
                 doc.Add(new Paragraph("Factura de Venta", fuenteTitulo));
-                doc.Add(new Paragraph($"Fecha: {venta.fecha:dd/MM/yyyy}", fuenteNormal));
+                doc.Add(new Paragraph($"Fecha: {DateTime.Now:dd/MM/yyyy HH:mm}", fuenteNormal));
                 doc.Add(new Paragraph($"Factura: {venta.nro_factura ?? "Sin número"}", fuenteNormal));
                 doc.Add(new Paragraph($"Cliente: {venta.nombre_cliente}", fuenteNormal));
                 doc.Add(new Paragraph($"Vendedor: {venta.nombre_vendedor}", fuenteNormal));
@@ -1831,14 +1535,13 @@ namespace ProyectoNetshop.formularios
 
                 doc.Add(tabla);
                 doc.Add(new Paragraph(" "));
-                //doc.Add(new Paragraph($"TOTAL: {venta.total_venta.ToString("C", culturaAR)}", fuenteNormal));
                 doc.Add(new Paragraph($"TOTAL: {venta.total_venta.ToString("C", culturaAR)}", fuenteTitulo));
 
                 doc.Close();
                 stream.Close();
             }
 
-            MessageBox.Show("PDF generado correctamente en el escritorio.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return ruta;
         }
     }
 }
