@@ -42,12 +42,12 @@
             tbDniVendedorReporte = new TextBox();
             label3 = new Label();
             panel1 = new Panel();
-            lbTotalVendidoVendedor = new Label();
-            lbTotal = new Label();
             label1 = new Label();
             label7 = new Label();
             fechaHastaVendedor = new DateTimePicker();
             fechaDesdeVendedor = new DateTimePicker();
+            lbTotalVendidoVendedor = new Label();
+            lbTotal = new Label();
             chReporteVendedor = new System.Windows.Forms.DataVisualization.Charting.Chart();
             dgvReporteVentaVendedor = new DataGridView();
             nroFactura = new DataGridViewTextBoxColumn();
@@ -187,8 +187,6 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(0, 0, 64);
-            panel1.Controls.Add(lbTotalVendidoVendedor);
-            panel1.Controls.Add(lbTotal);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(label7);
             panel1.Controls.Add(fechaHastaVendedor);
@@ -199,28 +197,6 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(288, 851);
             panel1.TabIndex = 3;
-            // 
-            // lbTotalVendidoVendedor
-            // 
-            lbTotalVendidoVendedor.AutoSize = true;
-            lbTotalVendidoVendedor.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
-            lbTotalVendidoVendedor.ForeColor = SystemColors.ButtonFace;
-            lbTotalVendidoVendedor.Location = new Point(120, 745);
-            lbTotalVendidoVendedor.Name = "lbTotalVendidoVendedor";
-            lbTotalVendidoVendedor.Size = new Size(63, 34);
-            lbTotalVendidoVendedor.TabIndex = 30;
-            lbTotalVendidoVendedor.Text = "$0,00";
-            // 
-            // lbTotal
-            // 
-            lbTotal.AutoSize = true;
-            lbTotal.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
-            lbTotal.ForeColor = SystemColors.ButtonFace;
-            lbTotal.Location = new Point(40, 745);
-            lbTotal.Name = "lbTotal";
-            lbTotal.Size = new Size(81, 34);
-            lbTotal.TabIndex = 29;
-            lbTotal.Text = "TOTAL:";
             // 
             // label1
             // 
@@ -262,6 +238,28 @@
             fechaDesdeVendedor.Size = new Size(209, 27);
             fechaDesdeVendedor.TabIndex = 17;
             // 
+            // lbTotalVendidoVendedor
+            // 
+            lbTotalVendidoVendedor.AutoSize = true;
+            lbTotalVendidoVendedor.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbTotalVendidoVendedor.ForeColor = SystemColors.ButtonFace;
+            lbTotalVendidoVendedor.Location = new Point(842, 753);
+            lbTotalVendidoVendedor.Name = "lbTotalVendidoVendedor";
+            lbTotalVendidoVendedor.Size = new Size(63, 34);
+            lbTotalVendidoVendedor.TabIndex = 30;
+            lbTotalVendidoVendedor.Text = "$0,00";
+            // 
+            // lbTotal
+            // 
+            lbTotal.AutoSize = true;
+            lbTotal.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbTotal.ForeColor = SystemColors.ButtonFace;
+            lbTotal.Location = new Point(755, 753);
+            lbTotal.Name = "lbTotal";
+            lbTotal.Size = new Size(81, 34);
+            lbTotal.TabIndex = 29;
+            lbTotal.Text = "TOTAL:";
+            // 
             // chReporteVendedor
             // 
             chReporteVendedor.BackColor = Color.Linen;
@@ -277,7 +275,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             chReporteVendedor.Series.Add(series1);
-            chReporteVendedor.Size = new Size(567, 365);
+            chReporteVendedor.Size = new Size(446, 365);
             chReporteVendedor.TabIndex = 21;
             chReporteVendedor.Text = "Grafico reporte vendedor";
             // 
@@ -359,73 +357,74 @@
             lCantidadVentas.AutoSize = true;
             lCantidadVentas.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lCantidadVentas.ForeColor = SystemColors.ButtonFace;
-            lCantidadVentas.Location = new Point(877, 485);
+            lCantidadVentas.Location = new Point(755, 481);
             lCantidadVentas.Name = "lCantidadVentas";
-            lCantidadVentas.Size = new Size(184, 34);
+            lCantidadVentas.Size = new Size(219, 34);
             lCantidadVentas.TabIndex = 31;
-            lCantidadVentas.Text = "Cantidad de ventas:";
+            lCantidadVentas.Text = "\U0001f9fe Cantidad de ventas:";
+            lCantidadVentas.Click += lCantidadVentas_Click;
             // 
             // lVentaMasAlta
             // 
             lVentaMasAlta.AutoSize = true;
             lVentaMasAlta.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lVentaMasAlta.ForeColor = SystemColors.ButtonFace;
-            lVentaMasAlta.Location = new Point(877, 521);
+            lVentaMasAlta.Location = new Point(759, 517);
             lVentaMasAlta.Name = "lVentaMasAlta";
-            lVentaMasAlta.Size = new Size(147, 34);
+            lVentaMasAlta.Size = new Size(182, 34);
             lVentaMasAlta.TabIndex = 32;
-            lVentaMasAlta.Text = "Venta mas alta:";
+            lVentaMasAlta.Text = "📈 Venta mas alta:";
             // 
             // lVentaMasBaja
             // 
             lVentaMasBaja.AutoSize = true;
             lVentaMasBaja.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lVentaMasBaja.ForeColor = SystemColors.ButtonFace;
-            lVentaMasBaja.Location = new Point(877, 557);
+            lVentaMasBaja.Location = new Point(759, 553);
             lVentaMasBaja.Name = "lVentaMasBaja";
-            lVentaMasBaja.Size = new Size(151, 34);
+            lVentaMasBaja.Size = new Size(186, 34);
             lVentaMasBaja.TabIndex = 33;
-            lVentaMasBaja.Text = "Venta mas baja:";
+            lVentaMasBaja.Text = "📉 Venta mas baja:";
             // 
             // lPromedioFactura
             // 
             lPromedioFactura.AutoSize = true;
             lPromedioFactura.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lPromedioFactura.ForeColor = SystemColors.ButtonFace;
-            lPromedioFactura.Location = new Point(877, 593);
+            lPromedioFactura.Location = new Point(759, 589);
             lPromedioFactura.Name = "lPromedioFactura";
-            lPromedioFactura.Size = new Size(205, 34);
+            lPromedioFactura.Size = new Size(240, 34);
             lPromedioFactura.TabIndex = 34;
-            lPromedioFactura.Text = "Promedio por factura:";
+            lPromedioFactura.Text = "📊 Promedio por factura:";
             // 
             // lClienteFrecuente
             // 
             lClienteFrecuente.AutoSize = true;
             lClienteFrecuente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lClienteFrecuente.ForeColor = SystemColors.ButtonFace;
-            lClienteFrecuente.Location = new Point(877, 629);
+            lClienteFrecuente.Location = new Point(759, 625);
             lClienteFrecuente.Name = "lClienteFrecuente";
-            lClienteFrecuente.Size = new Size(212, 34);
+            lClienteFrecuente.Size = new Size(245, 34);
             lClienteFrecuente.TabIndex = 35;
-            lClienteFrecuente.Text = "Cliente mas frecuente: ";
+            lClienteFrecuente.Text = " ⭐  Cliente mas frecuente: ";
             // 
             // lDiaMayorFacturacion
             // 
             lDiaMayorFacturacion.AutoSize = true;
             lDiaMayorFacturacion.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lDiaMayorFacturacion.ForeColor = SystemColors.ButtonFace;
-            lDiaMayorFacturacion.Location = new Point(877, 709);
+            lDiaMayorFacturacion.Location = new Point(759, 661);
             lDiaMayorFacturacion.Name = "lDiaMayorFacturacion";
-            lDiaMayorFacturacion.Size = new Size(251, 34);
+            lDiaMayorFacturacion.Size = new Size(286, 34);
             lDiaMayorFacturacion.TabIndex = 36;
-            lDiaMayorFacturacion.Text = "Dia con mayor facturacion: ";
+            lDiaMayorFacturacion.Text = "📅 Dia con mayor facturacion: ";
             // 
             // lbCantidadVentas
             // 
             lbCantidadVentas.AutoSize = true;
             lbCantidadVentas.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lbCantidadVentas.ForeColor = SystemColors.ButtonFace;
-            lbCantidadVentas.Location = new Point(1067, 485);
+            lbCantidadVentas.Location = new Point(977, 481);
             lbCantidadVentas.Name = "lbCantidadVentas";
             lbCantidadVentas.Size = new Size(26, 34);
             lbCantidadVentas.TabIndex = 37;
@@ -436,7 +435,7 @@
             lbVentaMasAlta.AutoSize = true;
             lbVentaMasAlta.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lbVentaMasAlta.ForeColor = SystemColors.ButtonFace;
-            lbVentaMasAlta.Location = new Point(1034, 521);
+            lbVentaMasAlta.Location = new Point(944, 517);
             lbVentaMasAlta.Name = "lbVentaMasAlta";
             lbVentaMasAlta.Size = new Size(26, 34);
             lbVentaMasAlta.TabIndex = 38;
@@ -447,7 +446,7 @@
             lbVentaMasBaja.AutoSize = true;
             lbVentaMasBaja.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lbVentaMasBaja.ForeColor = SystemColors.ButtonFace;
-            lbVentaMasBaja.Location = new Point(1034, 559);
+            lbVentaMasBaja.Location = new Point(945, 551);
             lbVentaMasBaja.Name = "lbVentaMasBaja";
             lbVentaMasBaja.Size = new Size(26, 34);
             lbVentaMasBaja.TabIndex = 39;
@@ -458,7 +457,7 @@
             lbPromedioFactura.AutoSize = true;
             lbPromedioFactura.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lbPromedioFactura.ForeColor = SystemColors.ButtonFace;
-            lbPromedioFactura.Location = new Point(1088, 593);
+            lbPromedioFactura.Location = new Point(1002, 589);
             lbPromedioFactura.Name = "lbPromedioFactura";
             lbPromedioFactura.Size = new Size(26, 34);
             lbPromedioFactura.TabIndex = 40;
@@ -469,7 +468,7 @@
             lbClienteFrecuente.AutoSize = true;
             lbClienteFrecuente.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lbClienteFrecuente.ForeColor = SystemColors.ButtonFace;
-            lbClienteFrecuente.Location = new Point(1088, 627);
+            lbClienteFrecuente.Location = new Point(1002, 625);
             lbClienteFrecuente.Name = "lbClienteFrecuente";
             lbClienteFrecuente.Size = new Size(26, 34);
             lbClienteFrecuente.TabIndex = 41;
@@ -480,7 +479,7 @@
             lbDiaMayorFacturacion.AutoSize = true;
             lbDiaMayorFacturacion.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
             lbDiaMayorFacturacion.ForeColor = SystemColors.ButtonFace;
-            lbDiaMayorFacturacion.Location = new Point(877, 745);
+            lbDiaMayorFacturacion.Location = new Point(755, 697);
             lbDiaMayorFacturacion.Name = "lbDiaMayorFacturacion";
             lbDiaMayorFacturacion.Size = new Size(26, 34);
             lbDiaMayorFacturacion.TabIndex = 42;
@@ -492,6 +491,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 0, 64);
             ClientSize = new Size(1270, 851);
+            Controls.Add(lbTotalVendidoVendedor);
+            Controls.Add(lbTotal);
             Controls.Add(lbDiaMayorFacturacion);
             Controls.Add(lbClienteFrecuente);
             Controls.Add(lbPromedioFactura);

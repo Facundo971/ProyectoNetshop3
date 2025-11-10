@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// Importa librerías.
+using Microsoft.Data.SqlClient;
 using ProyectoNetshop.Cruds;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ namespace ProyectoNetshop.formularios
         // Inicializado en -1 para indicar que ningun usuario se eligio
         private int _usuarioSeleccionadoId = -1;
 
+        // Configura el formulario de usuarios al inicializar: asigna eventos para carga, clics en la grilla, filtros de búsqueda,
+        // visibilidad de contraseña, y restricciones de entrada en campos.
         public usuarios()
         {
             InitializeComponent();
@@ -63,6 +66,9 @@ namespace ProyectoNetshop.formularios
             tbBusquedaDniUsuario.KeyPress += TextBox_OnlyDigits_KeyPress;
         }
 
+        // Inicializa la vista de usuarios: configura controles de fecha, filtros de estado, selección de perfil por defecto, y
+        // carga usuarios con sus descripciones de perfil. Define manualmente las columnas del DataGridView para mostrar datos relevantes y
+        // oculta el ID interno.
         private void usuarios_Load(object sender, EventArgs e)
         {
             // Mostramos el formato corto de fecha
@@ -71,7 +77,7 @@ namespace ProyectoNetshop.formularios
             // Habilitamos el checkbox para activar/desactivar la fecha
             fechaNacimientoUsuario.ShowCheckBox = true;
 
-            // Por defecto, que venga “sin fecha” (unchecked)
+            // Por defecto, que venga “sin fecha”
             fechaNacimientoUsuario.Checked = false;
 
             // Por defecto muestro ambos
@@ -201,12 +207,14 @@ namespace ProyectoNetshop.formularios
             dgvUsuarios.DataSource = usuarios;
         }
 
+        // Oculta visualmente las contraseñas en la grilla de usuarios mostrando siempre 15 asteriscos,
+        // sin importar el valor real.
         private void DgvUsuarios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             // Si es la columna “pass”
             if (dgvUsuarios.Columns[e.ColumnIndex].Name == "pass")
             {
-                // Asigna siempre 10 asteriscos
+                // Asigna siempre 15 asteriscos
                 e.Value = "***************";
                 e.FormattingApplied = true;
             }
@@ -230,6 +238,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Al hacer clic fuera de la grilla, se limpia la selección actual, se reinicia el ID de usuario seleccionado y se vacían los
+        // campos del formulario.
         private void Form_Or_Container_Click(object? sender, EventArgs e)
         {
             dgvUsuarios.ClearSelection();
@@ -237,6 +247,8 @@ namespace ProyectoNetshop.formularios
             LimpiarControles();
         }
 
+        // Restringe la entrada en el campo de nombre: solo permite letras, espacios y teclas de control.
+        // Evita caracteres inválidos como números o símbolos.
         private void tbNombre_KeyPress(object sender, KeyPressEventArgs e)
         {
             // Permite solo letras y teclas de control
@@ -246,6 +258,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Restringe la entrada en el campo de apellido: solo permite letras, espacios y teclas de control.
+        // Evita caracteres no válidos como números o símbolos.
         private void tbApellido_KeyPress(object sender, KeyPressEventArgs e)
         {
             // Permite solo letras y teclas de control
@@ -255,6 +269,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Guarda o actualiza un usuario según el contexto: valida campos, confirma la acción, arma el modelo, ejecuta el INSERT o UPDATE,
+        // muestra el resultado, refresca la grilla y limpia el formulario.
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (!ValidarCampos())
@@ -271,7 +287,6 @@ namespace ProyectoNetshop.formularios
             Usuario_model usuarioSeleccionado = null;
             if (_usuarioSeleccionadoId >= 0 && dgvUsuarios.CurrentRow != null)
                 usuarioSeleccionado = dgvUsuarios.CurrentRow.DataBoundItem as Usuario_model;
-
 
             // Se armar el objeto Usuario_model
             var usuario = new Usuario_model
@@ -310,6 +325,7 @@ namespace ProyectoNetshop.formularios
             LimpiarControles();
         }
 
+        // Al cambiar la selección de perfil, se extrae el ID y la descripción del perfil elegido.
         private void cbPerfilUsuario_SelectedIndexChanged(object sender, EventArgs e)
         {
             Usuario_model usuario = new Usuario_model();
@@ -321,6 +337,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Obtiene la lista de perfiles desde la base de datos: ejecuta un SELECT, recorre los resultados y
+        // construye objetos `Perfil_model` con ID, descripción y estado activo. Devuelve la colección completa.
         private List<Perfil_model> ObtenerPerfiles()
         {
             var lista = new List<Perfil_model>();
@@ -345,6 +363,8 @@ namespace ProyectoNetshop.formularios
             return lista;
         }
 
+        // Recupera todos los usuarios desde la base de datos: lee cada fila del resultado, maneja posibles valores nulos en fecha y teléfono,
+        // convierte la contraseña a byte[], y construye objetos `Usuario_model`. Devuelve la lista completa.
         private List<Usuario_model> ObtenerUsuarios()
         {
             var lista = new List<Usuario_model>();
@@ -396,6 +416,9 @@ namespace ProyectoNetshop.formularios
 
             return lista;
         }
+
+        // Al hacer clic en una fila del grid, se carga el usuario seleccionado en el formulario: se asignan sus datos a los controles,
+        // se actualiza el ID interno, se configura la visibilidad del estado y se habilita el botón de eliminación si el usuario está activo.
         private void DgvUsuarios_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -436,12 +459,19 @@ namespace ProyectoNetshop.formularios
 
             // Habilita “Eliminar” solo si activa == 1
             btnBorrar.Enabled = u.activo == 1;
+
+            // Bloquear edición de perfil si el usuario seleccionado es el mismo que el actual
+            cbPerfilUsuario.Enabled = _usuarioSeleccionadoId != Sesion.UsuarioActualId;
         }
+
+        // Cada vez que se modifica el texto en los campos de búsqueda, se aplica el filtro y se actualiza la grilla de usuarios.
         private void Busqueda_TextChanged(object sender, EventArgs e)
         {
             FiltrarYRefrescar();
         }
 
+        // Aplica filtros dinámicos sobre la lista de usuarios: por estado (activo/inactivo), por prefijo de DNI y por coincidencia parcial en el nombre.
+        // Luego asigna la descripción del perfil correspondiente y actualiza el DataGridView con los resultados filtrados.
         private void FiltrarYRefrescar()
         {
             var perfiles = ObtenerPerfiles();
@@ -475,6 +505,8 @@ namespace ProyectoNetshop.formularios
             dgvUsuarios.DataSource = filtrados;
         }
 
+        // Limpia todos los campos del formulario de usuario: borra textos, restablece radios y fecha, oculta el estado de baja y
+        // selecciona el perfil "Vendedor" por defecto (ID = 2). También reinicia el ID de usuario seleccionado.
         private void LimpiarControles()
         {
             tbNombreUsuario.Clear();
@@ -500,6 +532,9 @@ namespace ProyectoNetshop.formularios
             // Ocultar el groupbox
             gbActivoUsuario.Visible = false;
         }
+
+        // Maneja la desactivación de un usuario: verifica si hay selección, impide desactivar al usuario actual, solicita confirmación,
+        // ejecuta la baja lógica, informa el resultado y actualiza la grilla.
         private void btnEliminar_Click(object sender, EventArgs e)
         {
             // Si no hay selección: limpio los campos
@@ -553,6 +588,8 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Controla el comportamiento de los filtros de estado: si ambos checkboxes están desmarcados,
+        // se reactiva el que disparó el evento para evitar una grilla vacía. Luego actualiza la vista con los filtros aplicados.
         private void Filtro_CheckedChanged(object sender, EventArgs e)
         {
             if (!cbActivosUsuarios.Checked && !cbInactivosUsuarios.Checked)
@@ -575,6 +612,8 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Valida todos los campos del formulario de usuario: verifica nombre, apellido, email con formato `.com`, contraseña con requisitos,
+        // edad entre 18 y 100 años, DNI en rango válido, teléfono de 10 dígitos, perfil seleccionado y unicidad de email/DNI.
         private bool ValidarCampos()
         {
             // Nombre
@@ -749,6 +788,7 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Alterna la visibilidad de la contraseña: si el checkbox está marcado, muestra el texto plano; si no, lo enmascara con asteriscos.
         private void cbOcultalContraseniaUser_CheckedChanged(object sender, EventArgs e)
         {
             tbContraseniaUsuario.UseSystemPasswordChar = !cbOcultalContraseniaUser.Checked;

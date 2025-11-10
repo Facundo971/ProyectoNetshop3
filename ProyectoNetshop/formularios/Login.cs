@@ -1,4 +1,5 @@
-﻿using FontAwesome.Sharp;
+﻿// Importa librerías.
+using FontAwesome.Sharp;
 using Microsoft.Data.SqlClient;
 using ProyectoNetshop.BD;
 using ProyectoNetshop.Cruds;
@@ -18,14 +19,17 @@ namespace vistaDeProyectoC
 {
     public partial class FInicioSesion : Form
     {
-        //Perfil
+        // Perfil
         public int IdPerfil { get; private set; }
 
-        //Vendedor
+        // Vendedor
         public int VendedorId { get; private set; }
         public int VendedorDni { get; private set; }
         public string VendedorNombre { get; private set; }
 
+
+        // Constructor del formulario de inicio de sesión: inicializa componentes visuales, activa el modo oculto para la contraseña,
+        // y enlaza eventos para alternar visibilidad del texto y validar que el nombre de usuario contenga solo letras.
         public FInicioSesion()
         {
             InitializeComponent();
@@ -37,6 +41,8 @@ namespace vistaDeProyectoC
             TBUsuarioLogin.KeyPress += TextBox_OnlyLetters_KeyPress;
         }
 
+        // Evento de carga del formulario de inicio de sesión: asegura que el campo de contraseña se muestre oculto al iniciar,
+        // reforzando la privacidad del usuario desde el primer momento.
         private void FInicioSesion_Load(object sender, EventArgs e)
         {
             TBContraseniaLogin.UseSystemPasswordChar = true;
@@ -47,6 +53,10 @@ namespace vistaDeProyectoC
 
         }
 
+        // Lógica de autenticación al presionar "Ingresar": valida campos obligatorios, consulta la base por el usuario ingresado,
+        // verifica estado activo y compara la contraseña. Si es correcto, carga datos del vendedor (ID, DNI, nombre completo), asigna el perfil y
+        // cierra el formulario con éxito. En caso de error, muestra mensajes claros según el
+        // motivo (usuario inexistente, cuenta inactiva, contraseña incorrecta o error técnico).
         private void BIngresar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(TBUsuarioLogin.Text))
@@ -126,6 +136,8 @@ namespace vistaDeProyectoC
 
         }
 
+        // Maneja la acción de cancelar en el formulario de inicio de sesión: solicita confirmación al usuario antes de cerrar el formulario.
+        // Si el usuario acepta, se establece el resultado como `Cancel`, permitiendo al formulario principal detectar que el login fue abortado.
         private void BCancelar_Click(object sender, EventArgs e)
         {
             var resp = MessageBox.Show("¿Seguro que deseas salir?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
@@ -138,6 +150,8 @@ namespace vistaDeProyectoC
 
         }
 
+        // Restringe la entrada del TextBox a solo letras, espacios y teclas de control: bloquea números, símbolos y caracteres especiales para
+        // asegurar que el campo (como el nombre de usuario) contenga únicamente texto alfabético.
         private void TextBox_OnlyLetters_KeyPress(object sender, KeyPressEventArgs e)
         {
             bool esControl = char.IsControl(e.KeyChar);
@@ -148,6 +162,8 @@ namespace vistaDeProyectoC
                 e.Handled = true;
         }
 
+        // Alterna la visibilidad del campo de contraseña según el estado del checkbox: si está marcado, muestra el texto plano; si no,
+        // lo oculta con caracteres seguros.
         private void cbOcultarContraseniaLoginUser_CheckedChanged(object sender, EventArgs e)
         {
             TBContraseniaLogin.UseSystemPasswordChar = !cbOcultarContraseniaLoginUser.Checked;

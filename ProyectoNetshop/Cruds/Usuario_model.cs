@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Importa librerías.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace ProyectoNetshop.Cruds
 {
     internal class Usuario_model
     {
+        // Modelo de usuario que incluye datos personales, credenciales, estado de actividad y perfil asociado.
         public int id_usuario { get; set; }
         public string nombre { get; set; }
         public string apellido { get; set; }
@@ -22,8 +24,8 @@ namespace ProyectoNetshop.Cruds
         public string descripcion { get; set; }
         public string ActivoTexto => activo == 1 ? "SI" : "NO";
 
+        // Constructor del modelo de usuario, permite inicializar todos los campos principales con datos personales y de perfil.
         public Usuario_model() { }
-
         public Usuario_model(int p_id_usuario, string p_nombre, string p_apellido, string p_email, byte[] p_pass, int p_activo, string p_sexo, DateTime p_fecha_nacimiento,
                              long p_telefono, int p_dni, int p_id_perfil)
         {

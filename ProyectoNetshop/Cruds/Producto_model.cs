@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Importa librerías.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace ProyectoNetshop.Cruds
 {
     internal class Producto_model
     {
+        // Modelo de producto que incluye información comercial, stock, imagen, estado de eliminación y referencias de marca y categoría.
         public int id_producto { get; set; }
         public string nombre { get; set; }
         public string? descripcion { get; set; }
@@ -22,8 +24,8 @@ namespace ProyectoNetshop.Cruds
         public string descripcionCategoria { get; set; }
         public string EliminadoTexto => eliminado == 1 ? "NO" : "SI";
 
+        // Constructor del modelo de producto que inicializa todos los campos principales, incluyendo precio de venta, stock y referencias.
         public Producto_model() { }
-
         public Producto_model(int p_id_producto, string p_nombre, string p_descripcion, decimal p_precio, int p_stock, 
                               string p_imagen, int p_eliminado, decimal p_precio_vta, int p_id_marca, int p_id_categoria)
         {

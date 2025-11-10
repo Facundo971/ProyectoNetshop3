@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// Importa librerías.
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +11,7 @@ namespace ProyectoNetshop.Cruds
 {
     internal class Venta_controller
     {
+        // Inserta una venta pendiente con total 0 y estado 1, y devuelve el ID generado.
         public static int CrearVentaPendiente(DateTime fecha, string tipoFactura, int idUsuario, int idCliente)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -26,6 +28,7 @@ namespace ProyectoNetshop.Cruds
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
+        // Inserta un ítem en la venta y devuelve true si se agregó correctamente.
         public static bool AgregarDetalleVenta(int idVenta, int idProducto, int cantidad, decimal precioUnitario)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -41,6 +44,7 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery() > 0;
         }
 
+        // Inserta una venta completa en la base de datos y devuelve su ID generado.
         public static int GuardarVenta(Venta_model venta)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -59,6 +63,7 @@ namespace ProyectoNetshop.Cruds
             return (int)cmd.ExecuteScalar();
         }
 
+        // Guarda un ítem de venta en la base de datos y devuelve cuántas filas se insertaron.
         public static int GuardarDetalleVenta(Venta_detalle_model detalle)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -73,6 +78,7 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Devuelve una lista de ventas filtradas por estado y vendedor, con nombres de cliente y vendedor.
         public static List<Venta_model> ObtenerVentasPorEstadoYVendedor(int estado, int idUsuario)
         {
             var lista = new List<Venta_model>();
@@ -110,6 +116,7 @@ namespace ProyectoNetshop.Cruds
             return lista;
         }
 
+        // Genera un nuevo número de factura según el tipo, basado en el último registrado.
         public static string GenerarNroFactura(string tipoFactura)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -133,6 +140,7 @@ namespace ProyectoNetshop.Cruds
             return $"{tipoFactura}-{nuevoNumero.ToString("D6")}";
         }
 
+        // Devuelve el total vendido para un estado específico; si no hay ventas, retorna 0.
         public static decimal ObtenerTotalVentasPorEstado(int estado)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -142,6 +150,7 @@ namespace ProyectoNetshop.Cruds
             return (decimal)cmd.ExecuteScalar();
         }
 
+        // Devuelve el total vendido por un vendedor en un estado específico; si no hay ventas, retorna 0.
         public static decimal ObtenerTotalVentasPorEstadoYVendedor(int estado, int idUsuario)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -154,6 +163,7 @@ namespace ProyectoNetshop.Cruds
             return (decimal)cmd.ExecuteScalar();
         }
 
+        // Cancela una venta duplicando su cabecera con total negativo y estado 3 (Cancelado), devolviendo el stock asociado.
         public static bool CancelarVentaDuplicando(int idVentaOriginal)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -264,6 +274,7 @@ namespace ProyectoNetshop.Cruds
             }
         }
 
+        // Verifica si la venta ya fue cancelada buscando otra con mismo nro_factura y estado 3 (Cancelado).
         public static bool YaFueCancelada(int idVentaOriginal)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -280,6 +291,7 @@ namespace ProyectoNetshop.Cruds
             return cantidad > 0;
         }
 
+        // Verifica si existe una venta cancelada con el número de factura dado (estado 3 (Cancelado)).
         public static bool ExisteVentaCanceladaPorFactura(string nroFactura)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -293,6 +305,7 @@ namespace ProyectoNetshop.Cruds
             return cantidad > 0;
         }
 
+        // Obtiene los datos principales de una venta por ID, incluyendo factura, cliente y vendedor.
         public static Venta_model ObtenerCabeceraVenta(int idVenta)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -321,6 +334,7 @@ namespace ProyectoNetshop.Cruds
             };
         }
 
+        // Obtiene los ítems de una venta por ID, incluyendo nombre del producto, cantidad y precio unitario.
         public static List<Venta_detalle_model> ObtenerDetalleVenta(int idVenta)
         {
             var lista = new List<Venta_detalle_model>();
@@ -345,6 +359,7 @@ namespace ProyectoNetshop.Cruds
             return lista;
         }
 
+        // Devuelve cabeceras de ventas no canceladas (estado 2) por vendedor, excluyendo duplicadas por nro_factura.
         public static List<(string nroFactura, DateTime fecha, string tipoFactura, decimal totalVenta, string nombreCliente)> ObtenerCabecerasPorVendedorNoCanceladas(int dniVendedor)
         {
             var resultado = new List<(string, DateTime, string, decimal, string)>();
@@ -380,6 +395,7 @@ namespace ProyectoNetshop.Cruds
             return resultado;
         }
 
+        // Devuelve los ítems vendidos por un vendedor (estado 2 (Finalizados)), excluyendo facturas que ya fueron canceladas.
         public static List<(string nroFactura, string nombreProducto, int cantidad, decimal precioUnitario, decimal total)> ObtenerDetallesPorVendedorNoCancelados(int dniVendedor)
         {
             var resultado = new List<(string, string, int, decimal, decimal)>();
@@ -415,6 +431,7 @@ namespace ProyectoNetshop.Cruds
             return resultado;
         }
 
+        // Devuelve ventas por vendedor y estado en un rango de fechas, excluyendo facturas canceladas (estado 3).
         public static DataTable ObtenerVentasPorVendedorYEstado(List<int> vendedores, DateTime desde, DateTime hasta, List<int> estados)
         {
             var tabla = new DataTable();
@@ -449,6 +466,7 @@ namespace ProyectoNetshop.Cruds
             return tabla;
         }
 
+        // Devuelve productos vendidos por vendedor y estado en un rango de fechas, excluyendo facturas canceladas.
         public static DataTable ObtenerProductosVendidosPorVendedorYEstado(List<int> vendedores, DateTime desde, DateTime hasta, List<int> estados)
         {
             var tabla = new DataTable();
@@ -479,6 +497,7 @@ namespace ProyectoNetshop.Cruds
             return tabla;
         }
 
+        // Devuelve un resumen total de ventas por vendedor en un rango de fechas, excluyendo facturas canceladas.
         public static DataTable ObtenerResumenTotalVentas(List<int> vendedores, DateTime desde, DateTime hasta, List<int> estados)
         {
             var tabla = new DataTable();

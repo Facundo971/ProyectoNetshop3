@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Importa librerías.
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace ProyectoNetshop.Cruds
 {
     internal class Categoria_controller
     {
+        // Obtiene la descripción de una categoría según su ID, devolviendo "Sin categoría" si no se encuentra coincidencia.
         public static string ObtenerDescripcion(int id_categoria)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();

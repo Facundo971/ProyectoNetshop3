@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// Importa librerías.
+using Microsoft.Data.SqlClient;
 using ProyectoNetshop.BD;
 using ProyectoNetshop.Cruds;
 using System;
@@ -23,12 +24,19 @@ namespace ProyectoNetshop.formularios
         // Campo que indica el producto seleccionado
         private int _productoSeleccionadoId = -1;
 
+        // Campo que indica si el producto seleccionado está eliminado
         private int _productoSeleccionadoEliminado = 1; // 1 = no eliminado, 0 = eliminado
 
+        // Bandera para evitar recursión en el evento TextChanged de tbPrecioProducto y tbPrecioVentaProducto
         private bool _suppressPrecioTextChanged = false;
 
+        // Ruta de la imagen por defecto
         private const string ImagenPorDefectoPath = @"Resources\producto_defecto.jpg";
 
+
+        // Constructor del formulario de gestión de productos: inicializa componentes, configura validaciones de entrada para descripción y precios,
+        // y enlaza eventos para interacción dinámica. Incluye lógica para selección en la grilla, limpieza de controles al hacer clic fuera,
+        // y filtrado reactivo por nombre y precio. También gestiona los checkboxes de estado (activos/inactivos) para aplicar filtros.
         public CrudProductos()
         {
             InitializeComponent();
@@ -53,11 +61,15 @@ namespace ProyectoNetshop.formularios
             cbInactivosProductos.CheckedChanged += Filtro_CheckedChanged;
         }
 
+        // Evento que se dispara al modificar el texto del campo de búsqueda de nombre de producto: invoca el método `FiltrarYRefrescarProductos()`
+        // para actualizar dinámicamente la grilla según el texto ingresado.
         private void Busqueda_TextChanged(object sender, EventArgs e)
         {
             FiltrarYRefrescarProductos();
         }
 
+        // Restringe la entrada del `TextBox` a solo dígitos y teclas de control: bloquea letras, símbolos y decimales para asegurar que el campo reciba
+        // únicamente números enteros válidos.
         private void TextBox_OnlyDigits_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (char.IsControl(e.KeyChar)) return; 
@@ -65,6 +77,8 @@ namespace ProyectoNetshop.formularios
                 e.Handled = true; 
         }
 
+        // Maneja el clic del mouse sobre la grilla de productos: si se hace clic fuera de una fila válida, limpia la selección y los controles
+        // asociados al producto. Si se hace clic sobre una fila, la selecciona exclusivamente.
         private void DgvProductos_MouseDown(object? sender, MouseEventArgs e)
         {
             var hit = dgvProductos.HitTest(e.X, e.Y);
@@ -81,6 +95,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Maneja el clic fuera de la grilla de productos (formulario o contenedor): limpia la selección activa del DataGridView, reinicia el
+        // identificador del producto seleccionado y borra los datos cargados en los controles.
         private void Form_Or_Container_Click(object? sender, EventArgs e)
         {
             dgvProductos.ClearSelection();
@@ -88,6 +104,8 @@ namespace ProyectoNetshop.formularios
             LimpiarControlesProducto();
         }
 
+        // Elimina cualquier carácter no numérico, preserva la posición del cursor y evita bucles de eventos mediante un flag de supresión.
+        // Luego actualiza la grilla aplicando los filtros.
         private void TbBusquedaPrecio_SanitizarTextChanged(object? sender, EventArgs e)
         {
             if (_suppressPrecioTextChanged) return;
@@ -116,6 +134,9 @@ namespace ProyectoNetshop.formularios
             FiltrarYRefrescarProductos();
         }
 
+        // Permite al usuario seleccionar una imagen desde el sistema de archivos para asociarla al producto: abre un diálogo con filtros de formatos
+        // válidos, guarda la ruta seleccionada, carga la imagen en el `PictureBox` y ajusta su visualización.
+        // Luego invoca `validarCampos()` para actualizar el estado del formulario.
         private void btnCargarImg_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -136,6 +157,10 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Maneja la lógica de guardado del producto: determina si se trata de una creación o actualización según el estado de selección,
+        // construye el objeto Producto_model con los datos del formulario, y ejecuta el INSERT o UPDATE correspondiente.
+        // Si la operación es exitosa, muestra un mensaje de confirmación, actualiza la grilla, intenta reseleccionar el producto afectado y
+        // recarga los controles. Si falla, informa el error. Finalmente, refresca la vista y limpia los campos.
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             string accion = _productoSeleccionadoId < 0 ? "crear" : "actualizar";
@@ -210,6 +235,9 @@ namespace ProyectoNetshop.formularios
             LimpiarControlesProducto();
         }
 
+        // Aplica filtros dinámicos sobre la lista de productos y actualiza la grilla: filtra por estado (activo/inactivo), nombre parcial y
+        // rango de precios. Luego enriquece cada producto con las descripciones de marca y categoría, y actualiza el DataGridView con los resultados.
+        // Limpia la selección actual y reinicia el ID del producto seleccionado.
         private void FiltrarYRefrescarProductos()
         {
             var productos = ObtenerProductos();
@@ -243,6 +271,9 @@ namespace ProyectoNetshop.formularios
             ActualizarEstadoBtnBorrar();
         }
 
+        // Carga los datos del producto seleccionado en los controles del formulario: asigna valores a los campos de texto, combos y
+        // radio buttons según el objeto Producto_model. También actualiza el estado visual del grupo de eliminación y carga la imagen correspondiente.
+        // Si el producto es nulo, limpia los controles.
         private void CargarProductoEnControles(Producto_model p)
         {
             if (p == null) { LimpiarControlesProducto(); return; }
@@ -269,6 +300,9 @@ namespace ProyectoNetshop.formularios
             CargarImagenEnPictureBox(p.imagen);
         }
 
+        // Restaura el formulario de producto a su estado inicial: limpia todos los campos de texto, restablece la imagen al recurso por defecto,
+        // deselecciona marca y categoría, y reinicia los flags de selección y eliminación. También oculta el grupo de estado,
+        // desactiva los botones de acción y actualiza su visibilidad.
         private void LimpiarControlesProducto()
         {
             tbNombreProducto.Clear();
@@ -309,6 +343,9 @@ namespace ProyectoNetshop.formularios
             ActualizarEstadoBtnBorrar();
         }
 
+        // Recupera todos los productos desde la base de datos: ejecuta una consulta SQL sobre la tabla producto, lee cada fila con un SqlDataReader,
+        // y construye una lista de objetos Producto_model. Maneja posibles valores nulos en descripcion e imagen, y asigna todos los campos
+        // relevantes (precio, stock, estado, marca, categoría, etc.).
         private List<Producto_model> ObtenerProductos()
         {
             var lista = new List<Producto_model>();
@@ -342,6 +379,9 @@ namespace ProyectoNetshop.formularios
             return lista;
         }
 
+        // Recupera todas las marcas desde la base de datos: ejecuta una consulta SQL sobre la tabla marca, lee cada fila con SqlDataReader y
+        // construye una lista de objetos Marca_model con sus respectivos campos (`id_marca`, `descripcion`, `activo`).
+        // Esta lista se utiliza para poblar combos, enriquecer productos y aplicar filtros por marca en el CRUD.
         private List<Marca_model> ObtenerMarcas()
         {
             var lista = new List<Marca_model>();
@@ -366,6 +406,9 @@ namespace ProyectoNetshop.formularios
             return lista;
         }
 
+        // Recupera todas las categorías desde la base de datos: ejecuta una consulta SQL sobre la tabla categoria, lee cada fila con SqlDataReader y
+        // construye una lista de objetos Categoria_model con sus respectivos campos (`id_categoria`, `descripcion`, `activo`).
+        // Esta lista se utiliza para poblar combos, enriquecer productos y aplicar filtros por categoría en el CRUD.
         private List<Categoria_model> ObtenerCategorias()
         {
             var lista = new List<Categoria_model>();
@@ -390,7 +433,9 @@ namespace ProyectoNetshop.formularios
             return lista;
         }
 
-
+        // Valida la entrada del campo de nombre de producto: permite únicamente letras, números, espacios y teclas de control.
+        // Si se detecta un carácter inválido, lo bloquea y muestra una advertencia al usuario. Previene errores de formato y asegura consistencia en
+        // los nombres registrados dentro del CRUD.
         private void tbNombre_KeyPress(object sender, KeyPressEventArgs e)
         {
             bool esControl = char.IsControl(e.KeyChar);
@@ -404,6 +449,9 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Valida la entrada del campo de descripción del producto: permite únicamente letras, números, espacios y teclas de control.
+        // Si se detecta un carácter inválido (como símbolos o signos de puntuación), lo bloquea y muestra una advertencia.
+        // Refuerza la integridad del contenido descriptivo y previene errores de formato en el CRUD.
         private void TbDescripcion_KeyPress(object sender, KeyPressEventArgs e)
         {
             bool esControl = char.IsControl(e.KeyChar);
@@ -417,6 +465,9 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Valida la entrada del campo de precio: permite únicamente dígitos y teclas de control (como retroceso).
+        // Si se ingresa un carácter no numérico, lo bloquea y muestra una advertencia.
+        // Previene errores de formato y asegura que el valor ingresado sea un número entero válido para operaciones posteriores.
         private void tbPrecio_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -425,6 +476,10 @@ namespace ProyectoNetshop.formularios
                 MessageBox.Show("Solo se permiten números.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+        // Valida la entrada del campo de precio de venta: permite únicamente dígitos y teclas de control.
+        // Si se ingresa un carácter no numérico, lo bloquea y muestra una advertencia.
+        // Asegura que el valor ingresado sea un número entero válido, evitando errores en cálculos o persistencia de datos.
         private void tbPrecioVenta_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -434,6 +489,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Valida la entrada del campo de stock: permite únicamente dígitos y teclas de control.
+        // Si se ingresa un carácter no numérico, lo bloquea y muestra una advertencia.
         private void tbStock_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -443,6 +500,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Valida la entrada del campo ID de producto: permite únicamente dígitos y teclas de control.
+        // Si se ingresa un carácter no numérico, lo bloquea y muestra una advertencia.
         private void tbiDProducto_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -452,6 +511,11 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Inicializa el formulario del CRUD de productos: configura el DataGridView para solo lectura, selección exclusiva por fila y
+        // sin edición directa. Asocia eventos de cambio de filtros, carga las listas de marcas y categorías en sus respectivos combos,
+        // y aplica formato monetario a las columnas de precios.
+        // Luego, obtiene los productos desde la base de datos, les asigna las descripciones de marca y categoría,
+        // y los vincula al `DataGridView`. También define manualmente las columnas visibles y oculta el ID interno.
         private void CrudProductos_Load(object sender, EventArgs e)
         {
             btnGuardarProducto.Enabled = false;
@@ -587,6 +651,10 @@ namespace ProyectoNetshop.formularios
             dgvProductos.DataSource = productos;
         }
 
+        // Maneja la selección de una fila en el DataGridView: cuando el usuario hace clic en una celda, se recupera el objeto Producto_model
+        // asociado a esa fila y se cargan sus datos en los controles del formulario.
+        // Esto incluye nombre, descripción, precios, stock, marca, categoría, estado de eliminación y la imagen del producto.
+        // También actualiza el estado visual del grupo de eliminación y los botones relacionados.
         private void DgvProductos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -617,6 +685,9 @@ namespace ProyectoNetshop.formularios
             CargarImagenEnPictureBox(p.imagen);
         }
 
+        // Carga una imagen en el PictureBox del producto: libera la imagen anterior si existe, limpia la ruta seleccionada, y
+        // verifica si la nueva ruta es válida y el archivo existe. Si es así, intenta cargarla como Bitmap y ajusta el modo de visualización.
+        // Si falla o la ruta es inválida, carga una imagen por defecto desde los recursos.
         private void CargarImagenEnPictureBox(string rutaImagen)
         {
             if (pbImagenProducto.Image != null)
@@ -654,6 +725,9 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Maneja los cambios en los filtros de estado (activos/inactivos): si ambos checkboxes están desmarcados, vuelve a marcar el que disparó el
+        // evento para evitar un estado sin productos visibles. Si al menos uno está marcado, aplica los filtros actualizados llamando a
+        // FiltrarYRefrescarProductos().
         private void Filtro_CheckedChanged(object sender, EventArgs e)
         {
             if (!cbActivosProductos.Checked && !cbInactivosProductos.Checked)
@@ -667,6 +741,10 @@ namespace ProyectoNetshop.formularios
             FiltrarYRefrescarProductos();
         }
 
+        // Valida los campos del formulario antes de habilitar el botón Guardar: verifica que los campos obligatorios no estén vacíos y
+        // que los valores numéricos (precio, precio de venta y stock) sean válidos. Solo habilita el botón si el precio de venta es menor al
+        // precio original, lo que sugiere una lógica de control de márgenes o promociones. También actualiza el estado del botón Borrar para
+        // mantener coherencia visual y funcional.
         private void validarCampos()
         {
             bool baseValida = !string.IsNullOrWhiteSpace(tbNombreProducto.Text) &&
@@ -711,52 +789,51 @@ namespace ProyectoNetshop.formularios
             ActualizarEstadoBtnBorrar();
         }
 
+        // Asocia eventos de cambio de texto y selección a la validación de campos: cada vez que el usuario modifica un campo relevante del formulario
+        // (nombre, descripción, precios, stock, marca, categoría, etc.), se invoca validarCampos() para actualizar dinámicamente el estado del
+        // botón Guardar.
         private void tbNombre_TextChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
-
         private void tbiDProducto_TextChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
-
         private void tbDescripcion_TextChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
-
         private void tbPrecio_TextChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
-
         private void tbPrecioVenta_TextChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
-
-
         private void tbStock_TextChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
-
         private void cbCategoria_SelectedIndexChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
-
         private void cbMarca_SelectedIndexChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
-
         private void tbMarca_TextChanged(object sender, EventArgs e)
         {
             validarCampos();
         }
 
+        // Maneja la lógica de eliminación de un producto: si no hay producto seleccionado, limpia el formulario.
+        // Si el producto ya está marcado como eliminado (`eliminado == 0`), muestra una advertencia y desactiva el botón.
+        // Si no, solicita confirmación al usuario. Al aceptar, llama al controlador para cambiar el estado a eliminado.
+        // Si la operación fue exitosa, actualiza la grilla y limpia los controles;
+        // si falla, muestra un mensaje de error.
         private void btnEliminar_Click(object sender, EventArgs e)
         {
             if (_productoSeleccionadoId < 0)
@@ -788,6 +865,9 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Verifica si el formulario contiene datos ingresados: evalúa si alguno de los campos relevantes
+        // (nombre, descripción, precios, stock, marca, categoría o imagen) tiene contenido o selección válida.
+        // Retorna true si al menos uno está completo, lo que indica que el formulario no está vacío.
         private bool TieneDatosEnFormulario()
         {
             if (!string.IsNullOrWhiteSpace(tbNombreProducto.Text)) return true;
@@ -801,7 +881,8 @@ namespace ProyectoNetshop.formularios
             return false;
         }
 
-
+        // Actualiza el estado del botón Borrar: lo habilita si hay un producto seleccionado que no está marcado como eliminado
+        // (`eliminado != 0`) o si el formulario contiene datos ingresados.
         private void ActualizarEstadoBtnBorrar()
         {
             bool seleccionValida = (_productoSeleccionadoId > 0) && (_productoSeleccionadoEliminado != 0);

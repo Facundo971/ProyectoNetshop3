@@ -1,4 +1,5 @@
-﻿using ProyectoNetshop.Cruds;
+﻿// Importa librerías.
+using ProyectoNetshop.Cruds;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,13 +15,17 @@ namespace ProyectoNetshop.formularios
 {
     public partial class DetalleFactura : Form
     {
-        //Vendedor
+        // Vendedor
         private readonly int vendedorDni;
         private readonly string vendedorNombreCompleto;
 
+        // Datos originales para filtros
         private List<(string nroFactura, string nombreProducto, int cantidad, decimal precioUnitario, decimal total)> detallesOriginales;
         private List<(string nroFactura, DateTime fecha, string tipoFactura, decimal totalVenta, string nombreCliente)> cabecerasOriginales;
 
+        // Constructor del formulario de detalle de factura: inicializa componentes, configura validaciones de entrada para filtros (nombre y precios), y
+        // enlaza eventos `TextChanged` para aplicar filtros dinámicos en tiempo real.
+        // También recibe y almacena los datos del vendedor (DNI y nombre completo) para contextualizar la visualización.
         public DetalleFactura(int p_dni, string p_nombre)
         {
             InitializeComponent();
@@ -39,6 +44,8 @@ namespace ProyectoNetshop.formularios
             tbBusquedaPrecioMaxProductoDF.TextChanged += (s, e) => AplicarFiltrosDetalleFactura();
         }
 
+        // Restringe la entrada del filtro de nombre de producto: permite solo letras, números, espacios y teclas de control.
+        // Bloquea símbolos y caracteres especiales para mantener la coherencia en la búsqueda textual.
         private void txtFiltroNombreProducto_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) &&
@@ -49,6 +56,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Restringe la entrada en los campos de filtro de precio: permite solo dígitos y teclas de control (como borrar o tab).
+        // Bloquea letras, símbolos y decimales para asegurar que el valor ingresado sea numérico entero.
         private void txtFiltroPrecio_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -62,6 +71,8 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Evento de carga del formulario de detalle de factura: asigna los datos del vendedor (DNI y nombre completo) a los campos correspondientes y
+        // los bloquea para evitar edición. Luego invoca los métodos que muestran los detalles y cabeceras de facturas no canceladas asociadas al vendedor.
         private void DetalleFactura_Load(object sender, EventArgs e)
         {
             //Vendedor
@@ -76,6 +87,9 @@ namespace ProyectoNetshop.formularios
             MostrarCabecerasDelVendedor();
         }
 
+        // Muestra las cabeceras de facturas no canceladas asociadas al vendedor: configura el `DataGridView` con columnas personalizadas,
+        // consulta los datos desde el controlador, y los carga en la grilla con formato regional argentino.
+        // Calcula el total acumulado de ventas por factura y lo muestra en un label.
         private void MostrarCabecerasDelVendedor()
         {
             dgvVentaCabeceraFactura.Columns.Clear();
@@ -115,6 +129,9 @@ namespace ProyectoNetshop.formularios
             lbTotalVendidoCabeceraFactura.Text = totalCabeceras.ToString("C", culturaAR);
         }
 
+        // Muestra los detalles de facturas no canceladas del vendedor actual: configura el `DataGridView` con columnas personalizadas,
+        // consulta los datos desde el controlador y los carga en la grilla con formato monetario argentino.
+        // Calcula el total vendido sumando los importes por producto y lo muestra en el label correspondiente.
         public void MostrarDetallesDelVendedor()
         {
             dgvDetalleFactura.Columns.Clear();
@@ -156,6 +173,9 @@ namespace ProyectoNetshop.formularios
             lbTotalVendidoDetalleFactura.Text = totalVendido.ToString("C", culturaAR);
         }
 
+        // Aplica filtros dinámicos sobre los detalles y cabeceras de facturas del vendedor: evalúa coincidencias por nombre de producto,
+        // número de factura y rango de precios. Actualiza ambas grillas (`dgvDetalleFactura` y `dgvVentaCabeceraFactura`) con los resultados filtrados y
+        // recalcula los totales correspondientes.
         private void AplicarFiltrosDetalleFactura()
         {
             string filtroNombre = tbBusquedaNombreProductoDF.Text.Trim().ToLower();

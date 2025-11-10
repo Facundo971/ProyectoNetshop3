@@ -1,4 +1,9 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// Importa librerías.
+using FontAwesome.Sharp;
+using iTextSharp.text.pdf.codec.wmf;
+using Microsoft.Data.SqlClient;
+using Org.BouncyCastle.Asn1.Crmf;
+using ProyectoNetshop.formularios;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,15 +13,23 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Media.Media3D;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace vistaDeProyectoC
 {
     public partial class FBackUp : Form
     {
+        // Cadena de conexión y estado de conexión
         private string? _cadenaConexion = null;
         private bool _conectado = false;
+
+        // Inicializa el formulario y deja todo desactivado:  
+        // Limpia campos, desactiva botones y eventos, y vuelve a suscribirlos.
         public FBackUp()
         {
             InitializeComponent();
@@ -42,6 +55,9 @@ namespace vistaDeProyectoC
             BBackUp.Click += BBackUp_Click;
         }
 
+        // Configura el estado inicial al cargar el formulario:  
+        // Asigna el nombre fijo de la base de datos, bloquea su edición, y habilita la ruta de guardado solo para uso interno.
+        // Llama a Campos_TextChanged para actualizar los botones según el estado actual.
         private void FBackUp_Load(object sender, EventArgs e)
         {
             TBBaseDeDatos.Text = "proyectoT";
@@ -57,6 +73,8 @@ namespace vistaDeProyectoC
 
         }
 
+        // Actualiza el estado de los botones según los campos:  
+        // Habilita “Conectar” si hay nombre de base, “Guardar ruta” si hay conexión, y “BackUp” si además hay ruta válida.
         private void Campos_TextChanged(object sender, EventArgs e)
         {
             // Habilitar conectar solo si hay texto en el textbox de BD
@@ -72,6 +90,11 @@ namespace vistaDeProyectoC
             BBackUp.Enabled = _conectado && !string.IsNullOrWhiteSpace(TBGuardarRuta.Text);
         }
 
+        // Intenta conectar con la base de datos ingresada:  
+        // Valida que el nombre no esté vacío, arma la cadena de conexión y prueba abrirla.
+        // Si conecta, habilita la selección de ruta y muestra mensaje de éxito.  
+        // Si falla, desactiva controles y muestra el error.  
+        // Luego actualiza el estado de los botones con Campos_TextChanged().
         private void BConectar_Click(object sender, EventArgs e)
         {
             var nombreBD = TBBaseDeDatos.Text.Trim();
@@ -114,6 +137,10 @@ namespace vistaDeProyectoC
 
         }
 
+        // Permite seleccionar y guardar la ruta del archivo de backup:  
+        // Solo si hay conexión activa, abre un SaveFileDialog con nombre sugerido y extensión .bak.  
+        // Si el usuario confirma, guarda la ruta en el textbox y muestra mensaje de éxito.
+        // Luego actualiza el estado de los botones con Campos_TextChanged().
         private void BGuardarRuta_Click(object sender, EventArgs e)
         {
             if (!_conectado)
@@ -138,6 +165,10 @@ namespace vistaDeProyectoC
             Campos_TextChanged(this, EventArgs.Empty);
         }
 
+        // Ejecuta el backup de la base seleccionada:  
+        // Verifica conexión y ruta válida, solicita confirmación y ejecuta el comando BACKUP DATABASE de forma asíncrona.
+        // Si tiene éxito, muestra mensaje, limpia campos, resetea el estado y desactiva controles.
+        // Si ocurre un error, lo informa con detalle.
         private async void BBackUp_Click(object? sender, EventArgs e)
         {
             if (!_conectado || string.IsNullOrWhiteSpace(TBBaseDeDatos.Text) || string.IsNullOrWhiteSpace(TBGuardarRuta.Text))

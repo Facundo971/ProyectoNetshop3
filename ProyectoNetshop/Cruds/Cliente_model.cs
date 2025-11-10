@@ -1,3 +1,4 @@
+// Importa librerías.
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace ProyectoNetshop.Cruds
 {
     internal class Cliente_model
     {
+        // Modelo de cliente que representa sus datos personales, contacto, identificación y estado de actividad.
         public int id_cliente { get; set; }
         public string nombre { get; set; }
         public string apellido { get; set; }
@@ -17,8 +19,9 @@ namespace ProyectoNetshop.Cruds
         public string telefono { get; set; }
         public int dni { get; set; }
         public int activo { get; set; }
-        public Cliente_model() { }
 
+        // Constructor del modelo de cliente que inicializa todos los campos personales, de contacto y estado de actividad.
+        public Cliente_model() { }
         public Cliente_model(int p_id_cliente, string p_nombre, string p_apellido, string p_email, string p_sexo, 
             DateTime p_fecha_nacimiento, string p_telefono, int p_dni, int p_activo)
         {

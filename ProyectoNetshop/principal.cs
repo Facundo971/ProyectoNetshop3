@@ -134,9 +134,26 @@ namespace ProyectoNetshop
 
         }
 
+        // Al cargar el formulario principal, muestra el nombre completo y el perfil del usuario logueado
         private void principal_Load(object sender, EventArgs e)
         {
+            // Mostrar nombre completo
+            lbNombreCompletoUPrincipal.Text = $"Usuario: {vendedorNombre}";
 
+            // Mostrar descripción del perfil
+            lbPerfilUPrincipal.Text = $"Perfil: {ObtenerDescripcionPerfil(idPerfil)}";
+        }
+
+        // Devuelve la descripción textual del perfil según su ID numérico
+        private string ObtenerDescripcionPerfil(int id)
+        {
+            return id switch
+            {
+                1 => "Administrador",
+                2 => "Vendedor",
+                3 => "Gerente",
+                _ => "Perfil desconocido"
+            };
         }
 
         // Este metodo determina que secciones el usuario puede acceder dependiendo el rol del usuario

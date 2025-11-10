@@ -1,4 +1,5 @@
-﻿using iTextSharp.text;
+﻿// Importa librerías.
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using PdfiumViewer;
 using ProyectoNetshop.Cruds;
@@ -21,16 +22,16 @@ namespace ProyectoNetshop.formularios
 {
     public partial class ventas : Form
     {
-        //Vendedor
+        //Datos del Vendedor
         private readonly int vendedorDni;
         private readonly string vendedorNombreCompleto;
         private readonly int vendedorId;
 
-        //Cliente
+        //Datos del Cliente
         private ListBox lbClientesSugeridos = new ListBox();
         private Dictionary<string, Cliente_model> clientesMap = new Dictionary<string, Cliente_model>();
 
-        //Producto
+        //Datos del Producto
         private ListBox lbProductosSugeridos = new ListBox();
         private Dictionary<string, Producto_model> productosMap = new Dictionary<string, Producto_model>();
         private bool bloqueandoFiltroProducto = false;
@@ -43,6 +44,8 @@ namespace ProyectoNetshop.formularios
         private Panel panelVisorPdf;
         private PdfViewer visorPdf;
 
+        // Inicializa el formulario de ventas configurando el visor PDF, datos del vendedor,
+        // eventos de autocompletado, filtros, validaciones, y enlaces de controles para gestionar clientes, productos y ventas.
         public ventas(int p_dni, string p_nombre, int p_vendedor_id)
         {
             InitializeComponent();
@@ -161,6 +164,7 @@ namespace ProyectoNetshop.formularios
             dgvVentas.CellMouseMove += dgvVentas_CellMouseMove;
         }
 
+        // Configura filtros de búsqueda por nombre y precio, limpia campos, y muestra el panel con la grilla de productos.
         private void bListaProductosVenta_Click(object sender, EventArgs e)
         {
             var tbNombre = panelVistaProductosVenta.Controls["tbFiltroNombre"] as TextBox;
@@ -181,6 +185,7 @@ namespace ProyectoNetshop.formularios
             panelVistaProductosVenta.Visible = true;
         }
 
+        // Carga en la grilla todos los productos disponibles con sus datos e imagen, formateando el precio en moneda local.
         private void MostrarProductosEnGrid()
         {
             dgvProductosVenta.Columns.Clear();
@@ -227,6 +232,7 @@ namespace ProyectoNetshop.formularios
             dgvProductosVenta.Columns["colPrecio"].DefaultCellStyle.FormatProvider = new CultureInfo("es-AR");
         }
 
+        // Restringe la entrada del filtro de precio para que solo acepte números.
         private void txtFiltroPrecio_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -235,6 +241,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Restringe el filtro de nombre para aceptar solo letras, números y espacios.
         private void txtFiltroNombre_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) &&
@@ -245,6 +252,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Filtra los productos por nombre y rango de precio, y actualiza la grilla con los resultados que coinciden.
         private void AplicarFiltroProductos()
         {
             var nombre = panelVistaProductosVenta.Controls["tbFiltroNombre"] as TextBox;
@@ -279,6 +287,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Autocompleta dinámicamente clientes según el campo editado (nombre, DNI o email) y muestra sugerencias en una lista contextual.
         private void tbClienteFiltro_TextChanged(object sender, EventArgs e)
         {
             TextBox campo = sender as TextBox;
@@ -328,6 +337,7 @@ namespace ProyectoNetshop.formularios
             }));
         }
 
+        // Autocompleta dinámicamente productos según nombre o ID ingresado, mostrando sugerencias en una lista contextual.
         private void tbProductoFiltro_TextChanged(object sender, EventArgs e)
         {
             if (bloqueandoFiltroProducto) return;
@@ -375,6 +385,7 @@ namespace ProyectoNetshop.formularios
             }));
         }
 
+        // Al seleccionar un producto sugerido, carga sus datos en los campos del formulario y muestra su imagen.
         private void LbProductosSugeridos_Click(object sender, EventArgs e)
         {
             if (lbProductosSugeridos.SelectedItem == null) return;
@@ -410,6 +421,7 @@ namespace ProyectoNetshop.formularios
             lbProductosSugeridos.Visible = false;
         }
 
+        // Oculta la lista de clientes sugeridos tras perder el foco, con un breve retardo para evitar conflictos.
         private void OcultarListaClientes(object sender, EventArgs e)
         {
             Task.Delay(100).ContinueWith(_ =>
@@ -422,6 +434,7 @@ namespace ProyectoNetshop.formularios
             });
         }
 
+        // Asocia el evento de ocultar lista de clientes a todos los controles y sus hijos mediante recursividad.
         private void ConectarOcultamientoEnControles(Control control)
         {
             control.MouseDown += OcultarListaClientesPorClickGlobal;
@@ -432,6 +445,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Oculta la lista de clientes sugeridos si se hace clic fuera de los campos de búsqueda o la lista misma.
         private void OcultarListaClientesPorClickGlobal(object sender, MouseEventArgs e)
         {
             if (!tbNombreClienteVenta.Focused &&
@@ -443,6 +457,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Oculta la lista de productos sugeridos tras perder el foco, con un retardo para evitar cierres prematuros.
         private void OcultarListaProductos(object sender, EventArgs e)
         {
             Task.Delay(100).ContinueWith(_ =>
@@ -455,12 +470,14 @@ namespace ProyectoNetshop.formularios
             });
         }
 
+        // Restringe la entrada del TextBox para que solo se puedan ingresar números.
         private void TextBox_OnlyDigits_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
                 e.Handled = true;
         }
 
+        // Restringe la entrada del TextBox para permitir solo letras y espacios.
         private void TextBox_OnlyLetters_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar)
@@ -471,6 +488,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Si se selecciona "Pendientes", desactiva los otros estados, muestra el carrito y actualiza el total en formato moneda.
         private void cbVentaProductoPendientes_CheckedChanged(object sender, EventArgs e)
         {
             if (cbVentaProductoPendientes.Checked)
@@ -489,6 +507,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Si se selecciona "Vendidos", desactiva los otros estados, muestra ventas finalizadas y actualiza el total vendido en formato moneda.
         private void cbVentaProductoVendidos_CheckedChanged(object sender, EventArgs e)
         {
             if (cbVentaProductoVendidos.Checked)
@@ -507,6 +526,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Si se selecciona "Cancelados", desactiva los otros estados, muestra ventas canceladas y actualiza el total en formato moneda.
         private void cbVentaProductoCancelados_CheckedChanged(object sender, EventArgs e)
         {
             if (cbVentaProductoCancelados.Checked)
@@ -525,6 +545,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Muestra en la grilla las ventas según su estado (Finalizado o Cancelado), incluyendo botones de acción si corresponde.
         private void MostrarVentasPorEstadoEnGrid(int estado)
         {
             dgvVentas.Columns.Clear();
@@ -601,6 +622,8 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Inicializa el formulario de ventas: configura controles de vendedor, cliente y producto;
+        // arma la grilla de productos y ventas; conecta filtros, eventos y restauración del carrito si existe.
         private void ventas_Load(object sender, EventArgs e)
         {
             //Vendedor
@@ -795,6 +818,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Asegura que el control de fecha mantenga su estado activado al cambiar el valor, evitando desmarcado accidental.
         private void dtpFechaVenta_ValueChanged(object sender, EventArgs e)
         {
             if (!dtpFechaVenta.Checked)
@@ -803,6 +827,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Personaliza la apariencia de los botones en la grilla de ventas ("Borrar", "Cancelar", "Descargar") dibujando celdas
+        // con bordes redondeados, colores distintivos y texto centrado. Mejora la estética y la claridad visual de las acciones disponibles.
         private void dgvVentas_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
@@ -865,6 +891,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Cambia el cursor a "mano" cuando se pasa sobre botones de acción en la grilla, indicando interactividad.
         private void dgvVentas_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
@@ -882,6 +909,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Maneja los clics en la grilla de ventas: permite cancelar ventas finalizadas, borrar productos
+        // del carrito o visualizar el PDF de una venta válida. Incluye validaciones, confirmaciones y manejo de errores.
         private void dgvVentas_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
@@ -988,6 +1017,7 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Calcula el total vendido en el carrito sumando (cantidad × precio unitario) y lo muestra en formato moneda argentina.
         private void ActualizarTotalVendido()
         {
             decimal total = CarritoVentaSession.Carrito
@@ -997,11 +1027,13 @@ namespace ProyectoNetshop.formularios
             lbTotalVendidoVenta.Text = total.ToString("C", culturaAR);
         }
 
+        // Devuelve el total acumulado del carrito sumando (precio unitario × cantidad) de cada producto.
         private decimal ObtenerTotalCarrito()
         {
             return CarritoVentaSession.Carrito.Sum(p => p.precio_unitario * p.cantidad);
         }
 
+        // Al seleccionar un cliente sugerido, completa los campos del formulario con sus datos y oculta la lista contextual.
         private void LbClientesSugeridos_Click(object sender, EventArgs e)
         {
             if (lbClientesSugeridos.SelectedItem == null) return;
@@ -1019,6 +1051,9 @@ namespace ProyectoNetshop.formularios
             lbClientesSugeridos.Visible = false;
         }
 
+        // Agrega un producto al carrito de ventas tras validar cliente, producto, cantidad y precio.
+        // Si es el primer ítem, bloquea los campos de cliente, factura y fecha. Luego actualiza la grilla,
+        // el total vendido y limpia los campos del producto.
         private void IbBotonAgregarProductoVenta_Click(object sender, EventArgs e)
         {
             // Validaciones
@@ -1171,6 +1206,8 @@ namespace ProyectoNetshop.formularios
             ActualizarTotalVendido();
         }
 
+        // Muestra los productos del carrito en la grilla de ventas, incluyendo nombre, descripción, cantidad, precio, total, fecha y estado.
+        // Agrega un botón "Borrar" para permitir su eliminación.
         private void MostrarCarritoEnGrid()
         {
             dgvVentas.Columns.Clear();
@@ -1214,6 +1251,8 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Guarda la venta actual: valida datos, verifica stock, genera factura, registra venta y detalles, actualiza inventario,
+        // ofrece visualizar el PDF y limpia el carrito tras completar la operación.
         private void ibBotonGuardarVenta_Click(object sender, EventArgs e)
         {
             DialogResult confirmar = MessageBox.Show(
@@ -1276,8 +1315,7 @@ namespace ProyectoNetshop.formularios
             }
 
             // Calcular total de la venta
-            decimal totalCalculado = CarritoVentaSession.Carrito
-                .Sum(d => d.cantidad * d.precio_unitario);
+            decimal totalCalculado = CarritoVentaSession.Carrito.Sum(d => d.cantidad * d.precio_unitario);
 
             // Crear venta principal
             var venta = new Venta_model
@@ -1349,6 +1387,8 @@ namespace ProyectoNetshop.formularios
             LimpiarCamposVenta();
         }
 
+        // Restablece el formulario de venta: limpia campos de producto, cliente y factura; desbloquea controles;
+        // y vacía el carrito si contiene productos.
         private void ibBotonBorrarVenta_Click(object sender, EventArgs e)
         {
             // Limpiar campos de producto
@@ -1394,6 +1434,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Restablece el formulario de venta: limpia campos de producto y cliente, desbloquea controles,
+        // reinicia la fecha y tipo de factura, y vacía el carrito para iniciar una nueva operación.
         private void LimpiarCamposVenta()
         {
             CarritoVentaSession.Carrito.Clear();
@@ -1456,6 +1498,8 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Al modificar el nombre del cliente, busca coincidencias por nombre, DNI o email, actualiza la lista de sugerencias y
+        // la muestra si hay resultados.
         private void tbNombreClienteVenta_TextChanged(object sender, EventArgs e)
         {
             string nombre = tbNombreClienteVenta.Text.Trim();
@@ -1478,6 +1522,8 @@ namespace ProyectoNetshop.formularios
             lbClientesSugeridos.Visible = clientes.Count > 0;
         }
 
+        // Valida que la cantidad ingresada sea un entero positivo y no supere el stock disponible.
+        // Habilita el botón de agregar producto solo si la condición se cumple.
         private void ValidarCantidadVsStock(object sender, EventArgs e)
         {
             string cantidadText = tbCantidadProductoVenta.Text.Trim();
@@ -1506,6 +1552,8 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Genera un PDF con los datos de la venta: cabecera, tabla de productos, totales y formato profesional.
+        // Guarda el archivo en el escritorio con nombre único por factura y timestamp. Devuelve la ruta generada.
         private string GenerarPdfVenta(int idVenta)
         {
             var venta = Venta_controller.ObtenerCabeceraVenta(idVenta);

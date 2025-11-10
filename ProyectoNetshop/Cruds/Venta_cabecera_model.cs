@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Importa librerías.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace ProyectoNetshop.Cruds
 {
     internal class Venta_cabecera_model
     {
+        // Modelo que representa la cabecera de una venta, incluyendo datos de factura, estado, cliente y vendedor.
         public int id_venta { get; set; }
         public DateTime fecha { get; set; }
         public decimal total_venta { get; set; }
@@ -15,13 +17,12 @@ namespace ProyectoNetshop.Cruds
         public int id_usuario { get; set; }
         public int id_cliente { get; set; }
         public int id_estado { get; set; }
-
         public string estado_descripcion { get; set; }
         public string cliente_nombre { get; set; }
         public string vendedor_nombre { get; set; }
 
+        // Constructor del modelo de cabecera de venta, permite inicializar todos los campos principales.
         public Venta_cabecera_model() { }
-
         public Venta_cabecera_model(int p_id_venta, DateTime p_fecha, decimal p_total_venta, string p_tipo_factura,
                                     int p_id_usuario, int p_id_cliente, int p_id_estado)
         {

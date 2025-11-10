@@ -1,16 +1,25 @@
-﻿using Microsoft.Data.SqlClient;
-using ProyectoNetshop.Cruds;
+﻿// Importa librerías.
+using FontAwesome.Sharp;
+using iTextSharp.text.pdf.codec.wmf;
+using Microsoft.Data.SqlClient;
 using ProyectoNetshop.BD;
+using ProyectoNetshop.Cruds;
+using ProyectoNetshop.formularios;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace vistaDeProyectoC
 {
@@ -19,6 +28,11 @@ namespace vistaDeProyectoC
         // Campo que guarda el ID del usuario seleccionado en la grilla
         // Inicializado en -1 para indicar que ningun usuario se eligio
         private int _clienteSeleccionadoId = -1;
+
+        // Inicializa el formulario de registro y edición de clientes: configura eventos para filtros de estado (activo/inactivo),
+        // validación reactiva de campos, búsqueda dinámica por DNI y nombre, y selección contextual en la grilla.
+        // También establece comportamientos visuales como limpieza de selección al hacer clic fuera de filas y formateo textual
+        // del estado activo ("SI"/"NO").
         public FRegistrarCliente()
         {
             InitializeComponent();
@@ -58,6 +72,9 @@ namespace vistaDeProyectoC
             dgvClientes.CellFormatting += DgvClientes_CellFormatting;
         }
 
+        // Maneja el clic del mouse sobre el DataGridView de clientes: si el clic ocurre fuera de una fila válida (`RowIndex < 0`),
+        // se limpia la selección, se reinicia el ID del cliente seleccionado, se vacían los campos del formulario y se oculta el GroupBox de estado.
+        // Si el clic ocurre sobre una fila, se selecciona explícitamente esa fila.
         private void DgvClientes_MouseDown(object? sender, MouseEventArgs e)
         {
             var hit = dgvClientes.HitTest(e.X, e.Y);
@@ -76,6 +93,8 @@ namespace vistaDeProyectoC
             }
         }
 
+        // Maneja el clic en cualquier parte del formulario: limpia la selección del DataGridView, reinicia el ID del cliente seleccionado y
+        // vacía todos los campos del formulario. Además, oculta el GroupBox de estado activo/inactivo para evitar confusión visual.
         private void Form_MouseDown(object? sender, MouseEventArgs e)
         {
             // Limpiar selección y campos al clicar en el formulario
@@ -87,6 +106,8 @@ namespace vistaDeProyectoC
             gbActivoCliente.Visible = false;
         }
 
+        // Formatea la columna "activo" del DataGridView para mostrar texto legible: si el valor es null, se muestra "NO"; si es numérico,
+        // se interpreta `1` como "SI" y cualquier otro valor como "NO".
         private void DgvClientes_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (dgvClientes.Columns[e.ColumnIndex].DataPropertyName == "activo" || dgvClientes.Columns[e.ColumnIndex].Name == "activo")
@@ -106,6 +127,10 @@ namespace vistaDeProyectoC
             }
         }
 
+        // Valida la entrada en campos clave del formulario de cliente:  
+        // -tbNombre y tbApellido permiten solo letras y espacios, bloqueando cualquier otro carácter.
+        // -tbTelefono y tbDNI aceptan únicamente dígitos, impidiendo letras o símbolos.  
+        // En todos los casos, si el carácter ingresado no es válido, se cancela la entrada (`e.Handled = true`) y se muestra una advertencia.
         private void tbNombre_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar)
@@ -116,7 +141,6 @@ namespace vistaDeProyectoC
                 MessageBox.Show("Solo se permiten letras.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
         private void tbApellido_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar)
@@ -127,7 +151,6 @@ namespace vistaDeProyectoC
                 MessageBox.Show("Solo se permiten letras.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
         private void tbTelefono_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar)
@@ -137,7 +160,6 @@ namespace vistaDeProyectoC
                 MessageBox.Show("Solo se permiten números.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
         private void tbDNI_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar)
@@ -148,6 +170,11 @@ namespace vistaDeProyectoC
             }
         }
 
+        // Configura el formulario al cargarse: desactiva el botón "Guardar", activa ambos filtros (activos/inactivos), y establece límites de entrada
+        // para DNI (8 dígitos) y teléfono (10 dígitos). Inicializa el DateTimePicker con formato personalizado y sin fecha seleccionada por defecto.
+        // Define manualmente las columnas del DataGridView para clientes, asegurando control total sobre nombres, orden y formato.
+        // Oculta el ID interno (`id_cliente`) y ajusta las columnas al ancho del grid. Finalmente, carga la lista de clientes desde la base de datos y
+        // limpia la selección.
         private void FRegistrarCliente_Load(object sender, EventArgs e)
         {
             btnGuardar.Enabled = false;
@@ -231,14 +258,17 @@ namespace vistaDeProyectoC
 
             dgvClientes.DataSource = ObtenerClientes();
             dgvClientes.ClearSelection();
-
         }
 
+        // Detecta cambios en los campos del formulario de cliente: cada vez que el usuario modifica un campo relevante (texto, selección o fecha),
+        // se invoca validarCampos() para actualizar dinámicamente el estado del botón "Guardar".
         private void InputFields_Changed(object sender, EventArgs e)
         {
             validarCampos();
         }
 
+        // Valida el estado general del formulario de cliente: habilita el botón "Guardar" solo si todos los campos obligatorios están completos y
+        // válidos. Esto incluye nombre, apellido, DNI, email, teléfono, selección de sexo y fecha de nacimiento (si está activada).
         private void validarCampos()
         {
             btnGuardar.Enabled =
@@ -251,11 +281,16 @@ namespace vistaDeProyectoC
                 ValidarFechaNacimiento();
         }
 
+        // Validadores individuales para campos del formulario de cliente:
+        // - ValidarDNI(): exige al menos 8 caracteres para considerar el DNI válido, sin validar contenido numérico aquí (eso se hace en confirmarCampos()).
+        // - ValidarEmail(): requiere que el campo no esté vacío y que cumpla con un patrón básico de email que termine en .com, usando expresión regular.
+        // - ValidarTelefono(): permite que el campo esté vacío (opcional), pero si tiene contenido, debe tener al menos 10 dígitos.
+        // - ValidarFechaNacimiento(): si el checkbox está activado, valida que la fecha no sea futura y que la edad esté entre 18 y 100 años.
+        // Si no está activado, se considera válida por omisión.
         private bool ValidarDNI()
         {
             return tbDNI.Text.Length >= 8;
         }
-
         private bool ValidarEmail()
         {
             if (string.IsNullOrWhiteSpace(tbEmail.Text))
@@ -266,12 +301,10 @@ namespace vistaDeProyectoC
                 @"^[^@\s]+@[^@\s]+\.com$",
                 RegexOptions.IgnoreCase);
         }
-
         private bool ValidarTelefono()
         {
             return string.IsNullOrWhiteSpace(tbTelefono.Text) || tbTelefono.Text.Length >= 10;
         }
-
         private bool ValidarFechaNacimiento()
         {
             if (!fechaNacimiento.Checked)
@@ -289,6 +322,12 @@ namespace vistaDeProyectoC
             return edad >= 18 && edad <= 100;
         }
 
+        // Maneja la acción de guardar cliente: primero valida todos los campos mediante confirmarCampos(). Según si hay un cliente
+        // seleccionado (_clienteSeleccionadoId < 0), determina si se trata de una creación o actualización.
+        // Solicita confirmación al usuario antes de continuar. Luego construye el objeto Cliente_model con los datos del formulario,
+        // incluyendo conversión de fecha y sexo. Ejecuta el INSERT o UPDATE correspondiente a través del controlador.
+        // Si la operación fue exitosa, muestra un mensaje de éxito; si no, informa el error.
+        // Finalmente, actualiza la grilla, limpia los campos y reinicia la selección.
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (!confirmarCampos())
@@ -334,6 +373,10 @@ namespace vistaDeProyectoC
             dgvClientes.ClearSelection();
         }
 
+        // Maneja la lógica de desactivación de un cliente: si no hay cliente seleccionado (_clienteSeleccionadoId < 0), simplemente limpia el formulario.
+        // Si hay uno seleccionado, solicita confirmación al usuario antes de marcarlo como inactivo mediante Cliente_controller.eliminarCliente().
+        // Si la operación fue exitosa, muestra un mensaje de éxito; si el cliente ya estaba desactivado, informa al usuario.
+        // Luego limpia los campos, actualiza la grilla y reinicia la selección.
         private void btnEliminar_Click(object sender, EventArgs e)
         {
             // Si no hay selección: limpio los campos
@@ -363,6 +406,11 @@ namespace vistaDeProyectoC
             dgvClientes.ClearSelection();
         }
 
+        // Carga los datos del cliente seleccionado en el formulario:  
+        // Asigna nombre, apellido, email, teléfono, DNI, sexo y fecha de nacimiento.
+        // Actualiza el estado activo/inactivo y muestra el GroupBox si está inactivo.
+        // Habilita el botón "Eliminar" solo si el cliente está activo.  
+        // Permite editar o desactivar el cliente con contexto visual claro.
         private void DgvClientes_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -404,6 +452,9 @@ namespace vistaDeProyectoC
             btnBorrar.Enabled = cliente.activo == 1;
         }
 
+        // Aplica filtros dinámicos sobre la lista de clientes y actualiza la grilla:  
+        // Filtra por estado(activo/inactivo) según los checkboxes, por prefijo de DNI si hay texto numérico, y por coincidencia parcial en el nombre.
+        // Luego refresca el DataGridView con los resultados filtrados.
         private void FiltrarYRefrescar()
         {
             var clientes = ObtenerClientes();
@@ -430,6 +481,9 @@ namespace vistaDeProyectoC
             dgvClientes.DataSource = filtrados;
         }
 
+        // Recupera todos los clientes desde la base de datos:  
+        // Ejecuta una consulta SQL sobre la tabla cliente y construye una lista de objetos Cliente_model con los campos relevantes.
+        // Maneja valores nulos para fecha_nacimiento y telefono de forma segura.
         private List<Cliente_model> ObtenerClientes()
         {
             var lista = new List<Cliente_model>();
@@ -461,6 +515,9 @@ namespace vistaDeProyectoC
             return lista;
         }
 
+        // Limpia todos los campos del formulario de cliente:  
+        // Resetea los textos, radios, fecha de nacimiento y desactiva el botón "Guardar".  
+        // Oculta el GroupBox de estado y reinicia el ID de cliente seleccionado.
         private void vaciarCampos()
         {
             tbNombre.Text = "";
@@ -482,6 +539,11 @@ namespace vistaDeProyectoC
             _clienteSeleccionadoId = -1;
         }
 
+        // Valida todos los campos antes de guardar:  
+        // Verifica nombre, apellido, email, fecha de nacimiento, DNI y teléfono.
+        // Confirma que no haya duplicados de email o DNI en otros clientes.
+        // Muestra advertencias específicas y enfoca el campo con error.
+        // Solo permite guardar si todos los datos son válidos y únicos.
         private bool confirmarCampos()
         {
             // Nombre
@@ -608,6 +670,10 @@ namespace vistaDeProyectoC
             return true;
         }
 
+        // Filtra en tiempo real según lo que escribe el usuario:  
+        // - Solo permite números en el campo de búsqueda por DNI.
+        // - Solo letras y espacios en el campo de nombre.
+        // - Cada cambio de texto actualiza automáticamente la grilla con FiltrarYRefrescar().  
         private void tbBusquedaDniCliente_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -616,17 +682,14 @@ namespace vistaDeProyectoC
                 MessageBox.Show("Sólo se permiten números.", "Carácter no permitido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
         private void tbBusquedaDniCliente_TextChanged(object sender, EventArgs e)
         {
             FiltrarYRefrescar();
         }
-
         private void tbBusquedaNombreCliente_TextChanged(object sender, EventArgs e)
         {
             FiltrarYRefrescar();
         }
-
         private void tbBusquedaNombreCliente_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar)
@@ -638,16 +701,20 @@ namespace vistaDeProyectoC
             }
         }
 
+        // Aplica filtros al cambiar los checkboxes de estado:  
+        // Cada vez que se marca o desmarca "Activos" o "Inactivos", se actualiza la grilla llamando a FiltrarYRefrescar().  
         private void cbActivos_CheckedChanged(object sender, EventArgs e)
         {
             FiltrarYRefrescar();
         }
-
         private void cbInactivos_CheckedChanged(object sender, EventArgs e)
         {
             FiltrarYRefrescar();
         }
 
+        // Evita que ambos filtros de estado estén desmarcados:  
+        // Si el usuario desmarca tanto "Activos" como "Inactivos", se vuelve a marcar el checkbox que disparó el evento para mantener al menos un filtro activo.
+        // Luego actualiza la grilla con FiltrarYRefrescar().
         private void Filtro_CheckedChanged(object sender, EventArgs e)
         {
             if (!cbActivos.Checked && !cbInactivos.Checked)

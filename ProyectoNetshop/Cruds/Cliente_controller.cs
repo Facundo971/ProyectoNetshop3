@@ -1,3 +1,4 @@
+// Importa librerías.
 using Microsoft.Data.SqlClient;
 using ProyectoNetshop.BD;
 using System;
@@ -8,6 +9,7 @@ namespace ProyectoNetshop.Cruds
 {
     internal class Cliente_controller
     {
+        // Inserta un nuevo cliente en la base de datos con sus datos personales, contacto, identificación y estado de actividad.
         public static int agregarCliente(Cliente_model p_cliente)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -25,6 +27,7 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Actualiza los datos personales, de contacto y estado de un cliente existente en la base de datos según su ID.
         public static int actualizarCliente(Cliente_model p_cliente)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -45,6 +48,7 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Marca un cliente como inactivo (activo = 0) si actualmente está activo, según su ID.
         public static int eliminarCliente(int idCliente)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -55,6 +59,7 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Verifica si ya existe un cliente con el mismo DNI o email, excluyendo opcionalmente un ID específico.
         public static bool ExisteEmailODni(int dni, string email, int idCliente = 0)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -68,6 +73,8 @@ namespace ProyectoNetshop.Cruds
             return count > 0;
         }
 
+        // Busca clientes activos filtrando por nombre completo, DNI y/o email con coincidencias parciales.
+        // Devuelve una lista con datos básicos del cliente.
         public static List<Cliente_model> BuscarClientes(string nombre, string dni, string email)
         {
             var lista = new List<Cliente_model>();

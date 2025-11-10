@@ -1,4 +1,5 @@
-﻿using iTextSharp.text;
+﻿// Importa librerías.
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using PdfiumViewer;
 using ProyectoNetshop.Cruds;
@@ -19,23 +20,30 @@ namespace ProyectoNetshop.formularios
 {
     public partial class Reportes : Form
     {
+        // Variables de instancia
         private readonly int idPerfil;
         private int alturaOriginalChecklist = 40;
         private int alturaExpandidaChecklist = 100;
         private Button ultimoBotonPresionado;
 
+        // Tabla original sin filtrar
         private DataTable tablaOriginalReporteGerente;
 
+        // Controles para visor de PDF
         private Panel panelVisorPdf;
         private PdfViewer visorPdf;
 
+        // Gráfico de ventas
         private Chart chartVentas;
 
+        // Etiquetas para el gráfico
         private Label lbTituloGraficoVentas;
-
         private Label lbProductoMasVendido;
 
-
+        // Constructor del formulario de reportes del gerente: inicializa componentes visuales, configura el visor PDF embebido con botón de cierre,
+        // prepara el gráfico de torta para distribución de ventas, y define etiquetas estadísticas.
+        // También enlaza eventos para filtros, validaciones, generación de reportes y PDF.
+        // Establece el perfil del usuario y prepara el entorno interactivo para análisis gerencial.
         public Reportes(int p_idPerfil)
         {
             InitializeComponent();
@@ -142,7 +150,6 @@ namespace ProyectoNetshop.formularios
 
             this.Controls.Add(lbProductoMasVendido);
 
-
             idPerfil = p_idPerfil;
 
             clbVendedoresReporteGerente.ItemCheck += clbVendedoresReporteGerente_ItemCheck;
@@ -166,6 +173,8 @@ namespace ProyectoNetshop.formularios
             bGenerarPdfReporteGerente.Click += bGenerarPdfReporteGerente_Click;
         }
 
+        // Restringe la entrada en el campo de filtro de cliente: solo permite letras, espacios y teclas de control.
+        // Evita que el usuario ingrese números o símbolos, asegurando una búsqueda coherente por nombre.
         private void txtFiltroNombreCliente_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) &&
@@ -176,6 +185,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Restringe la entrada en el campo de filtro de producto: solo permite letras, espacios y teclas de control.
+        // Evita que el usuario ingrese números o símbolos, asegurando una búsqueda coherente por nombre de producto.
         private void txtFiltroNombreProducto_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) &&
@@ -186,6 +197,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Restringe la entrada en los campos de filtro de precio: solo permite dígitos y teclas de control.
+        // Bloquea letras y símbolos para asegurar que el usuario ingrese valores numéricos válidos.
         private void txtFiltroPrecio_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -194,6 +207,10 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Evento de carga del formulario de reportes del gerente: configura formatos de fecha, desactiva la adición manual de filas en la grilla,
+        // oculta filtros de estado por defecto, enlaza eventos para filtrado dinámico por texto y gestiona exclusividad entre checkboxes de estado.
+        // Si el perfil es de gerente (idPerfil == 3), carga dinámicamente la lista de vendedores.
+        // Prepara el entorno para análisis interactivo y filtrado contextual.
         private void Reportes_Load(object sender, EventArgs e)
         {
             fechaDesdeGerente.Format = DateTimePickerFormat.Custom;
@@ -262,6 +279,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Previene la selección del primer ítem en el checklist de vendedores: si el índice es 0 (usualmente un placeholder como "Seleccioná
+        // algún vendedor"), se fuerza a desmarcarlo.
         private void clbVendedoresReporteGerente_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (e.Index == 0)
@@ -270,12 +289,15 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Expande visualmente el checklist de vendedores al hacer clic: aumenta su altura y desplaza el scroll al segundo ítem,
+        // evitando mostrar el placeholder inicial.
         private void clbVendedoresReporteGerente_MouseClick(object sender, MouseEventArgs e)
         {
             clbVendedoresReporteGerente.Height = alturaExpandidaChecklist;
             clbVendedoresReporteGerente.TopIndex = 1;
         }
 
+        // Restaura la altura original del checklist de vendedores al perder el foco: revierte la expansión visual aplicada durante la selección.
         private void clbVendedoresReporteGerente_Leave(object sender, EventArgs e)
         {
             clbVendedoresReporteGerente.Height = alturaOriginalChecklist;
@@ -286,6 +308,9 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Evento central para generar reportes gerenciales: valida fechas y vendedores seleccionados, determina el tipo de reporte según el
+        // botón presionado (ventas por vendedor, productos vendidos o total de ventas), configura visibilidad de filtros y
+        // ejecuta la generación correspondiente. Activa la opción de exportar a PDF tras la generación.
         private void OnGenerarGerente_Click(object sender, EventArgs e)
         {
             ultimoBotonPresionado = sender as Button;
@@ -357,7 +382,8 @@ namespace ProyectoNetshop.formularios
             bGenerarPdfReporteGerente.Visible = true;
         }
 
-
+        // Valida que el rango de fechas seleccionado sea coherente: si la fecha “Hasta” es anterior a la fecha “Desde”,
+        // muestra un mensaje de advertencia y enfoca el control de inicio.
         private bool ValidarRangoFechas()
         {
             DateTime desde = fechaDesdeGerente.Value.Date;
@@ -386,6 +412,10 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Genera el reporte de ventas por vendedor para el gerente: consulta la base según filtros de fecha, estado y vendedores seleccionados,
+        // aplica filtros dinámicos por cliente, factura y rango de precios, y muestra los resultados en la grilla.
+        // Calcula KPIs como cantidad de ventas, cliente más frecuente, promedio por factura, extremos de venta y día de mayor facturación.
+        // Finalmente, renderiza un gráfico de torta con la distribución de ventas por vendedor.
         private void GenerarReporteVentasPorVendedor(List<int> vendedoresSeleccionados, DateTime fechaDesde, DateTime fechaHasta, List<int> estadosSeleccionados)
         {
             var tabla = Venta_controller.ObtenerVentasPorVendedorYEstado(vendedoresSeleccionados, fechaDesde, fechaHasta, estadosSeleccionados);
@@ -471,13 +501,13 @@ namespace ProyectoNetshop.formularios
                 .OrderByDescending(g => g.Total)
                 .First();
 
-            lbCantidadVentasReporteGerente.Text = $"Cantidad de ventas: {cantidadVentas}";
-            lbCantidadClientesReporteGerente.Text = $"Cantidad de clientes: {cantidadClientes}";
-            lbClienteFrecuenteReporteGerente.Text = $"Cliente más frecuente: {clienteFrecuente}";
-            lbPromedioFacturasReporteGerente.Text = $"Promedio por factura: {promedioFactura.ToString("C", culturaAR)}";
-            lbMayorVentaReporteGerente.Text = $"Venta más alta: {mayorVenta.ToString("C", culturaAR)}";
-            lbMenorVentaReporteGerente.Text = $"Venta más baja: {menorVenta.ToString("C", culturaAR)}";
-            lbMayorFacturacionReporteGerente.Text = $"Día con mayor facturación: {diaMayorFacturacion.Fecha:dd/MM/yyyy} ({diaMayorFacturacion.Total.ToString("C", culturaAR)})";
+            lbCantidadVentasReporteGerente.Text = $"🧾 Cantidad de ventas: {cantidadVentas}";
+            lbCantidadClientesReporteGerente.Text = $"👥 Cantidad de clientes: {cantidadClientes}";
+            lbClienteFrecuenteReporteGerente.Text = $" ⭐  Cliente más frecuente: {clienteFrecuente}";
+            lbPromedioFacturasReporteGerente.Text = $"📊 Promedio por factura: {promedioFactura.ToString("C", culturaAR)}";
+            lbMayorVentaReporteGerente.Text = $"📈 Venta más alta: {mayorVenta.ToString("C", culturaAR)}";
+            lbMenorVentaReporteGerente.Text = $"📉 Venta más baja: {menorVenta.ToString("C", culturaAR)}";
+            lbMayorFacturacionReporteGerente.Text = $"📅 Día con mayor facturación: {diaMayorFacturacion.Fecha:dd/MM/yyyy} ({diaMayorFacturacion.Total.ToString("C", culturaAR)})";
 
             // Mostrar los labels
             lbCantidadVentasReporteGerente.Visible = true;
@@ -532,15 +562,26 @@ namespace ProyectoNetshop.formularios
             dgvReporteGerente.Visible = true;
         }
 
+        // Maneja el clic en la celda de la columna "colPDF" del DataGridView: si se hace clic en una fila válida de dicha columna,
+        // obtiene el ID de la venta correspondiente. Este ID puede usarse luego para generar o visualizar el comprobante PDF asociado.
         private void dgvReporteGerente_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvReporteGerente.Columns[e.ColumnIndex].Name == "colPDF" && e.RowIndex >= 0)
+            // Valida que el índice de columna y fila sean válidos
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            // Valida que la columna exista y se llame "colPDF"
+            if (dgvReporteGerente.Columns[e.ColumnIndex].Name == "colPDF")
             {
                 var fila = dgvReporteGerente.Rows[e.RowIndex];
                 int idVenta = Convert.ToInt32(fila.Cells["id_venta"].Value);
             }
         }
 
+        // Genera el reporte de productos vendidos por vendedor: consulta la base según filtros de fecha, estado y vendedores, aplica filtros
+        // dinámicos por producto, factura y precios, y muestra los resultados en la grilla. Calcula KPIs como cantidad de registros, producto más
+        // vendido, promedio por producto, extremos de precio y día de mayor facturación. Finalmente, renderiza un gráfico de torta con la
+        // distribución de ventas por producto.
         private void GenerarReporteProductosVendidos(List<int> vendedoresSeleccionados, DateTime fechaDesde, DateTime fechaHasta, List<int> estadosSeleccionados)
         {
             var tabla = Venta_controller.ObtenerProductosVendidosPorVendedorYEstado(vendedoresSeleccionados, fechaDesde, fechaHasta, estadosSeleccionados);
@@ -625,13 +666,13 @@ namespace ProyectoNetshop.formularios
                 .OrderByDescending(g => g.Total)
                 .First();
 
-            lbCantidadVentasReporteGerente.Text = $"Cantidad de registros: {cantidadVentas}";
-            lbCantidadClientesReporteGerente.Text = $"Cantidad de vendedores: {cantidadVendedores}";
-            lbClienteFrecuenteReporteGerente.Text = $"Producto más vendido: {productoMasVendido}";
-            lbPromedioFacturasReporteGerente.Text = $"Promedio por producto: {promedioProducto.ToString("C", culturaAR)}";
-            lbMayorVentaReporteGerente.Text = $"Precio del producto más alto: {mayorProducto.ToString("C", culturaAR)}";
-            lbMenorVentaReporteGerente.Text = $"Precio del producto más bajo: {menorProducto.ToString("C", culturaAR)}";
-            lbMayorFacturacionReporteGerente.Text = $"Día con mayor facturación: {diaMayorFacturacion.Fecha:dd/MM/yyyy} ({diaMayorFacturacion.Total.ToString("C", culturaAR)})";
+            lbCantidadVentasReporteGerente.Text = $"🧾 Cantidad de registros: {cantidadVentas}";
+            lbCantidadClientesReporteGerente.Text = $"👥 Cantidad de vendedores: {cantidadVendedores}";
+            lbClienteFrecuenteReporteGerente.Text = $" ⭐  Producto más vendido: {productoMasVendido}";
+            lbPromedioFacturasReporteGerente.Text = $"📊 Promedio por producto: {promedioProducto.ToString("C", culturaAR)}";
+            lbMayorVentaReporteGerente.Text = $"📈 Precio del producto más alto: {mayorProducto.ToString("C", culturaAR)}";
+            lbMenorVentaReporteGerente.Text = $"📉 Precio del producto más bajo: {menorProducto.ToString("C", culturaAR)}";
+            lbMayorFacturacionReporteGerente.Text = $"📅 Día con mayor facturación: {diaMayorFacturacion.Fecha:dd/MM/yyyy} ({diaMayorFacturacion.Total.ToString("C", culturaAR)})";
 
             lbCantidadVentasReporteGerente.Visible = true;
             lbCantidadClientesReporteGerente.Visible = true;
@@ -686,6 +727,10 @@ namespace ProyectoNetshop.formularios
             dgvReporteGerente.Visible = true;
         }
 
+        // Genera el reporte de resumen total de ventas: consulta los totales por vendedor según filtros de fecha y estado, y
+        // muestra los resultados en la grilla. Calcula KPIs como cantidad total de ventas, vendedor con mayor facturación, promedio por venta, y
+        // extremos de venta. Renderiza un gráfico de torta con la distribución de ventas por vendedor. Oculta métricas
+        // no aplicables (como día de mayor facturación).
         private void GenerarReporteTotalVentas(List<int> vendedoresSeleccionados, DateTime fechaDesde, DateTime fechaHasta, List<int> estadosSeleccionados)
         {
             var tabla = Venta_controller.ObtenerResumenTotalVentas(vendedoresSeleccionados, fechaDesde, fechaHasta, estadosSeleccionados);
@@ -734,9 +779,8 @@ namespace ProyectoNetshop.formularios
             int cantidadVendedores = tablaEstadistica.Select(r => r.Field<string>("vendedor")).Distinct().Count();
 
             string vendedorTop = tablaEstadistica
-                .GroupBy(r => r.Field<string>("vendedor"))
-                .OrderByDescending(g => g.Sum(r => r.Field<decimal>("total")))
-                .First().Key;
+                                .OrderByDescending(r => r.Field<int>("cantidad_ventas"))
+                                .First().Field<string>("vendedor");
 
             decimal totalVentas = tablaEstadistica.Sum(r => r.Field<decimal>("total"));
             decimal promedioFactura = cantidadVentas > 0 ? totalVentas / cantidadVentas : 0;
@@ -744,12 +788,12 @@ namespace ProyectoNetshop.formularios
             decimal menorVenta = tablaEstadistica.Min(r => r.Field<decimal>("total"));
 
             int totalCantidadVentas = tablaEstadistica.Sum(r => r.Field<int>("cantidad_ventas"));
-            lbCantidadVentasReporteGerente.Text = $"Cantidad de ventas: {totalCantidadVentas}";
-            lbCantidadClientesReporteGerente.Text = $"Cantidad de vendedores: {cantidadVendedores}";
-            lbClienteFrecuenteReporteGerente.Text = $"Vendedor con más ventas: {vendedorTop}";
-            lbPromedioFacturasReporteGerente.Text = $"Promedio por venta: {promedioFactura.ToString("C", culturaAR)}";
-            lbMayorVentaReporteGerente.Text = $"Venta más alta: {mayorVenta.ToString("C", culturaAR)}";
-            lbMenorVentaReporteGerente.Text = $"Venta más baja: {menorVenta.ToString("C", culturaAR)}";
+            lbCantidadVentasReporteGerente.Text = $"🧾 Cantidad de ventas: {totalCantidadVentas}";
+            lbCantidadClientesReporteGerente.Text = $"👥 Cantidad de vendedores: {cantidadVendedores}";
+            lbClienteFrecuenteReporteGerente.Text = $" ⭐  Vendedor con más ventas: {vendedorTop}";
+            lbPromedioFacturasReporteGerente.Text = $"📊 Promedio por venta: {promedioFactura.ToString("C", culturaAR)}";
+            lbMayorVentaReporteGerente.Text = $"📈 Venta más alta: {mayorVenta.ToString("C", culturaAR)}";
+            lbMenorVentaReporteGerente.Text = $"📉 Venta más baja: {menorVenta.ToString("C", culturaAR)}";
 
             lbCantidadVentasReporteGerente.Visible = true;
             lbCantidadClientesReporteGerente.Visible = true;
@@ -815,6 +859,8 @@ namespace ProyectoNetshop.formularios
 
         }
 
+        // Configura la visibilidad de los campos de filtro según el tipo de reporte: permite mostrar u ocultar los controles de búsqueda por cliente,
+        // producto, factura y precios.
         private void ConfigurarVisibilidadFiltros(bool mostrarCliente, bool mostrarProducto, bool mostrarFactura, bool mostrarPrecio)
         {
             tbBusquedaClienteReporteG.Visible = mostrarCliente;
@@ -824,6 +870,9 @@ namespace ProyectoNetshop.formularios
             tbBusquedaPrecioMaxReporteG.Visible = mostrarPrecio;
         }
 
+        // Aplica filtros dinámicos sobre el reporte gerencial según los campos visibles: cliente, producto, factura y precios.
+        // Evalúa la presencia de columnas relevantes y ajusta la lógica según el tipo de reporte (ventas, productos, totales).
+        // Actualiza la grilla y el total vendido en tiempo real.
         private void AplicarFiltrosReporteGerente()
         {
             if (tablaOriginalReporteGerente == null || tablaOriginalReporteGerente.Rows.Count == 0)
@@ -876,6 +925,9 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Genera y visualiza el PDF del reporte gerencial activo: valida que haya datos, determina el tipo de reporte según el último botón presionado,
+        // construye el documento con encabezados, filas y totales usando iTextSharp, y lo guarda en el escritorio.
+        // Ofrece abrirlo inmediatamente en un visor embebido (PdfiumViewer), ajustando el panel visual.
         private void bGenerarPdfReporteGerente_Click(object sender, EventArgs e)
         {
             if (dgvReporteGerente.Rows.Count == 0)

@@ -1,4 +1,5 @@
-﻿using iTextSharp.text;
+﻿// Importa librerías.
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.Data.SqlClient;
 using PdfiumViewer;
@@ -21,17 +22,22 @@ namespace ProyectoNetshop.formularios
 {
     public partial class ReportesV : Form
     {
+        // Datos del vendedor
         private readonly int dni;
         private readonly string nombreCompleto;
 
         // Lista en memoria para filtrar sin volver a consultar la BD
         private List<(string nroFactura, DateTime fecha, string cliente, string tipoFactura, string producto, int cantidad, decimal precioUnitario, decimal totalPorProducto, string estado)> reporteOriginal;
 
+        // ErrorProviders para validación
         private readonly ErrorProvider errorProviderPrecios = new();
 
+        // Visor PDF y panel contenedor
         private PdfViewer visorPdf;
         private Panel panelVisorPdf;
 
+        // Constructor del formulario de reportes de vendedor: inicializa componentes, configura tamaño, crea visor PDF embebido con botón de cierre,
+        // y guarda los datos del vendedor. Prepara el entorno visual para mostrar reportes y documentos de forma integrada.
         public ReportesV(int p_dni, string p_nombreCompleto)
         {
             InitializeComponent();
@@ -102,6 +108,8 @@ namespace ProyectoNetshop.formularios
             this.Load += ReportesV_Load;
         }
 
+        // Evento de carga del formulario de reportes del vendedor: inicializa campos con datos del vendedor, oculta la grilla y KPIs,
+        // enlaza eventos para filtros dinámicos, validaciones y generación de PDF, y carga el reporte inicial.
         private void ReportesV_Load(object sender, EventArgs e)
         {
             tbDniVendedorReporte.Text = dni.ToString();
@@ -137,6 +145,8 @@ namespace ProyectoNetshop.formularios
             CargarReporte();
         }
 
+        // Oculta todos los indicadores clave de rendimiento (KPIs) del reporte de vendedor: desactiva la visibilidad de las
+        // etiquetas de cantidad de ventas, montos extremos, promedio, cliente frecuente y día de mayor facturación.
         private void HideKPILabels()
         {
             try
@@ -176,12 +186,17 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Evento para búsqueda dinámica en reportes: cada vez que se modifica el texto en los campos de filtro,
+        // se aplica automáticamente el filtrado sobre los datos del vendedor.
         private void SearchTextBox_TextChanged(object? sender, EventArgs e)
         {
             // Aplicar filtros en cada cambio de texto
             AplicarFiltrosReporteV();
         }
 
+        // Carga el reporte de ventas del vendedor según el rango de fechas seleccionado: valida fechas, configura la grilla,
+        // consulta la base de datos con múltiples joins, excluye facturas anuladas, y almacena los resultados en memoria.
+        // Si hay datos, aplica filtros y actualiza la visualización; si no, muestra mensajes y limpia la vista.
         private void CargarReporte()
         {
             // Si rango de fechas inválido, no mostrar nada y avisar
@@ -356,6 +371,8 @@ namespace ProyectoNetshop.formularios
             ActualizarTotalVendidoDesdeDatos(reporteOriginal);
         }
 
+        // Muestra los datos filtrados en la grilla de ventas del vendedor: limpia la grilla, formatea los valores con cultura argentina (es-AR), y
+        // agrega cada registro con sus campos ordenados.
         private void MostrarGrillaFiltrada(List<(string, DateTime, string, string, string, int, decimal, decimal, string)> datos)
         {
             dgvReporteVentaVendedor.Rows.Clear();
@@ -378,35 +395,6 @@ namespace ProyectoNetshop.formularios
 
             dgvReporteVentaVendedor.Visible = true;
         }
-
-        //private void MostrarEnGrilla(IEnumerable<(string nroFactura, DateTime fecha, string cliente, string tipoFactura, string producto, int cantidad, decimal precioUnitario, decimal totalPorProducto, string estado)> datos)
-        //{
-        //    dgvReporteVentaVendedor.Rows.Clear();
-        //    var culturaAR = new CultureInfo("es-AR");
-
-        //    foreach (var d in datos)
-        //    {
-        //        dgvReporteVentaVendedor.Rows.Add(
-        //            d.nroFactura,
-        //            d.fecha == DateTime.MinValue ? "" : d.fecha.ToString("dd/MM/yyyy"),
-        //            d.cliente,
-        //            d.tipoFactura,
-        //            d.cantidad,
-        //            d.precioUnitario.ToString("C", culturaAR),
-        //            d.totalPorProducto.ToString("C", culturaAR),
-        //            d.estado,
-        //            d.producto
-        //        );
-        //    }
-
-        //    dgvReporteVentaVendedor.Visible = dgvReporteVentaVendedor.Rows.Count > 0;
-
-        //    // Actualizar chart y total cada vez que cambiamos lo que se muestra en la grilla
-        //    ActualizarChartDesdeDatos(datos);
-
-        //    // Actualizar KPIs visibles según los datos actuales y rango de fechas
-        //    ActualizarKPIsDesdeDatos(datos);
-        //}
 
         // Actualiza chReporteVendedor usando los datos actualmente mostrados (agrega las cantidades por producto)
         private void ActualizarChartDesdeDatos(IEnumerable<(string nroFactura, DateTime fecha, string cliente, string tipoFactura, string producto, int cantidad, decimal precioUnitario, decimal totalPorProducto, string estado)> datos)
@@ -613,7 +601,7 @@ namespace ProyectoNetshop.formularios
                 if (this.lbDiaMayorFacturacion != null)
                 {
                     if (diaMayor != null)
-                        lbDiaMayorFacturacion.Text = $"{diaMayor.Fecha:dd/MM/yyyy} - {diaMayor.Total.ToString("C", cultura)}";
+                        lbDiaMayorFacturacion.Text = $"{diaMayor.Fecha:dd/MM/yyyy} ({diaMayor.Total.ToString("C", cultura)})";
                     else
                         lbDiaMayorFacturacion.Text = "-";
                     lbDiaMayorFacturacion.Visible = true;
@@ -812,7 +800,7 @@ namespace ProyectoNetshop.formularios
                 }
 
                 // Después de visualizar, preguntar si desea guardarlo
-                var guardar = MessageBox.Show("¿Desea guardar este PDF en disco?", "Guardar PDF", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var guardar = MessageBox.Show("¿Desea guardar este PDF en disco?", "Guardar PDF", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (guardar == DialogResult.Yes)
                 {
                     using var sfd = new SaveFileDialog
@@ -844,6 +832,8 @@ namespace ProyectoNetshop.formularios
             }
         }
 
+        // Busca un TextBox por nombre dentro del formulario y devuelve su texto actual.
+        // Si no se encuentra o no es un TextBox, retorna cadena vacía.
         private string GetTextBoxText(string name)
         {
             var encontrados = this.Controls.Find(name, true);
@@ -968,6 +958,8 @@ namespace ProyectoNetshop.formularios
             AplicarFiltrosReporteV();
         }
 
+        // Asigna un mensaje de error visual a un TextBox específico usando
+        // ErrorProvider: busca el control por nombre y, si lo encuentra, muestra el mensaje asociado.
         private void SetErrorOnTextBox(string name, string message)
         {
             var encontrados = this.Controls.Find(name, true);
@@ -975,6 +967,8 @@ namespace ProyectoNetshop.formularios
                 errorProviderPrecios.SetError(c, message);
         }
 
+        // Elimina el mensaje de error visual de un TextBox específico: busca el control por nombre y, si lo encuentra,
+        // borra el texto de error asociado mediante ErrorProvider. Restablece el estado visual tras una corrección válida.
         private void ClearErrorOnTextBox(string name)
         {
             var encontrados = this.Controls.Find(name, true);
@@ -983,6 +977,11 @@ namespace ProyectoNetshop.formularios
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void lCantidadVentas_Click(object sender, EventArgs e)
         {
 
         }

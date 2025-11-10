@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Importa librerías.
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace ProyectoNetshop.Cruds
 {
     internal class Marca_controller
     {
+        // Obtiene la descripción de una marca según su ID, devolviendo "Sin marca" si no se encuentra coincidencia.
         public static string ObtenerDescripcion(int id_marca)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();

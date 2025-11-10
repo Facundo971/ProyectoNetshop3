@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// Importa librerías.
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +11,7 @@ namespace ProyectoNetshop.Cruds
 {
     internal class Producto_controller
     {
+        // Inserta un nuevo producto en la base de datos con sus datos comerciales, imagen, estado y referencias de marca/categoría.
         public static int agregarProducto(Producto_model p_producto)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -41,6 +43,7 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Actualiza los datos de un producto existente en la base de datos, incluyendo precio, stock, imagen y referencias.
         public static int actualizarProducto(Producto_model p_producto)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -75,6 +78,7 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Cambia el estado de eliminación de un producto (eliminado = 0 o 1) según su ID.
         public static int CambiarEstadoEliminado(int id_producto, int eliminado)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -85,6 +89,8 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Busca productos no eliminados (eliminado = 1) filtrando por nombre parcial y/o ID exacto.
+        // Incluye descripciones de marca y categoría mediante controladores externos.
         public static List<Producto_model> BuscarProductos(string nombre, string id)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -131,6 +137,7 @@ namespace ProyectoNetshop.Cruds
             return lista;
         }
 
+        // Obtiene el stock actual de un producto según su ID, devolviendo 0 si no se encuentra.
         public static int ObtenerStockActual(int id_producto)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -141,6 +148,7 @@ namespace ProyectoNetshop.Cruds
             return resultado != null ? Convert.ToInt32(resultado) : 0;
         }
 
+        // Actualiza el stock de un producto sumando o restando una cantidad, validando que no resulte en stock negativo.
         public static int ActualizarStock(int id_producto, int cantidadDelta)
         {
             int stockActual = ObtenerStockActual(id_producto);
@@ -159,6 +167,8 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Recupera todos los productos activos (eliminado = 1) desde la base de datos,
+        // incluyendo descripciones de marca y categoría mediante controladores auxiliares.
         public static List<Producto_model> ObtenerProductos()
         {
             var lista = new List<Producto_model>();

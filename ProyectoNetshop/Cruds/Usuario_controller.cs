@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// Importa librerías.
+using Microsoft.Data.SqlClient;
 using ProyectoNetshop.BD;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace ProyectoNetshop.Cruds
 {
     internal class Usuario_controller
     {
+        // Inserta un nuevo usuario en la base de datos con todos sus datos personales y de perfil.
         public static int agregarUsuario(Usuario_model p_usuario)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -35,6 +37,7 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Actualiza los datos de un usuario existente en la base de datos, incluyendo credenciales y perfil.
         public static int actualizarUsuario(Usuario_model u)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -63,6 +66,7 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Desactiva un usuario en la base de datos (activo = 0) si está actualmente activo.
         public static int eliminarUsuario(int idUsuario)
         {
             using var con = BD.BaseDeDatos.obtenerConexion();
@@ -73,6 +77,7 @@ namespace ProyectoNetshop.Cruds
             return cmd.ExecuteNonQuery();
         }
 
+        // Obtiene la lista de vendedores activos (id_perfil = 2) con sus datos básicos desde la base de datos.
         public static List<Usuario_model> ObtenerVendedores()
         {
             var lista = new List<Usuario_model>();
@@ -95,6 +100,7 @@ namespace ProyectoNetshop.Cruds
             return lista;
         }
 
+        // Verifica si ya existe un usuario con el mismo DNI o email, excluyendo el ID actual si se está editando.
         public static bool ExisteEmailODni(int dni, string email, int idUsuario = 0)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();
@@ -108,6 +114,7 @@ namespace ProyectoNetshop.Cruds
             return count > 0;
         }
 
+        // Obtiene el ID de usuario según su nombre, devolviendo -1 si no se encuentra coincidencia.
         public static int ObtenerIdUsuarioPorNombre(string nombre)
         {
             using var conexion = BD.BaseDeDatos.obtenerConexion();

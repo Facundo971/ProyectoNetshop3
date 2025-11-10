@@ -39,11 +39,14 @@
             btnIconBackup = new FontAwesome.Sharp.IconButton();
             btnIconUsuarios = new FontAwesome.Sharp.IconButton();
             panelLogo = new Panel();
+            lbPerfilUPrincipal = new Label();
+            lbNombreCompletoUPrincipal = new Label();
             panelSuperior = new Panel();
             panel1 = new Panel();
             panelContenedor = new Panel();
             panelIzquierdo.SuspendLayout();
             panelSuperior.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panelIzquierdo
@@ -262,6 +265,28 @@
             panelLogo.Size = new Size(229, 133);
             panelLogo.TabIndex = 0;
             // 
+            // lbPerfilUPrincipal
+            // 
+            lbPerfilUPrincipal.AutoSize = true;
+            lbPerfilUPrincipal.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbPerfilUPrincipal.ForeColor = SystemColors.ButtonFace;
+            lbPerfilUPrincipal.Location = new Point(21, 66);
+            lbPerfilUPrincipal.Name = "lbPerfilUPrincipal";
+            lbPerfilUPrincipal.Size = new Size(67, 34);
+            lbPerfilUPrincipal.TabIndex = 1;
+            lbPerfilUPrincipal.Text = "label1";
+            // 
+            // lbNombreCompletoUPrincipal
+            // 
+            lbNombreCompletoUPrincipal.AutoSize = true;
+            lbNombreCompletoUPrincipal.Font = new Font("Dubai", 12F, FontStyle.Bold | FontStyle.Italic);
+            lbNombreCompletoUPrincipal.ForeColor = SystemColors.ButtonFace;
+            lbNombreCompletoUPrincipal.Location = new Point(21, 32);
+            lbNombreCompletoUPrincipal.Name = "lbNombreCompletoUPrincipal";
+            lbNombreCompletoUPrincipal.Size = new Size(67, 34);
+            lbNombreCompletoUPrincipal.TabIndex = 0;
+            lbNombreCompletoUPrincipal.Text = "label1";
+            // 
             // panelSuperior
             // 
             panelSuperior.BackColor = Color.FromArgb(0, 0, 64);
@@ -276,6 +301,8 @@
             // panel1
             // 
             panel1.BackColor = Color.SlateGray;
+            panel1.Controls.Add(lbPerfilUPrincipal);
+            panel1.Controls.Add(lbNombreCompletoUPrincipal);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
@@ -300,7 +327,9 @@
             Controls.Add(panelContenedor);
             Controls.Add(panelSuperior);
             Controls.Add(panelIzquierdo);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "principal";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Netshop";
@@ -308,6 +337,8 @@
             Load += principal_Load;
             panelIzquierdo.ResumeLayout(false);
             panelSuperior.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -326,5 +357,7 @@
         private Panel panel1;
         private Panel panelContenedor;
         private FontAwesome.Sharp.IconButton btnIconDetalleFacturas;
+        private Label lbNombreCompletoUPrincipal;
+        private Label lbPerfilUPrincipal;
     }
 }
