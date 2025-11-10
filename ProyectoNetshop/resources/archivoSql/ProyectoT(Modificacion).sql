@@ -7,7 +7,7 @@ CREATE TABLE cliente
   nombre VARCHAR(100) NOT NULL,
   apellido VARCHAR(100) NOT NULL,
   dni INT NOT NULL,
-  telefono INT,
+  telefono VARCHAR(20),
   email VARCHAR(200) NOT NULL,
   activo INT NOT NULL CONSTRAINT df_cliente_activo DEFAULT 1, -- SI = 1 y NO = 0  
   sexo VARCHAR(20) CONSTRAINT df_cliente_sexo DEFAULT 'Otros',
@@ -16,7 +16,7 @@ CREATE TABLE cliente
   CONSTRAINT uq_cliente_dni UNIQUE (dni),
   CONSTRAINT uq_cliente_email UNIQUE (email),
   CONSTRAINT ck_cliente_dni CHECK (dni BETWEEN 10000000 AND 99999999),
-  CONSTRAINT ck_cliente_telefono CHECK (telefono BETWEEN 1000000000 AND 9999999999),
+  CONSTRAINT ck_cliente_telefono CHECK (telefono IS NULL OR telefono NOT LIKE '%[^0-9]%'),
   CONSTRAINT ck_cliente_activo CHECK (activo IN (0, 1)),
   CONSTRAINT ck_cliente_sexo CHECK (sexo IN ('Masculino','Femenino','Otros')),
   CONSTRAINT ck_cliente_fecha_nacimiento CHECK ((DATEDIFF(year, fecha_nacimiento, GETDATE()) BETWEEN 18 AND 100) AND (fecha_nacimiento <= GETDATE()))
@@ -95,7 +95,7 @@ CREATE TABLE usuario
   activo INT NOT NULL CONSTRAINT df_usuario_activo DEFAULT 1, -- SI = 1 y NO = 0
   sexo VARCHAR(20) CONSTRAINT df_usuario_sexo DEFAULT 'Otros',
   fecha_nacimiento DATE,
-  telefono INT,
+  telefono VARCHAR(20),
   dni INT NOT NULL,
   id_perfil INT NOT NULL,
   CONSTRAINT pk_usuario PRIMARY KEY (id_usuario),
@@ -105,8 +105,18 @@ CREATE TABLE usuario
   CONSTRAINT ck_usuario_activo CHECK (activo IN (0, 1)),
   CONSTRAINT ck_usuario_sexo CHECK (sexo IN ('Masculino', 'Femenino', 'Otros')),
   CONSTRAINT ck_usuario_fecha_nacimiento CHECK ((DATEDIFF(year, fecha_nacimiento, GETDATE()) BETWEEN 18 AND 100) AND (fecha_nacimiento <= GETDATE())),
-  CONSTRAINT ck_usuario_telefono CHECK (telefono BETWEEN 1000000000 AND 9999999999),
+  CONSTRAINT ck_usuario_telefono CHECK (telefono IS NULL OR telefono NOT LIKE '%[^0-9]%'),
   CONSTRAINT ck_usuario_dni CHECK (dni BETWEEN 10000000 AND 99999999),
+);
+
+------------------------------------------------
+-- estado_venta
+------------------------------------------------
+CREATE TABLE estado_venta (
+  id_estado INT NOT NULL,
+  descripcion VARCHAR(50) NOT NULL,
+  CONSTRAINT pk_estado_venta PRIMARY KEY (id_estado),
+  CONSTRAINT ck_estado_descripcion CHECK (descripcion IN ('Pendiente', 'Finalizado', 'Cancelado'))
 );
 
 ------------------------------------------------
@@ -120,16 +130,20 @@ CREATE TABLE venta_cabecera
   tipo_factura CHAR(1) NOT NULL,
   id_usuario INT NOT NULL,
   id_cliente INT NOT NULL,
+  id_estado INT NOT NULL DEFAULT 1, -- 1 = Pendiente
+  nro_factura VARCHAR(20),
   CONSTRAINT pk_venta_cabecera PRIMARY KEY (id_venta),
   CONSTRAINT fk_venta_cabecera_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
   CONSTRAINT fk_venta_cabecera_cliente FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
-  CONSTRAINT ck_venta_cabecera_total_venta CHECK (total_venta >= 0),
+  CONSTRAINT fk_venta_cabecera_estado FOREIGN KEY (id_estado) REFERENCES estado_venta(id_estado),
   CONSTRAINT ck_venta_cabecera_fecha CHECK (fecha <= GETDATE()),
-  CONSTRAINT ck_venta_cabecera_tipo_factura CHECK (tipo_factura IN ('A','B','C','M','E','T'))
+  CONSTRAINT ck_venta_cabecera_tipo_factura CHECK (tipo_factura IN ('A','B','C','M','E','T')),
+  CONSTRAINT ck_venta_cabecera_total_venta CHECK (total_venta >= -9999999),
+  CONSTRAINT ck_venta_cabecera_nro_factura CHECK (nro_factura IS NULL OR nro_factura LIKE '[A-Z]-%')
 );
 
 ------------------------------------------------
--- venta_cabecera
+-- venta_detalle
 ------------------------------------------------
 CREATE TABLE venta_detalle
 (
