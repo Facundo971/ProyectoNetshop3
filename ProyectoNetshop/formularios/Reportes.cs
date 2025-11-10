@@ -428,7 +428,7 @@ namespace ProyectoNetshop.formularios
 
             tablaOriginalReporteGerente = tabla.Copy();
 
-            dgvReporteGerente.Columns.Clear(); 
+            dgvReporteGerente.Columns.Clear();
 
             string filtroCliente = tbBusquedaClienteReporteG.Text.Trim().ToLower();
             string filtroFactura = tbBusquedaNroFacturaReporteG.Text.Trim().ToLower();
@@ -451,6 +451,7 @@ namespace ProyectoNetshop.formularios
             }
 
             dgvReporteGerente.DataSource = tablaFiltrada.CopyToDataTable();
+            dgvReporteGerente.ReadOnly = true;
 
             dgvReporteGerente.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
@@ -1096,6 +1097,11 @@ namespace ProyectoNetshop.formularios
             {
                 MessageBox.Show("Error al generar el PDF: " + ex.Message, "Error técnico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

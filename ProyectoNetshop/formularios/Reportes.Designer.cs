@@ -168,6 +168,7 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(912, 133);
             panel2.TabIndex = 2;
+            panel2.Paint += panel2_Paint;
             // 
             // clbVendedoresReporteGerente
             // 
