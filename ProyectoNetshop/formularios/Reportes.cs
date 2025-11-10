@@ -260,6 +260,8 @@ namespace ProyectoNetshop.formularios
                 CargarChecklistVendedores();
         }
 
+        // Carga dinámicamente la lista de vendedores en el checklist, mostrando su DNI y nombre completo.
+        // Agrega un ítem inicial como placeholder y vincula cada vendedor con su ID para futuras consultas.
         private void CargarChecklistVendedores()
         {
             clbVendedoresReporteGerente.Items.Clear();
